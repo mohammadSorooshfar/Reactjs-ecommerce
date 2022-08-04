@@ -3,7 +3,7 @@ import React from "react";
 interface props {}
 
 const ProductDetails: React.FC<props> = () => {
-  return <div>ProductDetails</div>;
+  return <div></div>;
 };
 
 export default ProductDetails;
