@@ -59,7 +59,7 @@ const Header = () => {
   };
 
   return (
-    <AppBar position="fixed" color="transparent">
+    <AppBar position="fixed" color="transparent" elevation={0}>
       <Container maxWidth="lg">
         <Toolbar disableGutters>
           <Box
@@ -126,18 +126,14 @@ const Header = () => {
                 }}
                 open={Boolean(anchorElCategory)}
                 onClose={handleCloseCategoryMenu}
-                sx={{
-                  textAlign: "left",
-                }}
               >
                 {Object.entries(categories).map((category) => (
                   <MenuItem key={category[1]} onClick={handleCloseCategoryMenu}>
                     <Link
                       to={`/tehranshoes/products/${selectedGender}/${category[0]}`}
+                      style={{ textDecoration: "none", color: "inherit" }}
                     >
-                      <Typography textAlign="right" fontSize="20px">
-                        {category[1]}
-                      </Typography>
+                      <Typography fontSize="20px">{category[1]}</Typography>
                     </Link>
                   </MenuItem>
                 ))}

@@ -32,7 +32,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "backend": "node server",
+    "backend:dev": "nodemon server"
   },
   "eslintConfig": {
     "extends": [
@@ -53,6 +55,10 @@
     ]
   },
   "devDependencies": {
-    "@types/material-ui": "^0.21.12"
+    "@types/material-ui": "^0.21.12",
+    "json-server": "^0.17.0",
+    "jsonwebtoken": "^8.5.1",
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^2.0.19"
   }
 }
