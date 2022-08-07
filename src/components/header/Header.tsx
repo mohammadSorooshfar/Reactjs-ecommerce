@@ -21,17 +21,18 @@ import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { palette } from "@mui/system";
+import { Console, log } from "console";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { ObjectType } from "typescript";
 import logo from "../../assets/logo.png";
 
 interface Iprops {
   navHeight: string;
 }
-
 const genders = {
   men: "مردانه",
-  woman: "زنانه",
+  women: "زنانه",
   kid: "بچگانه",
 };
 const categories = {
@@ -54,12 +55,6 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
     kid: "black",
   });
   const navigate = useNavigate();
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
   const handleOpenCategoryMenu = (event: React.MouseEvent<HTMLElement>) => {
     if (anchorElCategory !== event.currentTarget) {
       setAnchorElCategory(event.currentTarget);
@@ -103,19 +98,14 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
     direction: "rtl",
   }));
   const getList = () => (
-    <div
-      style={{ direction: "rtl" }}
-      // onClick={() => setOpen(false)}
-    >
+    <div style={{ direction: "rtl" }}>
       {Object.entries(genders).map((gender, index) => (
         <ListItem key={index} sx={{ paddingRight: 0 }}>
           <Accordion elevation={0}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography>{gender[1]}</Typography>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography color={Object.values(navOptionColor)[index]}>
+                {gender[1]}
+              </Typography>
             </AccordionSummary>
             <AccordionDetails
               sx={{
