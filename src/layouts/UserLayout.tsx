@@ -1,4 +1,4 @@
-import { createTheme, ThemeProvider } from "@mui/material";
+import { createTheme, easing, ThemeProvider } from "@mui/material";
 import Footer from "components/footer/Footer";
 import Header from "components/header/Header";
 import React from "react";
