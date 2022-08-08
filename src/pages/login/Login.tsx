@@ -1,5 +1,5 @@
-import React from "react";
-import { Formik, Field, Form, useField, FieldAttributes } from "formik";
+import React, { useState } from "react";
+import { Formik, Field, Form } from "formik";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import {
   TextField,
@@ -8,48 +8,61 @@ import {
   Typography,
   Box,
   Avatar,
+  styled,
+  ContainerProps,
+  TextFieldProps,
+  BoxProps,
+  ButtonProps,
+  AvatarProps,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-const MyTextField: React.FC<FieldAttributes<{}>> = ({
-  placeholder,
-  ...props
-}) => {
-  const [field, meta] = useField<{}>(props);
-  const errorText = meta.error && meta.touched ? meta.error : "";
-  return (
-    <TextField
-      placeholder={placeholder}
-      {...field}
-      helperText={errorText}
-      error={!!errorText}
-      sx={{ width: "400px", padding: "16.5px 14px" }}
-    />
-  );
-};
-
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const ContainerStyle = styled(Container)<ContainerProps>(({ theme }) => ({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }));
+  const FormBoxStyle = styled(Box)<BoxProps>(({ theme }) => ({
+    position: "absolute",
+    top: "50%",
+    right: "50%",
+    transform: "translate(50%,-50%)",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center",
+    minHeight: "400px",
+  }));
+  const FormTextFieldStyle = styled(TextField)<TextFieldProps>(({ theme }) => ({
+    width: "400px",
+    padding: "16.5px 14px",
+    [theme.breakpoints.down("sm")]: {
+      width: "300px",
+    },
+  }));
+  const LoginButtonStyle = styled(Button)<ButtonProps>(({ theme }) => ({
+    backgroundColor: theme.palette.info.main,
+    width: "400px",
+    padding: "5px 10px",
+    fontSize: "18px",
+    [theme.breakpoints.down("sm")]: {
+      width: "300px",
+    },
+    "&:hover": {
+      backgroundColor: theme.palette.info.dark,
+    },
+  }));
+  const AvatarStyle = styled(Avatar)<AvatarProps>(({ theme }) => ({
+    backgroundColor: theme.palette.info.main,
+  }));
   return (
-    <Container
-      sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-    >
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          right: "50%",
-          transform: "translate(50%,-50%)",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          alignItems: "center",
-          minHeight: "400px",
-        }}
-      >
-        <Avatar sx={{ bgcolor: "red" }}>
+    <ContainerStyle>
+      <FormBoxStyle>
+        <AvatarStyle>
           <LockOutlinedIcon />
-        </Avatar>
+        </AvatarStyle>
         <Typography variant="h5">ورود به داشبورد</Typography>
         <Formik
           initialValues={{
@@ -73,33 +86,36 @@ const Login: React.FC = () => {
               }}
             >
               <div>
-                <MyTextField
+                <Field
                   placeholder="نام کاربری"
                   name="username"
                   required
+                  type="input"
+                  as={FormTextFieldStyle}
                 />
-                <MyTextField placeholder="رمزعبور" name="password" required />
+                <Field
+                  placeholder="رمزعبور"
+                  name="password"
+                  required
+                  type="input"
+                  as={FormTextFieldStyle}
+                />
               </div>
               <div>
-                <Button
+                <LoginButtonStyle
                   variant="contained"
-                  sx={{
-                    width: "400px",
-                    padding: "5px 10px",
-                    fontSize: "18px",
-                  }}
                   disabled={isSubmitting}
                   type="submit"
                 >
                   ورود
-                </Button>
+                </LoginButtonStyle>
               </div>
             </Form>
           )}
         </Formik>
         <Button onClick={() => navigate("/")}>بازگشت به سایت</Button>
-      </Box>
-    </Container>
+      </FormBoxStyle>
+    </ContainerStyle>
   );
 };
 

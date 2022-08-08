@@ -23,7 +23,8 @@ function App() {
         main: "#B20600",
       },
       info: {
-        main: "#E2DCC8",
+        main: "#2666CF",
+        dark: "#0a56d1",
       },
     },
   });
