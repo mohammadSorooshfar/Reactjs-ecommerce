@@ -16,6 +16,8 @@ import {
   AvatarProps,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { loginService } from "services/services";
+import { toast } from "react-toastify";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -57,6 +59,23 @@ const Login: React.FC = () => {
   const AvatarStyle = styled(Avatar)<AvatarProps>(({ theme }) => ({
     backgroundColor: theme.palette.info.main,
   }));
+  const handleLogin = async (
+    data: { username: string; password: string },
+    setSubmitting: (isSubmitting: boolean) => void
+  ) => {
+    setSubmitting(true);
+    loginService(data)
+      .then(() => {
+        toast.success("ورود با موفقیت انجام شد");
+        navigate("tehranshoes/dashboard/products");
+      })
+      .catch((e) => {
+        if (e.response.status === 400) {
+          setSubmitting(false);
+          toast.error("نام کاربری یا رمزعبور اشتباه است");
+        }
+      });
+  };
   return (
     <ContainerStyle>
       <FormBoxStyle>
@@ -70,10 +89,7 @@ const Login: React.FC = () => {
             password: "",
           }}
           onSubmit={(data, { setSubmitting }) => {
-            setSubmitting(true);
-            // make async call
-            console.log("submit: ", data);
-            setSubmitting(false);
+            handleLogin(data, setSubmitting);
           }}
         >
           {({ isSubmitting }) => (
