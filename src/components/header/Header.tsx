@@ -6,7 +6,6 @@ import {
   AccordionDetails,
   AccordionSummary,
   Button,
-  ButtonProps,
   Drawer,
   ListItem,
   MenuItemProps,
@@ -20,11 +19,8 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { palette } from "@mui/system";
-import { Console, log } from "console";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ObjectType } from "typescript";
 import logo from "../../assets/logo.png";
 
 interface Iprops {
@@ -42,16 +38,14 @@ const categories = {
 };
 
 const Header: React.FC<Iprops> = ({ navHeight }) => {
-  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElCategory, setAnchorElCategory] = useState<null | HTMLElement>(
     null
   );
-
   const [open, setOpen] = useState(false);
   const [selectedGender, setSelectedGender] = useState("");
   const [navOptionColor, setNavOptionColor] = useState({
     men: "black",
-    woman: "black",
+    women: "black",
     kid: "black",
   });
   const navigate = useNavigate();
@@ -66,7 +60,7 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
         setSelectedGender(selected[0]);
         setNavOptionColor({
           men: "black",
-          woman: "black",
+          women: "black",
           kid: "black",
           [selected[0]]: "#FFC23C",
         });
@@ -74,7 +68,7 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
     }
   };
   const handleCloseCategoryMenu = () => {
-    setNavOptionColor({ men: "black", woman: "black", kid: "black" });
+    setNavOptionColor({ men: "black", women: "black", kid: "black" });
     setAnchorElCategory(null);
   };
   const LoginButton = styled(Button)<{ small?: boolean }>(
@@ -90,7 +84,18 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
       fontSize: small ? "10px" : "",
     })
   );
-
+  const BrandTypographyStyle = styled(Typography)<{}>(({ theme }) => ({
+    fontWeight: 700,
+    color: "inherit",
+    textDecoration: "none",
+    "&:hover": {
+      cursor: "pointer",
+    },
+    fontSize: "20px",
+    [theme.breakpoints.down(1024)]: {
+      fontSize: "16px",
+    },
+  }));
   const CategoryMenu = styled(MenuItem)<MenuItemProps>(() => ({
     color: "black",
     padding: "0 30px",
@@ -140,28 +145,24 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
           <Toolbar disableGutters sx={{ maxHeight: navHeight }}>
             <Box
               sx={{
-                display: { xs: "none", md: "flex" },
+                display: { xs: "none", sm: "flex" },
                 justifyContent: "space-between",
                 alignItems: "center",
                 width: "100% !important",
                 textAlign: "right",
               }}
             >
-              <Box sx={{ display: "flex", alignItems: "center", width: "13%" }}>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Box>
-                  <img src={logo} alt="logo" style={{ width: "50px" }} />
+                  <img src={logo} alt="logo" style={{ width: "40px" }} />
                 </Box>
-                <Typography
+                <BrandTypographyStyle
                   variant="h6"
                   onClick={() => navigate("/tehranshoes")}
-                  sx={{
-                    fontWeight: 700,
-                    color: "inherit",
-                    textDecoration: "none",
-                  }}
+                  noWrap
                 >
                   کفش طهران
-                </Typography>
+                </BrandTypographyStyle>
               </Box>
               <Box
                 sx={{
@@ -186,7 +187,7 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
                       sx={{
                         color: Object.values(navOptionColor)[index],
                         fontWeight: "bold",
-                        fontSize: "16px",
+                        fontSize: "14px",
                         textDecoration: "none",
                       }}
                     >
@@ -231,7 +232,7 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
 
             <Box
               sx={{
-                display: { xs: "flex", md: "none" },
+                display: { xs: "flex", sm: "none" },
                 justifyContent: "space-between",
                 alignItems: "center",
                 width: "100%",
