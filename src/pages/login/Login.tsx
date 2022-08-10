@@ -67,7 +67,7 @@ const Login: React.FC = () => {
     loginService(data)
       .then(() => {
         toast.success("ورود با موفقیت انجام شد");
-        navigate("tehranshoes/dashboard/products");
+        navigate("/tehranshoes/dashboard/products");
       })
       .catch((e) => {
         if (e.response.status === 400) {
@@ -113,7 +113,7 @@ const Login: React.FC = () => {
                   placeholder="رمزعبور"
                   name="password"
                   required
-                  type="input"
+                  type="password"
                   as={FormTextFieldStyle}
                 />
               </div>
