@@ -19,9 +19,6 @@ function App() {
       success: {
         main: "#0F3D3E",
       },
-      error: {
-        main: "#B20600",
-      },
       info: {
         main: "#2666CF",
         dark: "#0a56d1",

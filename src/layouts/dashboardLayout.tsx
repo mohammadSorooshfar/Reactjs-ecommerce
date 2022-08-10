@@ -95,15 +95,6 @@ const DashboardLayout: React.FC<any> = ({ children }) => {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <IconButton
-        color="inherit"
-        aria-label="open drawer"
-        edge="start"
-        onClick={handleDrawerToggle}
-        sx={{ mr: 2, display: { sm: "none" } }}
-      >
-        <MenuIcon />
-      </IconButton>
       <Box
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
@@ -146,12 +137,28 @@ const DashboardLayout: React.FC<any> = ({ children }) => {
       <Box
         component="main"
         sx={{
-          flexGrow: 1,
           p: 3,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
         }}
       >
-        {children}
+        <IconButton
+          color="inherit"
+          edge="start"
+          onClick={handleDrawerToggle}
+          sx={{ mr: 2, display: { sm: "none" } }}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Typography variant="h4" noWrap component="div" color={"black"}>
+          پنل مدیریت فروشگاه
+        </Typography>
+        <Box
+          sx={{
+            mt: "50px",
+          }}
+        >
+          {children}
+        </Box>
       </Box>
     </Box>
   );
