@@ -7,9 +7,9 @@ import {
   TableRow,
 } from "@mui/material";
 import React from "react";
-import { IProduct } from "types/interfaces.types";
+import { IProductManagement } from "types/interfaces.types";
 
-const TrProduct: React.FC<{ rowData: IProduct }> = ({ rowData }) => {
+const TrProduct: React.FC<{ rowData: IProductManagement }> = ({ rowData }) => {
   const DeleteButton = styled(Button)<{}>(({ theme }) => ({
     backgroundColor: theme.palette.error.main,
     "&:hover": {

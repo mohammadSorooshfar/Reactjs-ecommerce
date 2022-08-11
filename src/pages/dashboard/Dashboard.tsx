@@ -1,13 +1,13 @@
 import EnhancedTable from "components/table/Table";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { getProductsAdminService } from "services/services";
+import { IOrder, IProduct } from "types/interfaces.types";
 
 interface props {}
 
 const Dashboard: React.FC<props> = () => {
   const location = useLocation();
-  const [data, setData] = useState<any[]>([]);
   const [headers, setHeaders] = useState<any[]>([]);
   const setHeaderByPath = (path: string) => {
     const dashboardLoc = path.split("/")[3];
@@ -68,27 +68,27 @@ const Dashboard: React.FC<props> = () => {
           label: "نام کاربر",
         },
         {
-          id: "total",
+          id: "totalPrice",
           numeric: true,
           disablePadding: true,
           label: "مجموع مبلغ",
         },
         {
-          id: "order time",
-          numeric: true,
+          id: "orderSubmitDate",
+          numeric: false,
           disablePadding: true,
           label: "زمان ثبت سفارش",
         },
         {
           id: "manage order",
-          numeric: true,
+          numeric: false,
           disablePadding: true,
           label: "بررسی سفارش",
         },
       ]);
     }
   };
-  useEffect(() => {
+  useLayoutEffect(() => {
     setHeaderByPath(location.pathname);
   }, [location.pathname]);
   return (

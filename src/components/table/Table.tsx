@@ -2,21 +2,27 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Paper from "@mui/material/Paper";
-import { visuallyHidden } from "@mui/utils";
 import TrProduct from "./TrProduct";
-import { IProduct } from "types/interfaces.types";
+import {
+  IOrder,
+  IOrderManagement,
+  IPriceManagement,
+  IProduct,
+  IProductManagement,
+  TDeliveryStatus,
+  TOrder,
+} from "types/interfaces.types";
 import { useLocation } from "react-router-dom";
 import TrPrice from "./TrPrice";
 import TrOrder from "./TrOrder";
-import { getProductsAdminService } from "services/services";
-import { descendingComparator } from "utils/functions.util";
+import {
+  getOrdersAdminService,
+  getProductsAdminService,
+} from "services/services";
 import {
   Button,
   FormControlLabel,
@@ -24,21 +30,31 @@ import {
   RadioGroup,
   Typography,
 } from "@mui/material";
+import EnhancedTableHead from "./TableHead";
+import {
+  createOrderDataForManagementTable,
+  createPriceDataForManagementTable,
+  createProductDataForManagementTable,
+  descendingComparator,
+  isAnPriceManagement,
+  isAnProductManagement,
+} from "utils/functions.util";
 
-const RowType: React.FC<{ path: any; rowData: IProduct }> = ({
-  path,
-  rowData,
-}) => {
-  const dashboardLoc = path.split("/")[3];
-  if (dashboardLoc === "products") {
+const RowType: React.FC<{
+  rowData: IProductManagement | IPriceManagement | IOrderManagement;
+}> = ({ rowData }) => {
+  if (isAnProductManagement(rowData)) {
     return <TrProduct rowData={rowData} />;
-  } else if (dashboardLoc === "inventory") {
+  } else if (isAnPriceManagement(rowData)) {
     return <TrPrice rowData={rowData} />;
   } else {
     return <TrOrder rowData={rowData} />;
   }
 };
-const HeaderType: React.FC<{ path: any }> = ({ path }) => {
+const HeaderType: React.FC<{ path: any; setDelivered?: any }> = ({
+  path,
+  setDelivered,
+}) => {
   const dashboardLoc = path.split("/")[3];
   if (dashboardLoc === "products") {
     return (
@@ -88,6 +104,9 @@ const HeaderType: React.FC<{ path: any }> = ({ path }) => {
           defaultValue="waiting"
           name="radio-buttons-group"
           sx={{ flexDirection: "row" }}
+          onChange={(e) => {
+            setDelivered(e.currentTarget.value === "waiting" ? false : true);
+          }}
         >
           <FormControlLabel
             value="waiting"
@@ -107,10 +126,8 @@ const HeaderType: React.FC<{ path: any }> = ({ path }) => {
   }
 };
 
-type Order = "asc" | "desc";
-
 function getComparator<Key extends keyof any>(
-  order: Order,
+  order: TOrder,
   orderBy: Key
 ): (
   a: { [key in Key]: number | string },
@@ -120,132 +137,114 @@ function getComparator<Key extends keyof any>(
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
-
-// This method is created for cross-browser compatibility, if you don't
-// need to support IE11, you can use Array.prototype.sort() directly
-function stableSort<T>(
-  array: readonly T[],
-  comparator: (a: T, b: T) => number
-) {
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
-interface EnhancedTableProps {
-  order?: Order;
-  orderBy?: string;
-  rowCount: number;
-  headers: any[];
-}
-
-function EnhancedTableHead(props: EnhancedTableProps) {
-  const { order, orderBy, rowCount, headers } = props;
-  // const createSortHandler =
-  //   (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
-  //     onRequestSort(event, property);
-  //   };
-
-  return (
-    <TableHead>
-      <TableRow sx={{ backgroundColor: "#2666CF" }}>
-        {headers.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align="right"
-            padding={headCell.disablePadding ? "none" : "normal"}
-            sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ padding: "5px" }}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              // onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
-
 interface ITableProps {
   headers: any[];
 }
 
 const EnhancedTable: React.FC<ITableProps> = ({ headers }) => {
-  const [order, setOrder] = React.useState<Order>("asc");
-  // const [orderBy, setOrderBy] = React.useState<keyof Data>("calories");
+  const [order, setOrder] = React.useState<TOrder>("asc");
+  const [orderBy, setOrderBy] =
+    React.useState<keyof IOrderManagement>("totalPrice");
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [rowData, setRowData] = React.useState([]);
-
+  const [rowData, setRowData] = React.useState<any[]>([]);
+  const [totalRows, setTotalRows] = React.useState(0);
+  const [delivered, setDelivered] = React.useState(false);
   const location = useLocation();
 
-  // const handleRequestSort = (property: keyof Data) => {
-  //   const isAsc = orderBy === property && order === "asc";
-  //   setOrder(isAsc ? "desc" : "asc");
-  //   setOrderBy(property);
-  // };
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    getProductsAdminService((newPage + 1).toString(), rowsPerPage.toString())
+  const handleRequestSort = (
+    event: React.MouseEvent<unknown>,
+    property: keyof IOrderManagement
+  ) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+  const getOrderData = (
+    deliveryStatus: TDeliveryStatus,
+    page: string,
+    rows: string
+  ) => {
+    let result = { data: [], total: "" };
+    getOrdersAdminService(deliveryStatus, page, rows)
       .then((res) => {
-        setRowData(res);
+        const data = createOrderDataForManagementTable(res.data);
+        setRowData(data);
+        setTotalRows(+res.total);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+    return result;
+  };
+  const getProductsData = (path: any, page: string, rows: string) => {
+    getProductsAdminService(page, rows)
+      .then((res) => {
+        if (path === "inventory") {
+          const data = createPriceDataForManagementTable(res.data);
+          setRowData(data);
+          setTotalRows(+res.total);
+        } else {
+          const data = createProductDataForManagementTable(res.data);
+          setRowData(data);
+          setTotalRows(+res.total);
+        }
       })
       .catch((e) => console.log(e));
+  };
+  const handleData = (newPage: number) => {
+    const loc = location.pathname.split("/")[3];
+    if (loc === "orders") {
+      const deliveryStatus: TDeliveryStatus =
+        delivered === true ? "delivered" : "notDelivered";
+      getOrderData(
+        deliveryStatus,
+        (newPage + 1).toString(),
+        rowsPerPage.toString()
+      );
+    } else {
+      getProductsData(loc, (newPage + 1).toString(), rowsPerPage.toString());
+    }
+  };
+  const handleChangePage = (event: unknown, newPage: number) => {
+    handleData(newPage);
     setPage(newPage);
   };
   React.useEffect(() => {
     handleChangePage("", 0);
-  }, []);
+  }, [location.pathname, delivered]);
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setRowsPerPage(+event.target.value);
+    setRowsPerPage(() => +event.target.value);
     setPage(0);
     handleChangePage("", 0);
   };
 
   return (
     <Box sx={{ width: "100%" }}>
-      {HeaderType({ path: location.pathname })}
+      {HeaderType({ path: location.pathname, setDelivered })}
       <Paper sx={{ width: "100%", mb: 2 }}>
         <TableContainer>
           <Table sx={{ minWidth: 750 }} size="medium">
             <EnhancedTableHead
               order={order}
-              // orderBy={orderBy}
-              // onRequestSort={handleRequestSort}
+              orderBy={orderBy}
+              onRequestSort={handleRequestSort}
               rowCount={8}
               headers={headers}
             />
             <TableBody>
-              {rowData
-                // .sort(getComparator(order, orderBy))
-                .map((row) => {
-                  return RowType({ path: location.pathname, rowData: row });
-                })}
+              {rowData.sort(getComparator(order, orderBy)).map((row) => {
+                return RowType({ rowData: row });
+              })}
             </TableBody>
           </Table>
         </TableContainer>
         <TablePagination
           component="div"
-          count={-1}
+          count={totalRows}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

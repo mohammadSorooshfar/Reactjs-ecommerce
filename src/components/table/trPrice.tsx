@@ -7,9 +7,9 @@ import {
   TableCell,
   TableRow,
 } from "@mui/material";
-import { IProduct } from "types/interfaces.types";
+import { IPriceManagement } from "types/interfaces.types";
 
-const TrPrice: React.FC<{ rowData: IProduct }> = ({ rowData }) => {
+const TrPrice: React.FC<{ rowData: IPriceManagement }> = ({ rowData }) => {
   return (
     <TableRow hover role="checkbox" tabIndex={-1} key={rowData.name}>
       <TableCell align="right">{rowData.name}</TableCell>
