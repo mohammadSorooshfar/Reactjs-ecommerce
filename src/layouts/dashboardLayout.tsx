@@ -13,12 +13,13 @@ import MailIcon from "@mui/icons-material/Mail";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { styled } from "@mui/material";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import CategoryIcon from "@mui/icons-material/Category";
 import ListAltIcon from "@mui/icons-material/ListAlt";
-
+import { logout } from "utils/functions.util";
+import LogoutIcon from "@mui/icons-material/Logout";
 const drawerWidth = 240;
 const managementSections = {
   products: {
@@ -43,22 +44,30 @@ const DashboardLayout: React.FC<any> = ({ children }) => {
     setMobileOpen(!mobileOpen);
   };
   const ListItemActive = styled(ListItem)<ListItemProps>(({ theme }) => ({
-    color: theme.palette.info.main,
+    color: theme.palette.secondary.main,
     textAlign: "right",
     justifyContent: "space-between",
     "&::before": {
       content: '""',
-      width: "5px",
-      height: "25px",
+      width: "6px",
+      height: "30px",
       borderRadius: "10px",
       marginRight: "-2.5px",
-      backgroundColor: theme.palette.info.main,
+      backgroundColor: "#FCFAFE",
     },
   }));
 
   const drawer = (
     <Box>
-      <Toolbar />
+      <Toolbar sx={{ justifyContent: "center", mt: 2 }}>
+        <Typography
+          variant="h5"
+          onClick={() => navigate("/tehranshoes")}
+          sx={{ "&:hover": { cursor: "pointer" }, color: "secondary.main" }}
+        >
+          کفش طهران
+        </Typography>
+      </Toolbar>
       <List>
         {Object.entries(managementSections).map((section, index) =>
           location.pathname === `/tehranshoes/dashboard/${section[0]}` ? (
@@ -80,24 +89,38 @@ const DashboardLayout: React.FC<any> = ({ children }) => {
               >
                 <ListItemText
                   primary={section[1].persian}
-                  sx={{ textAlign: "right" }}
+                  sx={{ textAlign: "right", color: "secondary.main" }}
                 />
-                <ListItemIcon sx={{ color: "inherit" }}>
+                <ListItemIcon sx={{ color: "secondary.main" }}>
                   {section[1].icon}
                 </ListItemIcon>
               </ListItemButton>
             </ListItem>
           )
         )}
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => logout(navigate)}>
+            <ListItemText
+              primary={"خروج"}
+              sx={{ textAlign: "right", color: "secondary.main" }}
+            />
+            <ListItemIcon sx={{ color: "secondary.main" }}>
+              <LogoutIcon sx={{ marginRight: "auto" }} />
+            </ListItemIcon>
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   );
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", backgroundColor: "#f0f1f8" }}>
       <Box
         component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+        sx={{
+          width: { sm: drawerWidth },
+          flexShrink: { sm: 0 },
+        }}
       >
         <Drawer
           variant="permanent"
@@ -108,6 +131,7 @@ const DashboardLayout: React.FC<any> = ({ children }) => {
               width: drawerWidth,
               right: 0,
               borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+              backgroundColor: "#575fcf",
             },
           }}
           open
@@ -155,6 +179,7 @@ const DashboardLayout: React.FC<any> = ({ children }) => {
         <Box
           sx={{
             mt: "50px",
+            minHeight: "78vh",
           }}
         >
           {children}

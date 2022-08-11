@@ -67,7 +67,7 @@ const HeaderType: React.FC<{ path: any; setDelivered?: any }> = ({
         }}
       >
         <Typography variant="h5">مدیریت کالاها</Typography>
-        <Button variant="contained" sx={{ backgroundColor: "#0F3D3E" }}>
+        <Button variant="contained" sx={{ backgroundColor: "#05c46b" }}>
           افزودن کالا
         </Button>
       </Box>
@@ -250,7 +250,6 @@ const EnhancedTable: React.FC<ITableProps> = ({ headers }) => {
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 8, 10]}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          sx={{ backgroundColor: "#2666CF" }}
         />
       </Paper>
     </Box>

@@ -1,4 +1,5 @@
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "configs/variables.config";
+import { NavigateFunction } from "react-router-dom";
 import {
   IOrder,
   IOrderManagement,
@@ -115,4 +116,9 @@ export const checkAuth = () => {
   } else {
     return false;
   }
+};
+
+export const logout = (navigate: NavigateFunction) => {
+  localStorage.removeItem("ACCESS_TOKEN");
+  navigate("/tehranshoes");
 };
