@@ -108,3 +108,11 @@ export function createPriceDataForManagementTable(data: IProduct[]) {
   }));
   return products;
 }
+
+export const checkAuth = () => {
+  if (localStorage.hasOwnProperty("ACCESS_TOKEN")) {
+    return true;
+  } else {
+    return false;
+  }
+};

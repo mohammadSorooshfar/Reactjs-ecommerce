@@ -21,6 +21,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { checkAuth } from "utils/functions.util";
 import logo from "../../assets/logo.png";
 
 interface Iprops {
@@ -62,7 +63,7 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
           men: "black",
           women: "black",
           kid: "black",
-          [selected[0]]: "#FFC23C",
+          [selected[0]]: "#ffd32a",
         });
       }
     }
@@ -71,19 +72,22 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
     setNavOptionColor({ men: "black", women: "black", kid: "black" });
     setAnchorElCategory(null);
   };
-  const LoginButton = styled(Button)<{ small?: boolean }>(
-    ({ theme, small }) => ({
-      color: theme.palette.secondary.main,
-      backgroundColor: "black",
-      "&:hover": {
-        backgroundColor: "#000000df",
-      },
-      padding: small ? "0 5px " : "0 30px",
-      width: small ? "" : "13%",
-      minHeight: small ? "20px" : "35px",
-      fontSize: small ? "10px" : "",
-    })
-  );
+  const LoginManagementButton = styled(Button)<{
+    small?: boolean;
+    management?: boolean;
+  }>(({ theme, small, management }) => ({
+    color: theme.palette.secondary.main,
+    backgroundColor: management
+      ? theme.palette.info.main
+      : theme.palette.primary.main,
+    "&:hover": {
+      backgroundColor: management ? theme.palette.info.dark : "#000000df",
+    },
+    padding: small ? "0 5px " : "0 30px",
+    width: small ? "" : "13%",
+    minHeight: small ? "20px" : "35px",
+    fontSize: small ? "10px" : "",
+  }));
   const BrandTypographyStyle = styled(Typography)<{}>(({ theme }) => ({
     fontWeight: 700,
     color: "inherit",
@@ -225,9 +229,20 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
                   ))}
                 </Menu>
               </Box>
-              <LoginButton onClick={() => navigate("/tehranshoes/login")}>
-                Login
-              </LoginButton>
+              {checkAuth() ? (
+                <LoginManagementButton
+                  onClick={() => navigate("/tehranshoes/dashboard/products")}
+                  management
+                >
+                  مدیریت
+                </LoginManagementButton>
+              ) : (
+                <LoginManagementButton
+                  onClick={() => navigate("/tehranshoes/login")}
+                >
+                  ورود
+                </LoginManagementButton>
+              )}
             </Box>
 
             <Box
@@ -254,17 +269,26 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
                   fontWeight: 700,
                   textDecoration: "none",
                 }}
-                color={"#100F0F"}
               >
                 کفش طهران
               </Typography>
               <Box sx={{ width: "20%" }}>
-                <LoginButton
-                  onClick={() => navigate("/tehranshoes/login")}
-                  small
-                >
-                  Login
-                </LoginButton>
+                {checkAuth() ? (
+                  <LoginManagementButton
+                    onClick={() => navigate("/tehranshoes/dashboard/products")}
+                    small
+                    management
+                  >
+                    مدیریت
+                  </LoginManagementButton>
+                ) : (
+                  <LoginManagementButton
+                    onClick={() => navigate("/tehranshoes/login")}
+                    small
+                  >
+                    ورود
+                  </LoginManagementButton>
+                )}
               </Box>
             </Box>
           </Toolbar>

@@ -11,17 +11,27 @@ function App() {
     direction: "rtl",
     palette: {
       primary: {
-        main: "#100F0F",
+        main: "#1e272e",
       },
       secondary: {
-        main: "#F1F1F1",
+        main: "#d2dae2",
+        dark: "#808e9b",
       },
       success: {
-        main: "#0F3D3E",
+        main: "#0be881",
+        dark: "#05c46b",
       },
       info: {
-        main: "#2666CF",
-        dark: "#0a56d1",
+        main: "#575fcf",
+        dark: "#3c40c6",
+      },
+      error: {
+        main: "#ff5e57",
+        dark: "#ff3f34",
+      },
+      warning: {
+        main: "#ffdd59",
+        dark: "#ffd32a",
       },
     },
   });
