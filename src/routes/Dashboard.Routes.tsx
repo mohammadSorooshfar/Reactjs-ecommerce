@@ -1,8 +1,8 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Dashboard from "pages/dashboard/Dashboard";
-import DashboardLayout from "layouts/dashboardLayout";
-import { PrivateRoutes } from "./PrivateRoutes";
+import Dashboard from "pages/dashboard/Dashboard.page";
+import DashboardLayout from "layouts/Dashboard.Layout";
+import { PrivateRoutes } from "./Private.Routes";
 const DashboardRoutes: React.FC = () => {
   return (
     <DashboardLayout>

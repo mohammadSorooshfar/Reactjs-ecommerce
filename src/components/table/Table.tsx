@@ -22,7 +22,7 @@ import TrOrder from "./TrOrder";
 import {
   getOrdersAdminService,
   getProductsAdminService,
-} from "services/services";
+} from "services/services.services";
 import {
   Button,
   FormControlLabel,
@@ -223,11 +223,11 @@ const EnhancedTable: React.FC<ITableProps> = ({ headers }) => {
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "90%", mr: "auto", ml: "auto" }}>
       {HeaderType({ path: location.pathname, setDelivered })}
       <Paper sx={{ width: "100%", mb: 2 }}>
         <TableContainer>
-          <Table sx={{ minWidth: 750 }} size="medium">
+          <Table sx={{ minWidth: "60%" }} size="medium">
             <EnhancedTableHead
               order={order}
               orderBy={orderBy}

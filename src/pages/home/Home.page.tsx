@@ -1,4 +1,4 @@
-import UserLayout from "layouts/UserLayout";
+import UserLayout from "layouts/User.Layout";
 import React from "react";
 
 interface props {}

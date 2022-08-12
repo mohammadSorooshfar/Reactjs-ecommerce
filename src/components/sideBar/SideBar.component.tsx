@@ -20,7 +20,9 @@ import CategoryIcon from "@mui/icons-material/Category";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import { logout } from "utils/functions.util";
 import LogoutIcon from "@mui/icons-material/Logout";
+
 const drawerWidth = 240;
+
 const managementSections = {
   products: {
     persian: "کالا ها",
@@ -35,16 +37,14 @@ const managementSections = {
     icon: <ListAltIcon sx={{ marginRight: "auto" }} />,
   },
 };
-
-const DashboardLayout: React.FC<any> = ({ children }) => {
-  const [mobileOpen, setMobileOpen] = useState(false);
+const SideBar: React.FC<{ mobileOpen: any; handleDrawerToggle: any }> = ({
+  mobileOpen,
+  handleDrawerToggle,
+}) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
   const ListItemActive = styled(ListItem)<ListItemProps>(({ theme }) => ({
-    color: theme.palette.secondary.main,
+    color: "#dce4ec",
     textAlign: "right",
     justifyContent: "space-between",
     "&::before": {
@@ -52,7 +52,7 @@ const DashboardLayout: React.FC<any> = ({ children }) => {
       width: "6px",
       height: "30px",
       borderRadius: "10px",
-      marginRight: "-2.5px",
+      //   marginRight: "-2.5px",
       backgroundColor: "#FCFAFE",
     },
   }));
@@ -63,7 +63,7 @@ const DashboardLayout: React.FC<any> = ({ children }) => {
         <Typography
           variant="h5"
           onClick={() => navigate("/tehranshoes")}
-          sx={{ "&:hover": { cursor: "pointer" }, color: "secondary.main" }}
+          sx={{ "&:hover": { cursor: "pointer" }, color: "#dce4ec" }}
         >
           کفش طهران
         </Typography>
@@ -72,7 +72,7 @@ const DashboardLayout: React.FC<any> = ({ children }) => {
         {Object.entries(managementSections).map((section, index) =>
           location.pathname === `/tehranshoes/dashboard/${section[0]}` ? (
             <ListItemActive key={section[1].persian} disablePadding>
-              <ListItemButton>
+              <ListItemButton onClick={() => handleDrawerToggle()}>
                 <ListItemText
                   primary={section[1].persian}
                   sx={{ textAlign: "right" }}
@@ -85,13 +85,16 @@ const DashboardLayout: React.FC<any> = ({ children }) => {
           ) : (
             <ListItem key={section[1].persian} disablePadding>
               <ListItemButton
-                onClick={() => navigate(`/tehranshoes/dashboard/${section[0]}`)}
+                onClick={() => {
+                  navigate(`/tehranshoes/dashboard/${section[0]}`);
+                  handleDrawerToggle();
+                }}
               >
                 <ListItemText
                   primary={section[1].persian}
-                  sx={{ textAlign: "right", color: "secondary.main" }}
+                  sx={{ textAlign: "right", color: "#dce4ec" }}
                 />
-                <ListItemIcon sx={{ color: "secondary.main" }}>
+                <ListItemIcon sx={{ color: "#dce4ec" }}>
                   {section[1].icon}
                 </ListItemIcon>
               </ListItemButton>
@@ -102,9 +105,9 @@ const DashboardLayout: React.FC<any> = ({ children }) => {
           <ListItemButton onClick={() => logout(navigate)}>
             <ListItemText
               primary={"خروج"}
-              sx={{ textAlign: "right", color: "secondary.main" }}
+              sx={{ textAlign: "right", color: "#dce4ec" }}
             />
-            <ListItemIcon sx={{ color: "secondary.main" }}>
+            <ListItemIcon sx={{ color: "#dce4ec" }}>
               <LogoutIcon sx={{ marginRight: "auto" }} />
             </ListItemIcon>
           </ListItemButton>
@@ -112,80 +115,53 @@ const DashboardLayout: React.FC<any> = ({ children }) => {
       </List>
     </Box>
   );
-
   return (
-    <Box sx={{ display: "flex", backgroundColor: "#f0f1f8" }}>
-      <Box
-        component="nav"
+    <Box
+      component="nav"
+      sx={{
+        width: { sm: drawerWidth },
+        flexShrink: { sm: 0 },
+      }}
+    >
+      <Drawer
+        variant="permanent"
         sx={{
-          width: { sm: drawerWidth },
-          flexShrink: { sm: 0 },
+          display: { xs: "none", sm: "block" },
+          "& .MuiDrawer-paper": {
+            boxSizing: "border-box",
+            width: drawerWidth,
+            right: 0,
+            backgroundColor: "#575fcf",
+          },
+        }}
+        open
+      >
+        {drawer}
+      </Drawer>
+      <Drawer
+        variant="temporary"
+        anchor="right"
+        transitionDuration={0}
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{
+          keepMounted: true, // Better open performance on mobile.
+        }}
+        sx={{
+          display: { xs: "block", sm: "none" },
+          "& .MuiDrawer-paper": {
+            boxSizing: "border-box",
+            width: drawerWidth,
+            right: 0,
+            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+            backgroundColor: "#575fcf",
+          },
         }}
       >
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: "none", sm: "block" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-              right: 0,
-              borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
-              backgroundColor: "#575fcf",
-            },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
-        <Drawer
-          variant="temporary"
-          anchor="right"
-          transitionDuration={0}
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-          sx={{
-            display: { xs: "block", sm: "none" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-            },
-          }}
-        >
-          {drawer}
-        </Drawer>
-      </Box>
-      <Box
-        component="main"
-        sx={{
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-        }}
-      >
-        <IconButton
-          color="inherit"
-          edge="start"
-          onClick={handleDrawerToggle}
-          sx={{ mr: 2, display: { sm: "none" } }}
-        >
-          <MenuIcon />
-        </IconButton>
-        <Typography variant="h4" noWrap component="div" color={"black"}>
-          پنل مدیریت فروشگاه
-        </Typography>
-        <Box
-          sx={{
-            mt: "50px",
-            minHeight: "78vh",
-          }}
-        >
-          {children}
-        </Box>
-      </Box>
+        {drawer}
+      </Drawer>
     </Box>
   );
 };
-export default DashboardLayout;
+
+export default SideBar;

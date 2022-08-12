@@ -1,4 +1,5 @@
-import { getOrdersAdmin, getProductsAdmin } from "api/admin/products.api";
+import { getOrdersAdmin } from "api/admin/order.api";
+import { getProductsAdmin } from "api/admin/products.api";
 import { Login } from "api/auth/login.api";
 import { ACCESS_TOKEN } from "configs/variables.config";
 import { TDeliveryStatus } from "types/interfaces.types";

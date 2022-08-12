@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import MainRoutes from "routes";
+import MainRoutes from "routes/index.Routes";
 import { createTheme, ThemeProvider } from "@mui/material";
 function App() {
   const mainTheme = createTheme({
@@ -14,7 +14,7 @@ function App() {
         main: "#1e272e",
       },
       secondary: {
-        main: "#d2dae2",
+        main: "#dce4ec",
         dark: "#808e9b",
       },
       success: {

@@ -1,12 +1,8 @@
 import EnhancedTable from "components/table/Table";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { getProductsAdminService } from "services/services";
-import { IOrder, IProduct } from "types/interfaces.types";
 
-interface props {}
-
-const Dashboard: React.FC<props> = () => {
+const Dashboard: React.FC = () => {
   const location = useLocation();
   const [headers, setHeaders] = useState<any[]>([]);
   const setHeaderByPath = (path: string) => {

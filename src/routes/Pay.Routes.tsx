@@ -1,9 +1,9 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Cart from "pages/cart/Cart";
-import Checkout from "pages/checkout/Checkout";
-import Payment from "pages/payment/Payment";
-import UserLayout from "layouts/UserLayout";
+import Cart from "pages/cart/Cart.page";
+import Checkout from "pages/checkout/Checkout.page";
+import Payment from "pages/payment/Payment.page";
+import UserLayout from "layouts/User.Layout";
 const PayRoutes: React.FC = () => {
   return (
     <UserLayout>

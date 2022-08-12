@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import ProductDetails from "pages/product details/ProductDetails";
-import UserLayout from "layouts/UserLayout";
+import ProductDetails from "pages/product details/ProductDetails.page";
+import UserLayout from "layouts/User.Layout";
 
 const ProductRoutes: React.FC = () => {
   return (

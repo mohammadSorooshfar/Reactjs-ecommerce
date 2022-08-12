@@ -1,4 +1,4 @@
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "configs/variables.config";
+import { ACCESS_TOKEN } from "configs/variables.config";
 import { NavigateFunction } from "react-router-dom";
 import {
   IOrder,
@@ -6,7 +6,6 @@ import {
   IPriceManagement,
   IProduct,
   IProductManagement,
-  TOrder,
 } from "types/interfaces.types";
 
 export const parseJwt = (token: string) => {
