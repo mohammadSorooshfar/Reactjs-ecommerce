@@ -19,6 +19,7 @@ import {
 import { useLocation } from "react-router-dom";
 import TrPrice from "./TrPrice";
 import TrOrder from "./TrOrder";
+import SearchIcon from "@mui/icons-material/Search";
 import {
   getOrdersAdminService,
   getProductsAdminService,
@@ -26,8 +27,10 @@ import {
 import {
   Button,
   FormControlLabel,
+  InputAdornment,
   Radio,
   RadioGroup,
+  TextField,
   Typography,
 } from "@mui/material";
 import EnhancedTableHead from "./TableHead";
@@ -51,10 +54,11 @@ const RowType: React.FC<{
     return <TrOrder rowData={rowData} />;
   }
 };
-const HeaderType: React.FC<{ path: any; setDelivered?: any }> = ({
-  path,
-  setDelivered,
-}) => {
+const HeaderType: React.FC<{
+  path: any;
+  setDelivered?: any;
+  setSearchText: any;
+}> = ({ path, setDelivered, setSearchText }) => {
   const dashboardLoc = path.split("/")[3];
   if (dashboardLoc === "products") {
     return (
@@ -90,37 +94,40 @@ const HeaderType: React.FC<{ path: any; setDelivered?: any }> = ({
     );
   } else {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          mb: "20px",
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="h5">مدیریت سفارش ها</Typography>
-        <RadioGroup
-          aria-labelledby="demo-radio-buttons-group-label"
-          defaultValue="waiting"
-          name="radio-buttons-group"
-          sx={{ flexDirection: "row" }}
-          onChange={(e) => {
-            setDelivered(e.currentTarget.value === "waiting" ? false : true);
+      <Box>
+        {" "}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            mb: "20px",
+            alignItems: "center",
           }}
         >
-          <FormControlLabel
-            value="waiting"
-            control={<Radio />}
-            label=" سفارش های در انتظار ارسال"
-            sx={{ margin: 0 }}
-          />
-          <FormControlLabel
-            value="delivered"
-            control={<Radio />}
-            label="سفارش های تحویل شده"
-            sx={{ margin: 0 }}
-          />
-        </RadioGroup>
+          <Typography variant="h5">مدیریت سفارش ها</Typography>
+          <RadioGroup
+            aria-labelledby="demo-radio-buttons-group-label"
+            defaultValue="waiting"
+            name="radio-buttons-group"
+            sx={{ flexDirection: "row" }}
+            onChange={(e) => {
+              setDelivered(e.currentTarget.value === "waiting" ? false : true);
+            }}
+          >
+            <FormControlLabel
+              value="waiting"
+              control={<Radio />}
+              label=" سفارش های در انتظار ارسال"
+              sx={{ margin: 0 }}
+            />
+            <FormControlLabel
+              value="delivered"
+              control={<Radio />}
+              label="سفارش های تحویل شده"
+              sx={{ margin: 0 }}
+            />
+          </RadioGroup>
+        </Box>
       </Box>
     );
   }
@@ -150,6 +157,7 @@ const EnhancedTable: React.FC<ITableProps> = ({ headers }) => {
   const [rowData, setRowData] = React.useState<any[]>([]);
   const [totalRows, setTotalRows] = React.useState(0);
   const [delivered, setDelivered] = React.useState(false);
+  const [searchText, setSearchText] = React.useState("");
   const location = useLocation();
 
   const handleRequestSort = (
@@ -166,7 +174,13 @@ const EnhancedTable: React.FC<ITableProps> = ({ headers }) => {
     rows: string
   ) => {
     let result = { data: [], total: "" };
-    getOrdersAdminService(deliveryStatus, page, rows)
+    getOrdersAdminService(
+      deliveryStatus,
+      page,
+      rows,
+      "userDescription.name",
+      searchText
+    )
       .then((res) => {
         const data = createOrderDataForManagementTable(res.data);
         setRowData(data);
@@ -178,7 +192,7 @@ const EnhancedTable: React.FC<ITableProps> = ({ headers }) => {
     return result;
   };
   const getProductsData = (path: any, page: string, rows: string) => {
-    getProductsAdminService(page, rows)
+    getProductsAdminService(page, rows, "userDescription.name", searchText)
       .then((res) => {
         if (path === "inventory") {
           const data = createPriceDataForManagementTable(res.data);
@@ -212,7 +226,7 @@ const EnhancedTable: React.FC<ITableProps> = ({ headers }) => {
   };
   React.useEffect(() => {
     handleChangePage("", 0);
-  }, [location.pathname, delivered]);
+  }, [location.pathname, delivered, searchText]);
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -224,7 +238,24 @@ const EnhancedTable: React.FC<ITableProps> = ({ headers }) => {
 
   return (
     <Box sx={{ width: "90%", mr: "auto", ml: "auto" }}>
-      {HeaderType({ path: location.pathname, setDelivered })}
+      <TextField
+        size="small"
+        variant="outlined"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+        }}
+        onChange={(e) => setSearchText(e.currentTarget.value)}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon />
+            </InputAdornment>
+          ),
+        }}
+      />
+      {HeaderType({ path: location.pathname, setDelivered, setSearchText })}
       <Paper sx={{ width: "100%", mb: 2 }}>
         <TableContainer>
           <Table sx={{ minWidth: "60%" }} size="medium">

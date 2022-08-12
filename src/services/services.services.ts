@@ -14,10 +14,17 @@ export const loginService = async (data: any) => {
 };
 export const getProductsAdminService = async (
   page: string,
-  pageSize: string
+  pageSize: string,
+  searchOption: string,
+  searchText: string
 ) => {
   try {
-    const response = await getProductsAdmin(page, pageSize);
+    const response = await getProductsAdmin(
+      page,
+      pageSize,
+      searchOption,
+      searchText
+    );
     return { data: response.data, total: response.headers["x-total-count"] };
   } catch (e) {
     return Promise.reject(e);
@@ -26,10 +33,18 @@ export const getProductsAdminService = async (
 export const getOrdersAdminService = async (
   deliveryStatus: TDeliveryStatus,
   page: string,
-  pageSize: string
+  pageSize: string,
+  searchOption: string,
+  searchText: string
 ) => {
   try {
-    const response = await getOrdersAdmin(deliveryStatus, page, pageSize);
+    const response = await getOrdersAdmin(
+      deliveryStatus,
+      page,
+      pageSize,
+      searchOption,
+      searchText
+    );
     return { data: response.data, total: response.headers["x-total-count"] };
   } catch (e) {
     return Promise.reject(e);

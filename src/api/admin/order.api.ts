@@ -5,12 +5,14 @@ import { TDeliveryStatus } from "types/interfaces.types";
 export async function getOrdersAdmin(
   deliveryStatus: TDeliveryStatus,
   page: string,
-  pageSize: string
+  pageSize: string,
+  searchOption: string,
+  searchText: string
 ) {
   try {
     const response = await http.get(
       GET_ORDERS +
-        `?deliveryStatus=${deliveryStatus}&_page=${page}&_limit=${pageSize}`
+        `?deliveryStatus=${deliveryStatus}&${searchOption}_like=${searchText}&_page=${page}&_limit=${pageSize}`
     );
 
     return response;
