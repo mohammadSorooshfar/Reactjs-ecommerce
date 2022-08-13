@@ -1,5 +1,5 @@
 import EnhancedTable from "components/table/Table";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 const Dashboard: React.FC = () => {
@@ -84,7 +84,7 @@ const Dashboard: React.FC = () => {
       ]);
     }
   };
-  useLayoutEffect(() => {
+  useEffect(() => {
     setHeaderByPath(location.pathname);
   }, [location.pathname]);
   return (
