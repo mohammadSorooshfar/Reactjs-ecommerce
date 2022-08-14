@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import {
   IOrderManagement,
   IPriceManagement,
+  IProduct,
   IProductManagement,
 } from "types/interfaces.types";
 import {
@@ -22,25 +23,71 @@ import {
   Typography,
 } from "@mui/material";
 import AddModal from "components/modals/AddModal";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { editableToggle } from "redux/products";
+import { updateProductsAdminService } from "services/services.services";
+import { toast } from "react-toastify";
 
 const RowType: React.FC<{
   rowData: IProductManagement | IPriceManagement | IOrderManagement;
   refreshFunction: any;
-}> = ({ rowData, refreshFunction }) => {
+  handleChangePriceInventory: any;
+}> = ({ rowData, refreshFunction, handleChangePriceInventory }) => {
   if (isAnProductManagement(rowData)) {
     return <TrProduct rowData={rowData} refreshFunction={refreshFunction} />;
   } else if (isAnPriceManagement(rowData)) {
-    return <TrPrice rowData={rowData} />;
+    return (
+      <TrPrice
+        rowData={rowData}
+        handleChangePriceInventory={handleChangePriceInventory}
+      />
+    );
   } else {
     return <TrOrder rowData={rowData} />;
   }
 };
-
-const ActionButtons: React.FC<{ path: any; setDelivered?: any }> = ({
-  path,
-  setDelivered,
-}) => {
+const ActionButtons: React.FC<{
+  path: any;
+  setDelivered?: any;
+  rowsData: [];
+  refreshFunction: any;
+}> = ({ path, setDelivered, rowsData, refreshFunction }) => {
   const [addOpen, setAddOpen] = useState(false);
+  const editable = useSelector((state: any) => state.products.editable);
+  const products = useSelector((state: any) => state.products.products);
+  const dispatch = useDispatch();
+  const handleEditPrice = (
+    rowsData: IPriceManagement[],
+    dispatch: any,
+    products: IProduct[]
+  ) => {
+    console.log(rowsData);
+    dispatch(editableToggle());
+    const editedProducts: IProduct[] = [];
+    products.forEach((product: IProduct, index) => {
+      if (
+        product.price !== rowsData[index].price ||
+        product.inventory !== rowsData[index].inventory
+      ) {
+        const newProduct = { ...product };
+        newProduct.price = rowsData[index].price;
+        newProduct.inventory = rowsData[index].inventory;
+        return editedProducts.push(newProduct);
+      }
+    }, []);
+    const promises = editedProducts.map((product) =>
+      updateProductsAdminService(product.id.toString(), product)
+    );
+    Promise.all(promises)
+      .then((res) => {
+        toast.success("ویرایش محصولات با موفقیت انجام شد");
+        refreshFunction();
+      })
+      .catch((res) => {
+        toast.error("در ویرایش کالاها خطایی صورت گرفت");
+      });
+  };
   const handleAdd = (data: any) => {
     console.log(data);
   };
@@ -83,7 +130,13 @@ const ActionButtons: React.FC<{ path: any; setDelivered?: any }> = ({
         }}
       >
         <Typography variant="h5">مدیریت موجودی و قیمت ها</Typography>
-        <Button variant="contained" disabled>
+
+        <Button
+          variant="contained"
+          color={"success"}
+          onClick={() => handleEditPrice(rowsData, dispatch, products)}
+          disabled={!editable}
+        >
           ذخیره
         </Button>
       </Box>

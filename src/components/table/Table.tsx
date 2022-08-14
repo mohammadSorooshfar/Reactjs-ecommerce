@@ -5,7 +5,9 @@ import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
 import * as React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { addProducts } from "redux/products";
 import {
   getOrdersAdminService,
   getProductsAdminService,
@@ -50,9 +52,12 @@ const EnhancedTable: React.FC<ITableProps> = ({
     React.useState<keyof IOrderManagement>("totalPrice");
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [rowData, setRowData] = React.useState<any[]>([]);
+  const [rowsData, setRowsData] = React.useState<any[]>([]);
   const [totalRows, setTotalRows] = React.useState(0);
   const [delivered, setDelivered] = React.useState(false);
+  // const [editable, setEditable] = React.useState(false);
+  const editable = useSelector((state: any) => state.products.editable);
+  const dispatch = useDispatch();
   const location = useLocation();
 
   const handleRequestSort = (
@@ -72,7 +77,7 @@ const EnhancedTable: React.FC<ITableProps> = ({
     getOrdersAdminService(deliveryStatus, page, rows)
       .then((res) => {
         const data = createOrderDataForManagementTable(res.data);
-        setRowData(data);
+        setRowsData(data);
         setTotalRows(+res.total);
       })
       .catch((e) => {
@@ -85,11 +90,12 @@ const EnhancedTable: React.FC<ITableProps> = ({
       .then((res) => {
         if (path === "inventory") {
           const data = createPriceDataForManagementTable(res.data);
-          setRowData(data);
+          setRowsData(data);
           setTotalRows(+res.total);
+          dispatch(addProducts(res.data));
         } else {
           const data = createProductDataForManagementTable(res.data);
-          setRowData(data);
+          setRowsData(data);
           setTotalRows(+res.total);
         }
       })
@@ -126,10 +132,25 @@ const EnhancedTable: React.FC<ITableProps> = ({
     setPage(0);
     handleChangePage("", 0);
   };
-
+  const handleChangePriceInventory = (
+    value: string,
+    id: number,
+    property: string
+  ) => {
+    setRowsData((prevRows) => {
+      const index = prevRows.findIndex((row) => row.id === id);
+      prevRows[index][property] = +value;
+      return [...prevRows];
+    });
+  };
   return (
     <Box sx={{ width: "90%", mr: "auto", ml: "auto" }}>
-      {ActionButtons({ path: location.pathname, setDelivered })}
+      {ActionButtons({
+        path: location.pathname,
+        setDelivered,
+        rowsData: rowsData,
+        refreshFunction: refresh,
+      })}
       <Paper sx={{ width: "100%", mb: 2 }}>
         <TableContainer>
           <Table sx={{ minWidth: "60%" }} size="medium">
@@ -141,21 +162,29 @@ const EnhancedTable: React.FC<ITableProps> = ({
               headers={headers}
             />
             <TableBody>
-              {rowData.sort(getComparator(order, orderBy)).map((row) => {
-                return RowType({ rowData: row, refreshFunction: refresh });
+              {rowsData.sort(getComparator(order, orderBy)).map((row) => {
+                return RowType({
+                  rowData: row,
+                  refreshFunction: refresh,
+                  handleChangePriceInventory: handleChangePriceInventory,
+                });
               })}
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          component="div"
-          count={totalRows}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          rowsPerPageOptions={[5, 8, 10]}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        {editable ? (
+          ""
+        ) : (
+          <TablePagination
+            component="div"
+            count={totalRows}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPageOptions={[5, 8, 10]}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        )}
       </Paper>
     </Box>
   );

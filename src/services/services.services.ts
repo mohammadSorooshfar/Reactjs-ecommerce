@@ -1,8 +1,12 @@
 import { getOrdersAdmin } from "api/admin/order.api";
-import { deleteProductsAdmin, getProductsAdmin } from "api/admin/products.api";
+import {
+  deleteProductsAdmin,
+  getProductsAdmin,
+  updateProductsAdmin,
+} from "api/admin/products.api";
 import { Login } from "api/auth/login.api";
 import { ACCESS_TOKEN } from "configs/variables.config";
-import { TDeliveryStatus } from "types/interfaces.types";
+import { IProduct, TDeliveryStatus } from "types/interfaces.types";
 export const loginService = async (data: any) => {
   try {
     const response = await Login(data);
@@ -38,6 +42,17 @@ export const getOrdersAdminService = async (
 export const deleteProductsAdminService = async (id: string) => {
   try {
     const response = await deleteProductsAdmin(id);
+    return response;
+  } catch (e) {
+    return Promise.reject(e);
+  }
+};
+export const updateProductsAdminService = async (
+  id: string,
+  data: IProduct
+) => {
+  try {
+    const response = await updateProductsAdmin(id, data);
     return response;
   } catch (e) {
     return Promise.reject(e);

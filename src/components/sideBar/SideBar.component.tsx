@@ -20,6 +20,7 @@ import CategoryIcon from "@mui/icons-material/Category";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import { logout } from "utils/functions.util";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { useSelector } from "react-redux";
 
 const drawerWidth = 240;
 
@@ -43,6 +44,7 @@ const SideBar: React.FC<{ mobileOpen: any; handleDrawerToggle: any }> = ({
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const editable = useSelector((state: any) => state.products.editable);
   const ListItemActive = styled(ListItem)<ListItemProps>(({ theme }) => ({
     color: "#dce4ec",
     textAlign: "right",
@@ -72,7 +74,10 @@ const SideBar: React.FC<{ mobileOpen: any; handleDrawerToggle: any }> = ({
         {Object.entries(managementSections).map((section, index) =>
           location.pathname === `/tehranshoes/dashboard/${section[0]}` ? (
             <ListItemActive key={section[1].persian} disablePadding>
-              <ListItemButton onClick={() => handleDrawerToggle()}>
+              <ListItemButton
+                onClick={() => handleDrawerToggle()}
+                disabled={editable}
+              >
                 <ListItemText
                   primary={section[1].persian}
                   sx={{ textAlign: "right" }}
@@ -89,6 +94,7 @@ const SideBar: React.FC<{ mobileOpen: any; handleDrawerToggle: any }> = ({
                   navigate(`/tehranshoes/dashboard/${section[0]}`);
                   handleDrawerToggle();
                 }}
+                disabled={editable}
               >
                 <ListItemText
                   primary={section[1].persian}
@@ -102,7 +108,7 @@ const SideBar: React.FC<{ mobileOpen: any; handleDrawerToggle: any }> = ({
           )
         )}
         <ListItem disablePadding>
-          <ListItemButton onClick={() => logout(navigate)}>
+          <ListItemButton onClick={() => logout(navigate)} disabled={editable}>
             <ListItemText
               primary={"خروج"}
               sx={{ textAlign: "right", color: "#dce4ec" }}
