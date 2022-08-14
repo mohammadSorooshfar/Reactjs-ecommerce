@@ -6,6 +6,7 @@ import {
   TableCell,
   TableRow,
 } from "@mui/material";
+import { BASE_URL, IMAGES, UPLOAD_IMAGE } from "configs/url.config";
 import React from "react";
 import { IProductManagement } from "types/interfaces.types";
 
@@ -28,7 +29,7 @@ const TrProduct: React.FC<{ rowData: IProductManagement }> = ({ rowData }) => {
       <TableCell align="right">
         <Avatar
           variant="rounded"
-          src={rowData.types[0].images[0]}
+          src={`${BASE_URL}${IMAGES}/${rowData.types[0].images[0]}`}
           sx={{ width: 56, height: 56 }}
         />
       </TableCell>
