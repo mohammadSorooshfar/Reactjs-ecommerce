@@ -25,9 +25,10 @@ import AddModal from "components/modals/AddModal";
 
 const RowType: React.FC<{
   rowData: IProductManagement | IPriceManagement | IOrderManagement;
-}> = ({ rowData }) => {
+  refreshFunction: any;
+}> = ({ rowData, refreshFunction }) => {
   if (isAnProductManagement(rowData)) {
-    return <TrProduct rowData={rowData} />;
+    return <TrProduct rowData={rowData} refreshFunction={refreshFunction} />;
   } else if (isAnPriceManagement(rowData)) {
     return <TrPrice rowData={rowData} />;
   } else {

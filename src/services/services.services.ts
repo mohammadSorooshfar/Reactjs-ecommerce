@@ -1,5 +1,5 @@
 import { getOrdersAdmin } from "api/admin/order.api";
-import { getProductsAdmin } from "api/admin/products.api";
+import { deleteProductsAdmin, getProductsAdmin } from "api/admin/products.api";
 import { Login } from "api/auth/login.api";
 import { ACCESS_TOKEN } from "configs/variables.config";
 import { TDeliveryStatus } from "types/interfaces.types";
@@ -31,6 +31,14 @@ export const getOrdersAdminService = async (
   try {
     const response = await getOrdersAdmin(deliveryStatus, page, pageSize);
     return { data: response.data, total: response.headers["x-total-count"] };
+  } catch (e) {
+    return Promise.reject(e);
+  }
+};
+export const deleteProductsAdminService = async (id: string) => {
+  try {
+    const response = await deleteProductsAdmin(id);
+    return response;
   } catch (e) {
     return Promise.reject(e);
   }

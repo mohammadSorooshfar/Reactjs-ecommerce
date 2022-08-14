@@ -11,3 +11,11 @@ export async function getProductsAdmin(page: string, pageSize: string) {
     return Promise.reject(e);
   }
 }
+export async function deleteProductsAdmin(id: string) {
+  try {
+    const response = await http.delete(GET_PRODUCTS + "/" + id);
+    return response;
+  } catch (e) {
+    return Promise.reject(e);
+  }
+}

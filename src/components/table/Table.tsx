@@ -116,7 +116,9 @@ const EnhancedTable: React.FC<ITableProps> = ({
   React.useEffect(() => {
     handleChangePage("", 0);
   }, [location.pathname, delivered]);
-
+  const refresh = () => {
+    handleChangePage("", page);
+  };
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -140,7 +142,7 @@ const EnhancedTable: React.FC<ITableProps> = ({
             />
             <TableBody>
               {rowData.sort(getComparator(order, orderBy)).map((row) => {
-                return RowType({ rowData: row });
+                return RowType({ rowData: row, refreshFunction: refresh });
               })}
             </TableBody>
           </Table>
