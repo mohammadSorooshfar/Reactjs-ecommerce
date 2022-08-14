@@ -1,130 +1,27 @@
-import * as React from "react";
 import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
 import TablePagination from "@mui/material/TablePagination";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import Paper from "@mui/material/Paper";
-import TrProduct from "./TrProduct";
-import {
-  IOrder,
-  IOrderManagement,
-  IPriceManagement,
-  IProduct,
-  IProductManagement,
-  TDeliveryStatus,
-  TOrder,
-} from "types/interfaces.types";
+import * as React from "react";
 import { useLocation } from "react-router-dom";
-import TrPrice from "./TrPrice";
-import TrOrder from "./TrOrder";
 import {
   getOrdersAdminService,
   getProductsAdminService,
 } from "services/services.services";
 import {
-  Button,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
-  Typography,
-} from "@mui/material";
-import EnhancedTableHead from "./TableHead";
+  IOrderManagement,
+  TDeliveryStatus,
+  TOrder,
+} from "types/interfaces.types";
 import {
   createOrderDataForManagementTable,
   createPriceDataForManagementTable,
   createProductDataForManagementTable,
   descendingComparator,
-  isAnPriceManagement,
-  isAnProductManagement,
 } from "utils/functions.util";
-
-const RowType: React.FC<{
-  rowData: IProductManagement | IPriceManagement | IOrderManagement;
-}> = ({ rowData }) => {
-  if (isAnProductManagement(rowData)) {
-    return <TrProduct rowData={rowData} />;
-  } else if (isAnPriceManagement(rowData)) {
-    return <TrPrice rowData={rowData} />;
-  } else {
-    return <TrOrder rowData={rowData} />;
-  }
-};
-const HeaderType: React.FC<{ path: any; setDelivered?: any }> = ({
-  path,
-  setDelivered,
-}) => {
-  const dashboardLoc = path.split("/")[3];
-  if (dashboardLoc === "products") {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          mb: "20px",
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="h5">مدیریت کالاها</Typography>
-        <Button variant="contained" sx={{ backgroundColor: "#05c46b" }}>
-          افزودن کالا
-        </Button>
-      </Box>
-    );
-  } else if (dashboardLoc === "inventory") {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          mb: "20px",
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="h5">مدیریت موجودی و قیمت ها</Typography>
-        <Button variant="contained" disabled>
-          ذخیره
-        </Button>
-      </Box>
-    );
-  } else {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          mb: "20px",
-          alignItems: "center",
-        }}
-      >
-        <Typography variant="h5">مدیریت سفارش ها</Typography>
-        <RadioGroup
-          aria-labelledby="demo-radio-buttons-group-label"
-          defaultValue="waiting"
-          name="radio-buttons-group"
-          sx={{ flexDirection: "row" }}
-          onChange={(e) => {
-            setDelivered(e.currentTarget.value === "waiting" ? false : true);
-          }}
-        >
-          <FormControlLabel
-            value="waiting"
-            control={<Radio />}
-            label=" سفارش های در انتظار ارسال"
-            sx={{ margin: 0 }}
-          />
-          <FormControlLabel
-            value="delivered"
-            control={<Radio />}
-            label="سفارش های تحویل شده"
-            sx={{ margin: 0 }}
-          />
-        </RadioGroup>
-      </Box>
-    );
-  }
-};
+import EnhancedTableHead from "./TableHead";
 
 function getComparator<Key extends keyof any>(
   order: TOrder,
@@ -139,9 +36,15 @@ function getComparator<Key extends keyof any>(
 }
 interface ITableProps {
   headers: any[];
+  RowType: any;
+  ActionButtons: any;
 }
 
-const EnhancedTable: React.FC<ITableProps> = ({ headers }) => {
+const EnhancedTable: React.FC<ITableProps> = ({
+  headers,
+  RowType,
+  ActionButtons,
+}) => {
   const [order, setOrder] = React.useState<TOrder>("asc");
   const [orderBy, setOrderBy] =
     React.useState<keyof IOrderManagement>("totalPrice");
@@ -224,7 +127,7 @@ const EnhancedTable: React.FC<ITableProps> = ({ headers }) => {
 
   return (
     <Box sx={{ width: "90%", mr: "auto", ml: "auto" }}>
-      {HeaderType({ path: location.pathname, setDelivered })}
+      {ActionButtons({ path: location.pathname, setDelivered })}
       <Paper sx={{ width: "100%", mb: 2 }}>
         <TableContainer>
           <Table sx={{ minWidth: "60%" }} size="medium">
