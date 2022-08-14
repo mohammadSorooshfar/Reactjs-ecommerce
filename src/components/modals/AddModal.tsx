@@ -6,7 +6,16 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Input, MenuItem, Select, styled } from "@mui/material";
+import {
+  Box,
+  BoxProps,
+  Input,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  styled,
+} from "@mui/material";
 import { Field, FieldAttributes, Form, Formik, useField } from "formik";
 import { TextFieldProps } from "material-ui";
 import Editor from "react-wysiwyg-typescript";
@@ -16,20 +25,20 @@ interface props {
   setOpen: any;
   handleSubmit: any;
 }
-const ImagesSelector: React.FC<FieldAttributes<{}>> = ({
-  placeholder,
-  ...props
-}) => {
-  const [field] = useField<{}>(props);
-  return (
-    <Input
-      placeholder={placeholder}
-      type="file"
-      inputProps={{ multiple: true }}
-      {...field}
-    />
-  );
-};
+// const ImagesSelector: React.FC<FieldAttributes<{}>> = ({
+//   placeholder,
+//   ...props
+// }) => {
+//   const [field] = useField<{}>(props);
+//   return (
+//     <Input
+//       placeholder={placeholder}
+//       type="file"
+//       inputProps={{ multiple: true }}
+//       {...field}
+//     />
+//   );
+// };
 // const CategorySelector: React.FC<FieldAttributes<{}>> = ({
 //   placeholder,
 //   defaultValue,
@@ -46,9 +55,17 @@ const ImagesSelector: React.FC<FieldAttributes<{}>> = ({
 //   );
 // };
 const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit }) => {
+  const [files, setFiles] = React.useState<any>();
+  const [gender, setGender] = React.useState<any>({});
+  const [category, setCategory] = React.useState<any>({});
   const handleClose = () => {
     setOpen(false);
   };
+  const BoxFormStyle: any = styled(Box)<BoxProps>(({ theme }) => ({
+    display: "flex",
+    justifyContent: "space-around",
+    mb: 1,
+  }));
   const FormTextFieldStyle: any = styled(TextField)<TextFieldProps>(
     ({ theme }) => ({
       width: "400px",
@@ -62,19 +79,17 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit }) => {
   return (
     <Dialog open={open} onClose={handleClose} dir="rtl" fullWidth>
       <DialogTitle>افزودن کالا</DialogTitle>
-      <DialogContent>
+      <DialogContent sx={{ textAlign: "center", p: 1 }}>
         <Formik
           initialValues={{
             name: "",
             color: "",
-            images: [],
+            images: files,
             price: "",
             inventory: "",
-            gender: "men",
-            category: "sport",
           }}
           validate={(values) => {
-            console.log(values);
+            console.log(values, files, category);
           }}
           onSubmit={(data, { setSubmitting }) => {
             handleSubmit(data);
@@ -86,20 +101,18 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit }) => {
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
-                height: "240px",
+                height: "400px",
               }}
             >
               <div>
-                <Field
-                  placeholder="نام کالا"
-                  name="name"
-                  required
-                  type="text"
-                  as={FormTextFieldStyle}
-                />
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
+                <BoxFormStyle>
+                  <Field
+                    placeholder="نام کالا"
+                    name="name"
+                    required
+                    type="text"
+                    as={FormTextFieldStyle}
+                  />
                   <Field
                     placeholder="قیمت"
                     name="price"
@@ -107,6 +120,8 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit }) => {
                     type="text"
                     as={FormTextFieldStyle}
                   />
+                </BoxFormStyle>
+                <BoxFormStyle>
                   <Field
                     placeholder="موجودی"
                     name="inventory"
@@ -114,15 +129,16 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit }) => {
                     type="text"
                     as={FormTextFieldStyle}
                   />
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-around",
-                    marginBottom: "10px",
-                  }}
-                >
                   <Field
+                    placeholder="رنگ"
+                    name="color"
+                    required
+                    type="text"
+                    as={FormTextFieldStyle}
+                  />
+                </BoxFormStyle>
+                <BoxFormStyle>
+                  {/* <Field
                     component={TextField}
                     label="جنسیت"
                     select
@@ -132,55 +148,84 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit }) => {
                     <MenuItem value="men">مردانه</MenuItem>
                     <MenuItem value="women">زنانه</MenuItem>
                     <MenuItem value="kid">بچگانه</MenuItem>
-                  </Field>
-                  {/* <Field
-                    component={Select}
-                    label="دسته"
-                    name="category"
-                    style={{ width: "45%", color: "black" }}
-                    inputProps={{ name: "gender", id: "gender" }}
-                  >
-                    <MenuItem value="sport">ورزشی</MenuItem>
-                    <MenuItem value="oxford">رسمی</MenuItem>
-                    <MenuItem value="sneaker">کتانی</MenuItem>
                   </Field> */}
-                  <TextField
-                    select
-                    placeholder="جنسیت"
-                    name="category"
-                    style={{
-                      width: "45%",
-                      color: "black",
+
+                  <Select
+                    displayEmpty
+                    value={gender.fa}
+                    sx={{ width: "45%" }}
+                    onChange={(e) => {
+                      setGender({
+                        en: e.target.value[0],
+                        fa: e.target.value[1],
+                      });
                     }}
-                    onChange={(e) => console.log(e.target.value)}
+                    input={<OutlinedInput />}
+                    renderValue={(selected: any) => {
+                      if (!selected) {
+                        return <em>جنسیت</em>;
+                      }
+                      return selected;
+                    }}
                   >
-                    <MenuItem value="sport" selected>
-                      ورزشی
+                    <MenuItem disabled value="جنسیت">
+                      <em>جنسیت</em>
                     </MenuItem>
-                    <MenuItem value="oxford">رسمی</MenuItem>
-                    <MenuItem value="sneaker">کتانی</MenuItem>
-                  </TextField>
+                    <MenuItem value={["sport", "مردانه"]}>مردانه</MenuItem>
+                    <MenuItem value={["oxford", "زنانه"]}>زنانه</MenuItem>
+                    <MenuItem value={["sneaker", "بچگانه"]}>بچگانه</MenuItem>
+                  </Select>
+                  <Select
+                    displayEmpty
+                    value={category.fa}
+                    sx={{ width: "45%" }}
+                    onChange={(e) => {
+                      setCategory({
+                        en: e.target.value[0],
+                        fa: e.target.value[1],
+                      });
+                    }}
+                    input={<OutlinedInput />}
+                    renderValue={(selected: any) => {
+                      if (!selected) {
+                        return <em>دسته بندی</em>;
+                      }
+                      return selected;
+                    }}
+                  >
+                    <MenuItem disabled value="دسته بندی">
+                      <em>دسته بندی</em>
+                    </MenuItem>
+                    <MenuItem value={["sport", "ورزشی"]}>ورزشی</MenuItem>
+                    <MenuItem value={["oxford", "رسمی"]}>رسمی</MenuItem>
+                    <MenuItem value={["sneaker", "کتانی"]}>کتانی</MenuItem>
+                  </Select>
                   {/* <Field as="select" name="gender">
                     <option value="men">مردانه</option>
                     <option value="women">زنانه</option>
                     <option value="kid">بچگانه</option>
                   </Field> */}
-                </div>
-                <ImagesSelector placeholder="عکس کالا" name="images" />
-                <TextField></TextField>
-                <Field
-                  placeholder="رنگ"
-                  name="color"
-                  required
-                  type="text"
-                  as={FormTextFieldStyle}
+                </BoxFormStyle>
+
+                <Input
+                  type="file"
+                  inputProps={{ multiple: true }}
+                  onChange={(e) =>
+                    setFiles((e.target as HTMLInputElement).files)
+                  }
+                  sx={{ mt: 4, width: "90%" }}
                 />
               </div>
               <DialogActions>
-                <Button onClick={handleClose} color="error">
+                <Button
+                  variant={"contained"}
+                  onClick={handleClose}
+                  color="error"
+                  sx={{ ml: 1 }}
+                >
                   انصراف
                 </Button>
-                <Button color="success" type="submit">
+                <Button variant={"contained"} color="success" type="submit">
                   افزودن
                 </Button>
               </DialogActions>
