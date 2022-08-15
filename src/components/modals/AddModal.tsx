@@ -1,15 +1,12 @@
 import {
-  Avatar,
   Box,
   BoxProps,
-  Grid,
   Input,
   InputLabel,
   MenuItem,
   OutlinedInput,
   Select,
   styled,
-  TextareaAutosize,
   Typography,
   TypographyProps,
 } from "@mui/material";
@@ -19,18 +16,13 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
-import { convertToRaw } from "draft-js";
 import { Field, Form, Formik } from "formik";
 import { TextFieldProps } from "material-ui";
 import * as React from "react";
-import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { categoryEnglish, genderEnglish } from "utils/functions.util";
 
-import draftToHtml from "draftjs-to-html";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { IProduct, IProductTypes } from "types/interfaces.types";
-import { BASE_URL, IMAGES } from "configs/url.config";
 
 const MultilineText: React.FC = () => {
   return (
@@ -58,9 +50,9 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit, data }) => {
     data ? Object.values(data.category)[0] : ""
   );
   const [customErrors, setCustomErrors] = React.useState<any>({});
-  const [currentImages, setCurrentImages] = React.useState<IProductTypes[]>(
-    data ? data.types : ""
-  );
+  // const [currentImages, setCurrentImages] = React.useState<string[]>(
+  //   data ? data.images : ""
+  // );
   console.log(data);
 
   const handleClose = () => {
@@ -100,7 +92,7 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit, data }) => {
         <Formik
           initialValues={{
             name: data ? data.name : "",
-            color: data ? data.types[0].color : "",
+            color: data ? data.colors[0] : "",
             price: data ? data.price : "",
             inventory: data ? data.inventory : "",
             description: data ? data.description : "",

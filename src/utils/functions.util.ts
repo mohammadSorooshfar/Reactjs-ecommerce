@@ -93,7 +93,8 @@ export function createProductDataForManagementTable(data: IProduct[]) {
     category: product.category,
     name: product.name,
     gender: product.gender,
-    types: product.types,
+    colors: product.colors,
+    images: product.images,
   }));
   return products;
 }

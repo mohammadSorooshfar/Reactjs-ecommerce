@@ -1,10 +1,7 @@
 export type TDeliveryStatus = "delivered" | "notDelivered";
 
 export type TOrder = "asc" | "desc";
-export interface IProductTypes {
-  color: string;
-  images: string[];
-}
+
 export interface IProduct {
   id: number;
   name: string;
@@ -12,7 +9,8 @@ export interface IProduct {
   category: string;
   price: number;
   inventory: number;
-  types: IProductTypes[];
+  colors: string[];
+  images: string[];
   description: string;
 }
 export interface IOrder {
@@ -42,7 +40,7 @@ export interface IProductManagement {
   name: string;
   category: string;
   gender: string;
-  types: IProductTypes[];
+  images: string[];
 }
 export interface IPriceManagement {
   id: number;

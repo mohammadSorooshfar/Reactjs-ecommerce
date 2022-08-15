@@ -8,13 +8,12 @@ import {
 } from "@mui/material";
 import AddModal from "components/modals/AddModal";
 import DeleteModal from "components/modals/DeleteModal";
-import { BASE_URL, IMAGES, UPLOAD_IMAGE } from "configs/url.config";
+import { BASE_URL, IMAGES } from "configs/url.config";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import {
   deleteProductsAdminService,
-  updateProductsAdminService,
   uploadImagesAdminService,
 } from "services/services.services";
 import { IProduct, IProductManagement } from "types/interfaces.types";
@@ -26,6 +25,7 @@ const TrProduct: React.FC<{
   const [openDelete, setOpenDelete] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const products = useSelector((state: any) => state.products.products);
+  console.log(products, rowData);
 
   const DeleteButton = styled(Button)<{}>(({ theme }) => ({
     backgroundColor: theme.palette.error.main,
@@ -106,7 +106,7 @@ const TrProduct: React.FC<{
         <TableCell align="right">
           <Avatar
             variant="rounded"
-            src={`${BASE_URL}${IMAGES}/${rowData.types[0].images[0]}`}
+            src={`${BASE_URL}${IMAGES}/${rowData.images[0]}`}
             sx={{ width: 56, height: 56 }}
           />
         </TableCell>
