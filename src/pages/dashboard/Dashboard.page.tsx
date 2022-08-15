@@ -26,7 +26,11 @@ import AddModal from "components/modals/AddModal";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { editableToggle } from "redux/products";
-import { updateProductsAdminService } from "services/services.services";
+import {
+  addProductAdminService,
+  updateProductsAdminService,
+  uploadImagesAdminService,
+} from "services/services.services";
 import { toast } from "react-toastify";
 
 const RowType: React.FC<{
@@ -88,8 +92,55 @@ const ActionButtons: React.FC<{
         toast.error("در ویرایش کالاها خطایی صورت گرفت");
       });
   };
-  const handleAdd = (data: any) => {
+  const handleAdd = (data: {
+    name: string;
+    price: string;
+    color: string;
+    inventory: string;
+    gender: { fa: string; en: string };
+    category: { fa: string; en: string };
+    files: FileList;
+    description: string;
+  }) => {
+    const reqConfig = {
+      headers: {
+        "content-type": "multipart/form-data",
+        token: localStorage.getItem("ACCESS_TOKEN"),
+      },
+    };
     console.log(data);
+
+    const imagePromises = Object.values(data.files).map((file: any) => {
+      let formData = new FormData();
+      formData.append("image", file);
+      return uploadImagesAdminService(formData, reqConfig);
+    });
+    Promise.all(imagePromises).then((arrOfResults) => {
+      const allFormData = {
+        name: data.name,
+        types: [
+          {
+            color: data.color,
+            images: [...arrOfResults],
+          },
+        ],
+        price: data.price,
+        inventory: data.inventory,
+        gender: { [data.gender.en]: data.gender.fa },
+        category: { [data.category.en]: data.category.fa },
+        description: data.description,
+      };
+
+      addProductAdminService(allFormData)
+        .then((res) => {
+          console.log(res);
+          toast.success("کالا با موفقیت اضافه شد");
+          refreshFunction();
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    });
   };
   const dashboardLoc = path.split("/")[3];
   if (dashboardLoc === "products") {

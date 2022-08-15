@@ -1,101 +1,162 @@
-import * as React from "react";
-import Button, { ButtonProps } from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 import {
   Box,
   BoxProps,
   Input,
-  InputLabel,
   MenuItem,
   OutlinedInput,
   Select,
   styled,
+  TextareaAutosize,
+  Typography,
+  TypographyProps,
 } from "@mui/material";
-import { Field, FieldAttributes, Form, Formik, useField } from "formik";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import TextField from "@mui/material/TextField";
+import { convertToRaw } from "draft-js";
+import { Field, Form, Formik } from "formik";
 import { TextFieldProps } from "material-ui";
-import Editor from "react-wysiwyg-typescript";
+import * as React from "react";
+import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { categoryEnglish, genderEnglish } from "utils/functions.util";
+
+import draftToHtml from "draftjs-to-html";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+
+const MultilineText: React.FC = () => {
+  return (
+    <TextField
+      multiline
+      rows={4}
+      placeholder="Default Value"
+      variant="standard"
+    />
+  );
+};
+
 interface props {
   open: any;
   setOpen: any;
   handleSubmit: any;
 }
-// const ImagesSelector: React.FC<FieldAttributes<{}>> = ({
-//   placeholder,
-//   ...props
-// }) => {
-//   const [field] = useField<{}>(props);
-//   return (
-//     <Input
-//       placeholder={placeholder}
-//       type="file"
-//       inputProps={{ multiple: true }}
-//       {...field}
-//     />
-//   );
-// };
-// const CategorySelector: React.FC<FieldAttributes<{}>> = ({
-//   placeholder,
-//   defaultValue,
-//   children,
-//   ...props
-// }) => {
-//   const [field] = useField<{}>(props);
-//   console.log(placeholder, defaultValue);
-
-//   return (
-//     <Select defaultValue={defaultValue} sx={{ width: "45%" }} {...field}>
-//       {children}
-//     </Select>
-//   );
-// };
 const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit }) => {
-  const [files, setFiles] = React.useState<any>();
-  const [gender, setGender] = React.useState<any>({});
-  const [category, setCategory] = React.useState<any>({});
+  const [files, setFiles] = React.useState<any>([]);
+  const [gender, setGender] = React.useState<string>("");
+  const [category, setCategory] = React.useState<string>("");
+  const [customErrors, setCustomErrors] = React.useState<any>({});
+
   const handleClose = () => {
+    setFiles([]);
+    setGender("");
+    setCategory("");
+    setCustomErrors({});
     setOpen(false);
   };
   const BoxFormStyle: any = styled(Box)<BoxProps>(({ theme }) => ({
     display: "flex",
     justifyContent: "space-around",
-    mb: 1,
+    marginBottom: "20px",
   }));
   const FormTextFieldStyle: any = styled(TextField)<TextFieldProps>(
     ({ theme }) => ({
-      width: "400px",
-      padding: "16.5px 14px",
-      [theme.breakpoints.down("sm")]: {
-        width: "300px",
-      },
+      width: "255px",
     })
   );
+  const ErrorTypographyStyle: any = styled(Typography)<TypographyProps>(
+    ({ theme }) => ({
+      color: theme.palette.error.main,
+      paddingTop: "5px",
+      fontSize: "12px",
+    })
+  );
+  const classes = {
+    editiorWrapper: {
+      width: "500px",
+    },
+  };
 
   return (
     <Dialog open={open} onClose={handleClose} dir="rtl" fullWidth>
-      <DialogTitle>افزودن کالا</DialogTitle>
+      <DialogTitle sx={{ pt: 2 }}>افزودن کالا</DialogTitle>
       <DialogContent sx={{ textAlign: "center", p: 1 }}>
         <Formik
           initialValues={{
             name: "",
             color: "",
-            images: files,
             price: "",
             inventory: "",
+            description: "",
           }}
           validate={(values) => {
-            console.log(values, files, category);
+            const errors: any = {};
+
+            if (!values.name) {
+              errors.name = "نام کالا را وارد نمایید";
+            }
+            if (!values.price) {
+              errors.price = "قیمت کالا را وارد نمایید";
+            } else if (!/^[0-9]*$/.test(values.price)) {
+              errors.price = "قیمت کالا باید عدد باشد";
+            } else if (+values.price <= 0) {
+              errors.price = "قیمت کالا باید بزرگتر از 0 باشد";
+            }
+            if (!values.color) {
+              errors.color = "رنگ کالا را وارد نمایید";
+            } else if (!/^[\u0600-\u06FF\s]+$/.test(values.color)) {
+              errors.color = "رنگ کالا فقط شامل حروف فارسی می باشد";
+            }
+            if (!values.inventory) {
+              errors.inventory = "موجودی کالا را وارد نمایید";
+            } else if (!/^[0-9]*$/.test(values.inventory)) {
+              errors.inventory = "موجودی کالا باید عدد باشد";
+            } else if (+values.inventory <= 0) {
+              errors.inventory = "موجودی کالا باید بزرگتر از 0 باشد";
+            }
+
+            return errors;
           }}
           onSubmit={(data, { setSubmitting }) => {
-            handleSubmit(data);
+            if (gender && category && files.length) {
+              setCustomErrors({});
+              const genderTranslate = genderEnglish(gender);
+              const categoryTranslate = categoryEnglish(category);
+              handleSubmit({
+                name: data.name,
+                price: data.price,
+                color: data.color,
+                inventory: data.inventory,
+                gender: genderTranslate,
+                category: categoryTranslate,
+                files,
+                description: data.description,
+              });
+              return;
+            }
+            if (!gender) {
+              setCustomErrors((prev: any) => ({
+                gender: "جنسیت را انتخاب کنید",
+                ...prev,
+              }));
+            }
+            if (!category) {
+              setCustomErrors((prev: any) => ({
+                category: "جنسیت را انتخاب کنید",
+                ...prev,
+              }));
+            }
+            if (!files.length) {
+              setCustomErrors((prev: any) => ({
+                files: "عکس را انتخاب کنید",
+                ...prev,
+              }));
+            }
           }}
         >
-          {({ isSubmitting }) => (
+          {({ isSubmitting, errors, touched }) => (
             <Form
               style={{
                 display: "flex",
@@ -106,122 +167,150 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit }) => {
             >
               <div>
                 <BoxFormStyle>
-                  <Field
-                    placeholder="نام کالا"
-                    name="name"
-                    required
-                    type="text"
-                    as={FormTextFieldStyle}
-                  />
-                  <Field
-                    placeholder="قیمت"
-                    name="price"
-                    required
-                    type="text"
-                    as={FormTextFieldStyle}
-                  />
+                  <Box>
+                    <Field
+                      placeholder="نام کالا"
+                      name="name"
+                      required
+                      type="text"
+                      as={FormTextFieldStyle}
+                    />
+                    {errors.name && touched.name && (
+                      <ErrorTypographyStyle>{errors.name}</ErrorTypographyStyle>
+                    )}
+                  </Box>
+                  <Box>
+                    <Field
+                      placeholder="قیمت"
+                      name="price"
+                      required
+                      type="text"
+                      as={FormTextFieldStyle}
+                    />
+                    {errors.price && touched.price && (
+                      <ErrorTypographyStyle>
+                        {errors.price}
+                      </ErrorTypographyStyle>
+                    )}
+                  </Box>
                 </BoxFormStyle>
                 <BoxFormStyle>
-                  <Field
-                    placeholder="موجودی"
-                    name="inventory"
-                    required
-                    type="text"
-                    as={FormTextFieldStyle}
-                  />
-                  <Field
-                    placeholder="رنگ"
-                    name="color"
-                    required
-                    type="text"
-                    as={FormTextFieldStyle}
-                  />
+                  <Box>
+                    <Field
+                      placeholder="موجودی"
+                      name="inventory"
+                      required
+                      type="text"
+                      as={FormTextFieldStyle}
+                    />
+                    {errors.inventory && touched.inventory && (
+                      <ErrorTypographyStyle>
+                        {errors.inventory}
+                      </ErrorTypographyStyle>
+                    )}
+                  </Box>
+                  <Box>
+                    <Field
+                      placeholder="رنگ"
+                      name="color"
+                      required
+                      type="text"
+                      as={FormTextFieldStyle}
+                    />
+                    {errors.color && touched.color && (
+                      <ErrorTypographyStyle>
+                        {errors.color}
+                      </ErrorTypographyStyle>
+                    )}
+                  </Box>
                 </BoxFormStyle>
                 <BoxFormStyle>
-                  {/* <Field
-                    component={TextField}
-                    label="جنسیت"
-                    select
-                    style={{ width: "45%", color: "black" }}
-                    inputProps={{ name: "gender", id: "gender" }}
-                  >
-                    <MenuItem value="men">مردانه</MenuItem>
-                    <MenuItem value="women">زنانه</MenuItem>
-                    <MenuItem value="kid">بچگانه</MenuItem>
-                  </Field> */}
-
-                  <Select
-                    displayEmpty
-                    value={gender.fa}
-                    sx={{ width: "45%" }}
-                    onChange={(e) => {
-                      setGender({
-                        en: e.target.value[0],
-                        fa: e.target.value[1],
-                      });
-                    }}
-                    input={<OutlinedInput />}
-                    renderValue={(selected: any) => {
-                      if (!selected) {
-                        return <em>جنسیت</em>;
-                      }
-                      return selected;
-                    }}
-                  >
-                    <MenuItem disabled value="جنسیت">
-                      <em>جنسیت</em>
-                    </MenuItem>
-                    <MenuItem value={["sport", "مردانه"]}>مردانه</MenuItem>
-                    <MenuItem value={["oxford", "زنانه"]}>زنانه</MenuItem>
-                    <MenuItem value={["sneaker", "بچگانه"]}>بچگانه</MenuItem>
-                  </Select>
-                  <Select
-                    displayEmpty
-                    value={category.fa}
-                    sx={{ width: "45%" }}
-                    onChange={(e) => {
-                      setCategory({
-                        en: e.target.value[0],
-                        fa: e.target.value[1],
-                      });
-                    }}
-                    input={<OutlinedInput />}
-                    renderValue={(selected: any) => {
-                      if (!selected) {
-                        return <em>دسته بندی</em>;
-                      }
-                      return selected;
-                    }}
-                  >
-                    <MenuItem disabled value="دسته بندی">
-                      <em>دسته بندی</em>
-                    </MenuItem>
-                    <MenuItem value={["sport", "ورزشی"]}>ورزشی</MenuItem>
-                    <MenuItem value={["oxford", "رسمی"]}>رسمی</MenuItem>
-                    <MenuItem value={["sneaker", "کتانی"]}>کتانی</MenuItem>
-                  </Select>
-                  {/* <Field as="select" name="gender">
-                    <option value="men">مردانه</option>
-                    <option value="women">زنانه</option>
-                    <option value="kid">بچگانه</option>
-                  </Field> */}
+                  <Box>
+                    <Select
+                      displayEmpty
+                      value={gender}
+                      sx={{ width: "255px" }}
+                      onChange={(e) => {
+                        setGender(e.target.value);
+                      }}
+                      input={<OutlinedInput />}
+                      renderValue={(selected: any) => {
+                        if (!selected) {
+                          return <em>جنسیت</em>;
+                        }
+                        return selected;
+                      }}
+                    >
+                      <MenuItem disabled value="جنسیت">
+                        <em>جنسیت</em>
+                      </MenuItem>
+                      <MenuItem value="مردانه">مردانه</MenuItem>
+                      <MenuItem value="زنانه">زنانه</MenuItem>
+                      <MenuItem value="بچگانه">بچگانه</MenuItem>
+                    </Select>
+                    {customErrors.gender && (
+                      <ErrorTypographyStyle>
+                        {customErrors.gender}
+                      </ErrorTypographyStyle>
+                    )}
+                  </Box>
+                  <Box>
+                    <Select
+                      displayEmpty
+                      value={category}
+                      sx={{ width: "255px" }}
+                      onChange={(e) => {
+                        setCategory(e.target.value);
+                      }}
+                      input={<OutlinedInput />}
+                      renderValue={(selected: any) => {
+                        if (!selected) {
+                          return <em>دسته بندی</em>;
+                        }
+                        return selected;
+                      }}
+                    >
+                      <MenuItem disabled value="دسته بندی">
+                        <em>دسته بندی</em>
+                      </MenuItem>
+                      <MenuItem value="ورزشی">ورزشی</MenuItem>
+                      <MenuItem value="رسمی">رسمی</MenuItem>
+                      <MenuItem value="کتانی">کتانی</MenuItem>
+                    </Select>
+                    {customErrors.category && (
+                      <ErrorTypographyStyle>
+                        {customErrors.category}
+                      </ErrorTypographyStyle>
+                    )}
+                  </Box>
                 </BoxFormStyle>
-
                 <Input
                   type="file"
                   inputProps={{ multiple: true }}
                   onChange={(e) =>
                     setFiles((e.target as HTMLInputElement).files)
                   }
-                  sx={{ mt: 4, width: "90%" }}
+                  sx={{ mt: 4, mb: 4, width: "90%" }}
+                />
+                {customErrors.files && (
+                  <ErrorTypographyStyle>
+                    {customErrors.files}
+                  </ErrorTypographyStyle>
+                )}
+                <Field
+                  name="description"
+                  placeholder="توضیحات"
+                  required
+                  type="text"
+                  as={FormTextFieldStyle}
                 />
               </div>
-              <DialogActions>
+              <DialogActions sx={{ pb: 1, justifyContent: "center" }}>
                 <Button
                   variant={"contained"}
                   onClick={handleClose}
                   color="error"
-                  sx={{ ml: 1 }}
+                  sx={{ ml: 3 }}
                 >
                   انصراف
                 </Button>

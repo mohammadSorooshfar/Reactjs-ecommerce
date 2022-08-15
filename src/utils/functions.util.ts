@@ -70,7 +70,6 @@ export function isAnPriceManagement(obj: any): obj is IPriceManagement {
 }
 
 export function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  console.log(orderBy);
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -120,4 +119,31 @@ export const checkAuth = () => {
 export const logout = (navigate: NavigateFunction) => {
   localStorage.removeItem("ACCESS_TOKEN");
   navigate("/tehranshoes");
+};
+
+export const genderEnglish = (gender: string) => {
+  switch (gender) {
+    case "مردانه":
+      return { en: "men", fa: "مردانه" };
+    case "زنانه":
+      return { en: "women", fa: "زنانه" };
+    case "بچگانه":
+      return { en: "kid", fa: "بچگانه" };
+
+    default:
+      break;
+  }
+};
+export const categoryEnglish = (category: string) => {
+  switch (category) {
+    case "کتانی":
+      return { en: "sneaker", fa: "کتانی" };
+    case "رسمی":
+      return { en: "oxford", fa: "رسمی" };
+    case "ورزشی":
+      return { en: "sport", fa: "ورزشی" };
+
+    default:
+      break;
+  }
 };
