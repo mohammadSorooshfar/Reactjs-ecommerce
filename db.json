@@ -13,7 +13,7 @@
       "inventory": 120,
       "types": [
         {
-          "color": "orange",
+          "color": "نارنجی",
           "images": [
             "b9da21850e1e29496ee29fc29f158108",
             "81e317120dc7b15a8d667d85dc657760",
@@ -21,7 +21,7 @@
           ]
         },
         {
-          "color": "black",
+          "color": "مشکی",
           "images": [
             "54556f38ac5b784fc1480e41d3f6a5f7",
             "944784b411cdb3a75eb6a44f3109c744",
@@ -44,7 +44,7 @@
       "inventory": 170,
       "types": [
         {
-          "color": "purple",
+          "color": "بنفش",
           "images": [
             "07f7c37914b6967ebfea87e8163eaeb1",
             "bb4c14684ff4c1e1207fcc49df858084",
@@ -52,7 +52,7 @@
           ]
         },
         {
-          "color": "red",
+          "color": "قرمز",
           "images": [
             "25df3b85b61864197e6b15bbe0d0a671",
             "9c2210cefa2faef2df81d06fd8d7d2f9",
@@ -75,7 +75,7 @@
       "inventory": 180,
       "types": [
         {
-          "color": "black",
+          "color": "مشکی",
           "images": [
             "af9af7c2d1d37184c3583b94ef37556b",
             "5a578af5f88fc5c6cef19fcef5ea1c2b",
@@ -83,7 +83,7 @@
           ]
         },
         {
-          "color": "white",
+          "color": "سفید",
           "images": [
             "1723618e70d32bcdb5124b8b90eead45",
             "0992c2bedfee57d59a53782800166193",
@@ -106,7 +106,7 @@
       "inventory": 80,
       "types": [
         {
-          "color": "yellow",
+          "color": "زرد",
           "images": [
             "7fe086fbf087bd08ce5b9c06d4e67a41",
             "b9afa8bf11eba085587c3c4bace355bc",
@@ -114,7 +114,7 @@
           ]
         },
         {
-          "color": "blue",
+          "color": "آبی",
           "images": [
             "6a69a9dde154f5b97443a352f133accb",
             "c5a3d70fb944e620a6279d814674cd34",
@@ -137,7 +137,7 @@
       "inventory": 130,
       "types": [
         {
-          "color": "silver",
+          "color": "نقره ای",
           "images": [
             "8d1dcbae685d10f0721b6e6924bb5d07",
             "bbe7071b2c063facf565177b8f9c6573",
@@ -145,7 +145,7 @@
           ]
         },
         {
-          "color": "black",
+          "color": "مشکی",
           "images": [
             "3d894c1a879843bae5e1b45e888ff615",
             "daab1ba93897a4ee0e8dd1d73cb102ce",
@@ -168,7 +168,7 @@
       "inventory": 220,
       "types": [
         {
-          "color": "pink",
+          "color": "صورتی",
           "images": [
             "cc5286ed05869692f069b9e726a79087",
             "e14927cef8b44ef6a5cb85ec328c0cf5",
@@ -176,7 +176,7 @@
           ]
         },
         {
-          "color": "purple",
+          "color": "بنفش",
           "images": [
             "ea06fb229d814d6a83bf65ef5988ae29",
             "0b45794ab35bf8f29d864592c2cb75a2",
@@ -199,7 +199,7 @@
       "inventory": 300,
       "types": [
         {
-          "color": "white",
+          "color": "سفید",
           "images": [
             "d44c6d024efccbd9a290010be5d6268a",
             "4adf64000a7ffd07e3939789840af54b",
@@ -207,7 +207,7 @@
           ]
         },
         {
-          "color": "black",
+          "color": "مشکی",
           "images": [
             "55739ea32e561fd8e4216a400d1bd0fb",
             "2bb9e92a455594394d187a4dab2fb037",
@@ -230,7 +230,7 @@
       "inventory": 155,
       "types": [
         {
-          "color": "pink",
+          "color": "صورتی",
           "images": [
             "c15165d44a7659b8fc18e6f825f0e52f",
             "d75b99702668fb17b98308fb5823bc9f",
@@ -253,7 +253,7 @@
       "inventory": 100,
       "types": [
         {
-          "color": "blue",
+          "color": "آبی",
           "images": [
             "69a07176405a69ddf4be4371f76dd729",
             "10819abb96c17859152939ba58b84af0",
@@ -261,7 +261,7 @@
           ]
         },
         {
-          "color": "black",
+          "color": "مشکی",
           "images": [
             "6afd830d5da68a09c9e9d04be2fcb023",
             "aa589192127106ca77d66baf5be1a70a",
@@ -284,7 +284,7 @@
       "inventory": 220,
       "types": [
         {
-          "color": "pink",
+          "color": "صورتی",
           "images": [
             "835ed1380d533c91103c7840c285907e",
             "b8b91142a5dc631f00b9e6c4453ae243",
@@ -292,7 +292,7 @@
           ]
         },
         {
-          "color": "purple",
+          "color": "بنفش",
           "images": [
             "9d027d0f89099281e9a5c48124b37253",
             "f9ad3f1cbaa5e1924e784e339bcfc6db",
@@ -315,7 +315,7 @@
       "inventory": 120,
       "types": [
         {
-          "color": "white",
+          "color": "سفید",
           "images": [
             "097bcee6784243eb296678ae405ae447",
             "90ed94e3831eedad6a8e760f3ec90e6d",
@@ -323,7 +323,7 @@
           ]
         },
         {
-          "color": "black",
+          "color": "مشکی",
           "images": [
             "e0c3e9df88492da0b9836a624aaa4d55",
             "84c178e8f217c17313707a9b2c53789c",
@@ -346,7 +346,7 @@
       "inventory": 40,
       "types": [
         {
-          "color": "black",
+          "color": "مشکی",
           "images": [
             "f3878abed6a10b7226a862bd09eba601",
             "84f3ed136ae433c734bc6a29f2cedc2d",
@@ -354,7 +354,7 @@
           ]
         },
         {
-          "color": "silver",
+          "color": "نقره ای",
           "images": [
             "b738b4abaa77f0d814c0a61ad4714187",
             "0094c985997775edc8b4af96ee85cb5e",
@@ -377,7 +377,7 @@
       "inventory": 70,
       "types": [
         {
-          "color": "black",
+          "color": "مشکی",
           "images": [
             "f5db287e3200e102b8ff2a65fadc3bab",
             "fd46a128812a9adb3c78989ebf6b4e52",
@@ -385,7 +385,7 @@
           ]
         },
         {
-          "color": "white",
+          "color": "سفید",
           "images": [
             "677823ab5ff6320261a42c83be9eaae2",
             "bd0bd2dc5e9a3dd71b3aadbbbb3656c1",
@@ -408,7 +408,7 @@
       "inventory": 140,
       "types": [
         {
-          "color": "white",
+          "color": "سفید",
           "images": [
             "9d37f358ad3588a6b53281cd334b3833",
             "7474a4190cefb6ba1a59b0ee3974e62c",
@@ -431,7 +431,7 @@
       "inventory": 150,
       "types": [
         {
-          "color": "green",
+          "color": "سبز",
           "images": [
             "9aa20b0a9aec6787a4d313fffaddb301",
             "a713842de55b2f38535f704e0d363c14",
@@ -439,7 +439,7 @@
           ]
         },
         {
-          "color": "black",
+          "color": "مشکی",
           "images": [
             "3e9b8ab5641f6bf346fcefccc1840bcc",
             "e8b7755ede6f123a14b970e6252cf161",
@@ -462,7 +462,7 @@
       "inventory": 90,
       "types": [
         {
-          "color": "blue",
+          "color": "آبی",
           "images": [
             "7177d5c23f73637be2daa588e67a4085",
             "46b9db817bf016eb3f9481da7b001686",
@@ -485,7 +485,7 @@
       "inventory": 10,
       "types": [
         {
-          "color": "white",
+          "color": "سفید",
           "images": [
             "308d7d04ab26a02e93d35230236a996e",
             "1679b8917a2fa821fea5277267a29528",
@@ -508,7 +508,7 @@
       "inventory": 60,
       "types": [
         {
-          "color": "red",
+          "color": "قرمز",
           "images": [
             "d61bcd3b606c23db500c14158d5d4916",
             "82d8f5b55718b124099d76d3818384e2",

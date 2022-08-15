@@ -1,7 +1,10 @@
 import {
+  Avatar,
   Box,
   BoxProps,
+  Grid,
   Input,
+  InputLabel,
   MenuItem,
   OutlinedInput,
   Select,
@@ -26,6 +29,8 @@ import { categoryEnglish, genderEnglish } from "utils/functions.util";
 
 import draftToHtml from "draftjs-to-html";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { IProduct, IProductTypes } from "types/interfaces.types";
+import { BASE_URL, IMAGES } from "configs/url.config";
 
 const MultilineText: React.FC = () => {
   return (
@@ -42,12 +47,21 @@ interface props {
   open: any;
   setOpen: any;
   handleSubmit: any;
+  data?: any;
 }
-const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit }) => {
+const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit, data }) => {
   const [files, setFiles] = React.useState<any>([]);
-  const [gender, setGender] = React.useState<string>("");
-  const [category, setCategory] = React.useState<string>("");
+  const [gender, setGender] = React.useState<any>(
+    data ? Object.values(data.gender)[0] : ""
+  );
+  const [category, setCategory] = React.useState<any>(
+    data ? Object.values(data.category)[0] : ""
+  );
   const [customErrors, setCustomErrors] = React.useState<any>({});
+  const [currentImages, setCurrentImages] = React.useState<IProductTypes[]>(
+    data ? data.types : ""
+  );
+  console.log(data);
 
   const handleClose = () => {
     setFiles([]);
@@ -66,6 +80,11 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit }) => {
       width: "255px",
     })
   );
+  const DescriptionTextFieldStyle: any = styled(TextField)<TextFieldProps>(
+    ({ theme }) => ({
+      width: "520px",
+    })
+  );
   const ErrorTypographyStyle: any = styled(Typography)<TypographyProps>(
     ({ theme }) => ({
       color: theme.palette.error.main,
@@ -73,11 +92,6 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit }) => {
       fontSize: "12px",
     })
   );
-  const classes = {
-    editiorWrapper: {
-      width: "500px",
-    },
-  };
 
   return (
     <Dialog open={open} onClose={handleClose} dir="rtl" fullWidth>
@@ -85,11 +99,11 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit }) => {
       <DialogContent sx={{ textAlign: "center", p: 1 }}>
         <Formik
           initialValues={{
-            name: "",
-            color: "",
-            price: "",
-            inventory: "",
-            description: "",
+            name: data ? data.name : "",
+            color: data ? data.types[0].color : "",
+            price: data ? data.price : "",
+            inventory: data ? data.inventory : "",
+            description: data ? data.description : "",
           }}
           validate={(values) => {
             const errors: any = {};
@@ -124,6 +138,7 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit }) => {
               setCustomErrors({});
               const genderTranslate = genderEnglish(gender);
               const categoryTranslate = categoryEnglish(category);
+
               handleSubmit({
                 name: data.name,
                 price: data.price,
@@ -284,28 +299,76 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit }) => {
                     )}
                   </Box>
                 </BoxFormStyle>
+                <InputLabel
+                  sx={{ color: "primary.main", marginLeft: "80%", mt: 4 }}
+                >
+                  افزودن تصویر:
+                </InputLabel>
                 <Input
                   type="file"
                   inputProps={{ multiple: true }}
                   onChange={(e) =>
                     setFiles((e.target as HTMLInputElement).files)
                   }
-                  sx={{ mt: 4, mb: 4, width: "90%" }}
+                  sx={{ mb: 4, width: "90%" }}
                 />
                 {customErrors.files && (
                   <ErrorTypographyStyle>
                     {customErrors.files}
                   </ErrorTypographyStyle>
                 )}
+                {/* {data ? (
+                  <Grid container spacing={2} marginBottom={4}>
+                    {currentImages.map((type: any, indexType: number) =>
+                      type.images.map((image: string, indexImage: number) => (
+                        <Grid
+                          item
+                          xs={4}
+                          onClick={() => {
+                            setCurrentImages((prev: any) => {
+                              let current = [...prev];
+                              const index = current[indexType].images.findIndex(
+                                (img: string) => img === image
+                              );
+                              console.log(
+                                current[indexType].images,
+                                index,
+                                image
+                              );
+
+                              current[indexType].images.splice(index, 1);
+                              console.log(current[indexType]);
+                              return current;
+                            });
+                            console.log(type, image);
+                          }}
+                        >
+                          <Avatar
+                            variant="rounded"
+                            src={`${BASE_URL}${IMAGES}/${image}`}
+                            sx={{
+                              width: 100,
+                              height: 100,
+                              mr: "auto",
+                              ml: "auto",
+                            }}
+                          />
+                        </Grid>
+                      ))
+                    )}
+                  </Grid>
+                ) : (
+                  ""
+                )} */}
                 <Field
                   name="description"
                   placeholder="توضیحات"
                   required
                   type="text"
-                  as={FormTextFieldStyle}
+                  as={DescriptionTextFieldStyle}
                 />
               </div>
-              <DialogActions sx={{ pb: 1, justifyContent: "center" }}>
+              <DialogActions sx={{ mt: 3, pb: 1, justifyContent: "center" }}>
                 <Button
                   variant={"contained"}
                   onClick={handleClose}

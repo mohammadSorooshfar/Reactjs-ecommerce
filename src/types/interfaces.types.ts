@@ -13,6 +13,7 @@ export interface IProduct {
   price: number;
   inventory: number;
   types: IProductTypes[];
+  description: string;
 }
 export interface IOrder {
   id: number;

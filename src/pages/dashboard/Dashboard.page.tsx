@@ -108,8 +108,6 @@ const ActionButtons: React.FC<{
         token: localStorage.getItem("ACCESS_TOKEN"),
       },
     };
-    console.log(data);
-
     const imagePromises = Object.values(data.files).map((file: any) => {
       let formData = new FormData();
       formData.append("image", file);
