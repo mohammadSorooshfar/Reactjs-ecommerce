@@ -92,12 +92,12 @@ const EnhancedTable: React.FC<ITableProps> = ({
           const data = createPriceDataForManagementTable(res.data);
           setRowsData(data);
           setTotalRows(+res.total);
-          dispatch(addProducts(res.data));
         } else {
           const data = createProductDataForManagementTable(res.data);
           setRowsData(data);
           setTotalRows(+res.total);
         }
+        dispatch(addProducts(res.data));
       })
       .catch((e) => console.log(e));
   };

@@ -64,7 +64,7 @@ const SideBar: React.FC<{ mobileOpen: any; handleDrawerToggle: any }> = ({
       <Toolbar sx={{ justifyContent: "center", mt: 2 }}>
         <Typography
           variant="h5"
-          onClick={() => navigate("/tehranshoes")}
+          onClick={() => (editable ? "" : navigate("/tehranshoes"))}
           sx={{ "&:hover": { cursor: "pointer" }, color: "#dce4ec" }}
         >
           کفش طهران

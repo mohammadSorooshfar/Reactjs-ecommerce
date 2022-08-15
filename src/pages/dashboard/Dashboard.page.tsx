@@ -116,14 +116,10 @@ const ActionButtons: React.FC<{
     Promise.all(imagePromises).then((arrOfResults) => {
       const allFormData = {
         name: data.name,
-        types: [
-          {
-            color: data.color,
-            images: [...arrOfResults],
-          },
-        ],
-        price: data.price,
-        inventory: data.inventory,
+        colors: [data.color],
+        images: [...arrOfResults],
+        price: +data.price,
+        inventory: +data.inventory,
         gender: { [data.gender.en]: data.gender.fa },
         category: { [data.category.en]: data.category.fa },
         description: data.description,

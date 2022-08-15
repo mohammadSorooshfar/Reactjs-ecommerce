@@ -9,11 +9,12 @@ import {
 import AddModal from "components/modals/AddModal";
 import DeleteModal from "components/modals/DeleteModal";
 import { BASE_URL, IMAGES } from "configs/url.config";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import {
   deleteProductsAdminService,
+  updateProductsAdminService,
   uploadImagesAdminService,
 } from "services/services.services";
 import { IProduct, IProductManagement } from "types/interfaces.types";
@@ -25,7 +26,9 @@ const TrProduct: React.FC<{
   const [openDelete, setOpenDelete] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const products = useSelector((state: any) => state.products.products);
-  console.log(products, rowData);
+  const product = useRef<IProduct>(
+    products.find((product: IProduct) => product.id == rowData.id)
+  );
 
   const DeleteButton = styled(Button)<{}>(({ theme }) => ({
     backgroundColor: theme.palette.error.main,
@@ -75,29 +78,29 @@ const TrProduct: React.FC<{
     });
     Promise.all(imagePromises).then((arrOfResults) => {
       const allFormData = {
+        id: product.current.id,
         name: data.name,
-        types: [
-          {
-            color: data.color,
-            images: [...arrOfResults],
-          },
+        colors: [
+          data.color ? data.color : product.current.colors[0],
+          ...product.current.colors.slice(1),
         ],
-        price: data.price,
-        inventory: data.inventory,
+        images: [...product.current.images, ...arrOfResults],
+        price: +data.price,
+        inventory: +data.inventory,
         gender: { [data.gender.en]: data.gender.fa },
         category: { [data.category.en]: data.category.fa },
         description: data.description,
       };
 
-      // updateProductsAdminService(rowData.id.toString(),allFormData)
-      //   .then((res) => {
-      //     console.log(res);
-      //     toast.success("کالا با موفقیت اضافه شد");
-      //     refreshFunction();
-      //   })
-      //   .catch((e) => {
-      //     console.log(e);
-      //   });
+      updateProductsAdminService(rowData.id.toString(), allFormData)
+        .then((res) => {
+          console.log(res);
+          toast.success("کالا با موفقیت ویرایش شد");
+          refreshFunction();
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     });
   };
   return (
@@ -141,7 +144,7 @@ const TrProduct: React.FC<{
         open={openUpdate}
         setOpen={setOpenUpdate}
         handleSubmit={handleEdit}
-        data={products.find((product: IProduct) => product.id == rowData.id)}
+        data={product.current}
       />
     </>
   );

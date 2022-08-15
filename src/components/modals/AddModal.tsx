@@ -23,6 +23,7 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { categoryEnglish, genderEnglish } from "utils/functions.util";
 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { IProduct } from "types/interfaces.types";
 
 const MultilineText: React.FC = () => {
   return (
@@ -39,7 +40,7 @@ interface props {
   open: any;
   setOpen: any;
   handleSubmit: any;
-  data?: any;
+  data?: IProduct;
 }
 const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit, data }) => {
   const [files, setFiles] = React.useState<any>([]);
@@ -57,8 +58,6 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit, data }) => {
 
   const handleClose = () => {
     setFiles([]);
-    setGender("");
-    setCategory("");
     setCustomErrors({});
     setOpen(false);
   };
@@ -87,14 +86,16 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit, data }) => {
 
   return (
     <Dialog open={open} onClose={handleClose} dir="rtl" fullWidth>
-      <DialogTitle sx={{ pt: 2 }}>افزودن کالا</DialogTitle>
+      <DialogTitle sx={{ pt: 2 }}>
+        {data ? "ویرایش" : "افزودن"} کالا
+      </DialogTitle>
       <DialogContent sx={{ textAlign: "center", p: 1 }}>
         <Formik
           initialValues={{
             name: data ? data.name : "",
             color: data ? data.colors[0] : "",
-            price: data ? data.price : "",
-            inventory: data ? data.inventory : "",
+            price: data ? data.price.toString() : "",
+            inventory: data ? data.inventory.toString() : "",
             description: data ? data.description : "",
           }}
           validate={(values) => {
@@ -134,13 +135,14 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit, data }) => {
               handleSubmit({
                 name: data.name,
                 price: data.price,
-                color: data.color,
+                colors: data.color,
                 inventory: data.inventory,
                 gender: genderTranslate,
                 category: categoryTranslate,
                 files,
                 description: data.description,
               });
+              handleClose();
               return;
             }
             if (!gender) {
@@ -370,7 +372,7 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit, data }) => {
                   انصراف
                 </Button>
                 <Button variant={"contained"} color="success" type="submit">
-                  افزودن
+                  {data ? "ویرایش" : "افزودن"}
                 </Button>
               </DialogActions>
             </Form>
