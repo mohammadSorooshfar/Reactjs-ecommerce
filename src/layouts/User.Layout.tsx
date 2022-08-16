@@ -6,7 +6,7 @@ const UserLayout: React.FC<any> = ({ children }: { children: any }) => {
   return (
     <div>
       <Header navHeight="10%" />
-      <div style={{ marginTop: "15%" }}>{children}</div>
+      <div style={{ marginTop: "5%" }}>{children}</div>
       <Footer />
     </div>
   );

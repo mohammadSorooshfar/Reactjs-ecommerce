@@ -7,7 +7,7 @@ import {
   uploadImageAdmin,
 } from "api/admin/products.api";
 import { Login } from "api/auth/login.api";
-import { AxiosRequestConfig } from "axios";
+import { getPosters } from "api/user/posters.api";
 import { ACCESS_TOKEN } from "configs/variables.config";
 import { IProduct, TDeliveryStatus } from "types/interfaces.types";
 export const loginService = async (data: any) => {
@@ -77,3 +77,11 @@ export const addProductAdminService = async (data: any) => {
     return Promise.reject(e);
   }
 };
+export async function getPostersService() {
+  try {
+    const response = await getPosters();
+    return response.data;
+  } catch (e) {
+    return Promise.reject(e);
+  }
+}

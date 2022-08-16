@@ -15,7 +15,7 @@
         "944784b411cdb3a75eb6a44f3109c744",
         "73b831f5db3230d1f4b20c263ce28eda"
       ],
-      "price": 5550000,
+      "price": 5750000,
       "inventory": 150,
       "gender": {
         "men": "مردانه"
@@ -59,8 +59,8 @@
       "category": {
         "sport": "ورزشی"
       },
-      "price": 1500000,
-      "inventory": 180,
+      "price": 2660000,
+      "inventory": 80,
       "colors": [
         "مشکی",
         "سفید"
@@ -84,8 +84,8 @@
       "category": {
         "sport": "ورزشی"
       },
-      "price": 2660000,
-      "inventory": 80,
+      "price": 1500000,
+      "inventory": 180,
       "colors": [
         "زرد",
         "آبی"
@@ -713,5 +713,15 @@
         }
       ]
     }
+  ],
+  "posters": [
+    "13c78c24cfef181da7c6b26e326db74c",
+    "72ad108b8343e6cbb1d8b1b7a0d37d4d",
+    "b65ed1cdbb0d9ab3a18752e56b6d0673",
+    "8d9716d498a516ff6e05e5c29d3d1a11",
+    "d1752f54fe00f28235d2f8091246b9bc",
+    "2119e150a64065988b4e5df689d6df61",
+    "2e667dfb5c6aa52bfc6a05d74a24bb2e",
+    "8bc92ca5acc13881bc2fe1c602b2dfcb"
   ]
 }
