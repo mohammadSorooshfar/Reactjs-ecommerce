@@ -19,9 +19,7 @@ const Home: React.FC<props> = () => {
 
   return (
     <UserLayout>
-      <Container maxWidth="lg">
-        <Slider images={posters} />
-      </Container>
+      <Slider images={posters} />
       <Offer />
       <Category />
       <NewsLetter />
