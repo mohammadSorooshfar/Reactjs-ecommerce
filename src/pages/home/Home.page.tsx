@@ -1,4 +1,5 @@
 import { Box, Container, Grid, Typography } from "@mui/material";
+import NewsLetter from "components/newsLetter/NewsLetter";
 import Offer from "components/offer/Offer";
 import Slider from "components/slider/Slider";
 import UserLayout from "layouts/User.Layout";
@@ -21,6 +22,7 @@ const Home: React.FC<props> = () => {
         <Slider images={posters} />
       </Container>
       <Offer />
+      <NewsLetter />
     </UserLayout>
   );
 };
