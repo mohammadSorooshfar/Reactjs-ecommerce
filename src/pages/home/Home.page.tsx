@@ -1,4 +1,5 @@
 import { Box, Container, Grid, Typography } from "@mui/material";
+import Offer from "components/offer/Offer";
 import Slider from "components/slider/Slider";
 import UserLayout from "layouts/User.Layout";
 import React, { useEffect, useState } from "react";
@@ -19,6 +20,7 @@ const Home: React.FC<props> = () => {
       <Container maxWidth="lg">
         <Slider images={posters} />
       </Container>
+      <Offer />
     </UserLayout>
   );
 };

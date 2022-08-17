@@ -14,6 +14,7 @@ function App() {
         main: "#1e272e",
       },
       secondary: {
+        light: "#EFEFEF",
         main: "#dce4ec",
         dark: "#808e9b",
       },

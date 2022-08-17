@@ -9,7 +9,9 @@ import {
   Drawer,
   ListItem,
   MenuItemProps,
+  Slide,
   styled,
+  useScrollTrigger,
 } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -90,7 +92,7 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
   }));
   const BrandTypographyStyle = styled(Typography)<{}>(({ theme }) => ({
     fontWeight: 700,
-    color: "inherit",
+    color: theme.palette.primary.main,
     textDecoration: "none",
     "&:hover": {
       cursor: "pointer",
@@ -144,7 +146,7 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
   );
   return (
     <>
-      <AppBar position="fixed" color="transparent" elevation={0}>
+      <AppBar position="fixed" sx={{ backgroundColor: "white" }} elevation={0}>
         <Container maxWidth="lg">
           <Toolbar disableGutters sx={{ maxHeight: navHeight }}>
             <Box
