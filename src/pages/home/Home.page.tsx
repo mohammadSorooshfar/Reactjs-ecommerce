@@ -1,4 +1,5 @@
 import { Box, Container, Grid, Typography } from "@mui/material";
+import Category from "components/category/Category";
 import NewsLetter from "components/newsLetter/NewsLetter";
 import Offer from "components/offer/Offer";
 import Slider from "components/slider/Slider";
@@ -22,6 +23,7 @@ const Home: React.FC<props> = () => {
         <Slider images={posters} />
       </Container>
       <Offer />
+      <Category />
       <NewsLetter />
     </UserLayout>
   );

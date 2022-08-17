@@ -12,7 +12,6 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import PercentIcon from "@mui/icons-material/Percent";
 import VerifiedIcon from "@mui/icons-material/Verified";
-interface props {}
 
 const offers: any = [
   {
@@ -41,7 +40,7 @@ const offers: any = [
   },
 ];
 
-const Offer: React.FC<props> = () => {
+const Offer: React.FC = () => {
   return (
     <Box
       sx={{ backgroundColor: "secondary.light" }}
