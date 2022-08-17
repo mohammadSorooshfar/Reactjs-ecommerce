@@ -46,10 +46,9 @@ const text: { title: string; description: string }[] = [
 
 export default function Slider({ images }: props) {
   const navigate = useNavigate();
-  console.log(images);
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" sx={{ paddingBottom: 5 }}>
       <Swiper
         spaceBetween={30}
         centeredSlides={true}

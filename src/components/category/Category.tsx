@@ -27,6 +27,7 @@ const categories: any = [
     height: 230,
     background: "#F7F7F7",
     paddingTop: 0,
+    animation: 1000,
   },
   {
     image: women,
@@ -36,15 +37,17 @@ const categories: any = [
     height: 230,
     background: "#F7E7F1",
     paddingTop: 0,
+    animation: 2000,
   },
   {
     image: kid,
     title: "بچگانه",
     link: "products/kid",
-    width: 180,
-    height: 180,
+    width: 150,
+    height: 150,
     background: "#e8e9f3",
-    paddingTop: 30,
+    paddingTop: 60,
+    animation: 3000,
   },
 ];
 
@@ -56,9 +59,14 @@ const Category: React.FC = () => {
         <Typography fontWeight={"700"} variant="h3" mb={5}>
           دسته بندی محصولات
         </Typography>
-        <Grid container spacing={15}>
+        <Grid container spacing={10}>
           {categories.map((category: any) => (
-            <Grid item sm={4}>
+            <Grid
+              item
+              sm={4}
+              data-aos="fade-up"
+              data-aos-duration={category.animation}
+            >
               <Card sx={{ backgroundColor: category.background }}>
                 <CardContent
                   sx={{
