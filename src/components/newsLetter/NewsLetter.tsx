@@ -9,7 +9,6 @@ const NewsLetter: React.FC = () => {
       style={{
         width: "100%",
         position: "relative",
-        height: "500px",
         backgroundColor: "#000000",
         zIndex: 2,
       }}
@@ -23,7 +22,7 @@ const NewsLetter: React.FC = () => {
           zIndex: 3,
         }}
       >
-        <Typography color={"#EFEFEF"} variant="h3" fontWeight={"700"} mb={8}>
+        <Typography color={"#EFEFEF"} variant={"h3"} fontWeight={"700"} mb={8}>
           به{" "}
           <Typography
             component={"span"}
@@ -39,7 +38,7 @@ const NewsLetter: React.FC = () => {
           placeholder="ایمیل خود را وارد کنید"
           sx={{
             backgroundColor: "secondary.light",
-            width: "600px",
+            width: { sm: "600px", xs: "300px" },
             borderRadius: "20px",
           }}
           InputProps={{
@@ -56,7 +55,7 @@ const NewsLetter: React.FC = () => {
         alt=""
         style={{
           width: "100%",
-          height: "100%",
+          height: "500px",
           objectFit: "cover",
           opacity: "0.25",
         }}

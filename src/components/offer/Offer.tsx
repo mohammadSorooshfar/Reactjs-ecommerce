@@ -48,10 +48,12 @@ const offers: any = [
 const Offer: React.FC = () => {
   return (
     <Box
-      sx={{ backgroundColor: "secondary.light" }}
+      sx={{
+        backgroundColor: "secondary.light",
+        paddingX: { sm: 20, xs: 3 },
+        paddingY: { sm: 7, xs: 3 },
+      }}
       mt={2}
-      paddingY={7}
-      paddingX={20}
     >
       <Container maxWidth="lg">
         <Typography color="error.main" fontWeight={"700"} variant="h3" mb={3}>

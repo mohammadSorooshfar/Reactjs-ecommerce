@@ -259,7 +259,7 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
                 <IconButton
                   size="large"
                   onClick={() => setOpen(true)}
-                  color="inherit"
+                  color="primary"
                 >
                   <MenuIcon />
                 </IconButton>

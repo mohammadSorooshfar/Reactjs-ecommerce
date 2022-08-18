@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Box,
   Button,
   Card,
@@ -8,15 +7,11 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import React from "react";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import PercentIcon from "@mui/icons-material/Percent";
-import VerifiedIcon from "@mui/icons-material/Verified";
-import { useNavigate } from "react-router-dom";
+import kid from "assets/kid.png";
 import men from "assets/men.png";
 import women from "assets/women.png";
-import kid from "assets/kid.png";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const categories: any = [
   {
@@ -54,7 +49,13 @@ const categories: any = [
 const Category: React.FC = () => {
   const navigate = useNavigate();
   return (
-    <Box mt={2} paddingY={5} paddingX={20}>
+    <Box
+      mt={2}
+      sx={{
+        paddingX: { sm: 20, xs: 3 },
+        paddingY: { sm: 5, xs: 3 },
+      }}
+    >
       <Container maxWidth="lg">
         <Typography fontWeight={"700"} variant="h3" mb={5}>
           دسته بندی محصولات

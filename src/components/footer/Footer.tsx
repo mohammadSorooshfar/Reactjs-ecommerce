@@ -36,7 +36,7 @@ const Footer: React.FC<props> = () => {
   return (
     <Container maxWidth="lg" sx={{ paddingY: 5 }}>
       <Grid container>
-        <Grid item xs={3}>
+        <Grid item sm={3} xs={6}>
           <List>
             <ListItem>
               <ListItemTitleText primary="با کفش طهران" />
@@ -58,7 +58,7 @@ const Footer: React.FC<props> = () => {
             </ListItem>
           </List>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item sm={3} xs={6}>
           <List>
             <ListItem>
               <ListItemTitleText primary="خدمات مشتریان" />
@@ -77,7 +77,7 @@ const Footer: React.FC<props> = () => {
             </ListItem>
           </List>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item sm={3} xs={6}>
           <List>
             <ListItem>
               <ListItemTitleText primary="راهنمای خرید از کفش طهران" />
@@ -93,7 +93,7 @@ const Footer: React.FC<props> = () => {
             </ListItem>
           </List>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item sm={3} xs={6}>
           <List>
             <ListItem>
               <ListItemTitleText primary="ما را در فضای مجازی دنبال کنید" />
