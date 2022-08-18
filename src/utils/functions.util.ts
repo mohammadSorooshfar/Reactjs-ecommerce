@@ -1,4 +1,4 @@
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "configs/variables.config";
+import { ACCESS_TOKEN } from "configs/variables.config";
 import { NavigateFunction } from "react-router-dom";
 import {
   IOrder,
@@ -6,7 +6,6 @@ import {
   IPriceManagement,
   IProduct,
   IProductManagement,
-  TOrder,
 } from "types/interfaces.types";
 
 export const parseJwt = (token: string) => {
@@ -71,7 +70,6 @@ export function isAnPriceManagement(obj: any): obj is IPriceManagement {
 }
 
 export function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  console.log(orderBy);
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -95,7 +93,8 @@ export function createProductDataForManagementTable(data: IProduct[]) {
     category: product.category,
     name: product.name,
     gender: product.gender,
-    types: product.types,
+    colors: product.colors,
+    images: product.images,
   }));
   return products;
 }
@@ -121,4 +120,103 @@ export const checkAuth = () => {
 export const logout = (navigate: NavigateFunction) => {
   localStorage.removeItem("ACCESS_TOKEN");
   navigate("/tehranshoes");
+};
+
+export const genderEnglish = (gender: string) => {
+  switch (gender) {
+    case "مردانه":
+      return { en: "men", fa: "مردانه" };
+    case "زنانه":
+      return { en: "women", fa: "زنانه" };
+    case "بچگانه":
+      return { en: "kid", fa: "بچگانه" };
+
+    default:
+      break;
+  }
+};
+export const categoryEnglish = (category: string) => {
+  switch (category) {
+    case "کتانی":
+      return { en: "sneaker", fa: "کتانی" };
+    case "رسمی":
+      return { en: "oxford", fa: "رسمی" };
+    case "ورزشی":
+      return { en: "sport", fa: "ورزشی" };
+
+    default:
+      break;
+  }
+};
+
+export const colorGenerator = (color: string) => {
+  switch (color) {
+    case "قرمز":
+      return "red";
+    case "نارنجی":
+      return "orange";
+    case "مشکی":
+      return "black";
+    case "بنفش":
+      return "purple";
+    case "سفید":
+      return "white";
+    case "زرد":
+      return "yellow";
+    case "آبی":
+      return "blue";
+    case "نقره ای":
+      return "silver";
+    case "صورتی":
+      return "pink";
+    case "سبز":
+      return "green";
+
+    default:
+      break;
+  }
+};
+
+export const persianNumber = (number: string) => {
+  let output = "";
+  for (let index = 0; index < number.length; index++) {
+    const num = number[index];
+
+    switch (num) {
+      case "1":
+        output += "۱";
+        break;
+      case "2":
+        output += "۲";
+        break;
+      case "3":
+        output += "۳";
+        break;
+      case "4":
+        output += "۴";
+        break;
+      case "5":
+        output += "۵";
+        break;
+      case "6":
+        output += "۶";
+        break;
+      case "7":
+        output += "۷";
+        break;
+      case "8":
+        output += "۸";
+        break;
+      case "9":
+        output += "۹";
+        break;
+      case "0":
+        output += "۰";
+        break;
+
+      default:
+        break;
+    }
+  }
+  return output + " تومان";
 };

@@ -1,9 +1,12 @@
 import React from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import MainRoutes from "routes";
+import MainRoutes from "routes/index.Routes";
 import { createTheme, ThemeProvider } from "@mui/material";
+import AOS from "aos";
+import "aos/dist/aos.css";
 function App() {
+  AOS.init();
   const mainTheme = createTheme({
     typography: {
       fontFamily: "Vazirmatn, sans-serif",
@@ -14,7 +17,8 @@ function App() {
         main: "#1e272e",
       },
       secondary: {
-        main: "#d2dae2",
+        light: "#EFEFEF",
+        main: "#dce4ec",
         dark: "#808e9b",
       },
       success: {

@@ -1,18 +1,17 @@
 export type TDeliveryStatus = "delivered" | "notDelivered";
 
 export type TOrder = "asc" | "desc";
-export interface IProductTypes {
-  color: string;
-  images: string[];
-}
+
 export interface IProduct {
   id: number;
   name: string;
-  gender: any;
-  category: string;
+  gender: { en: string; fa: string };
+  category: { en: string; fa: string };
   price: number;
   inventory: number;
-  types: IProductTypes[];
+  colors: string[];
+  images: string[];
+  description: string;
 }
 export interface IOrder {
   id: number;
@@ -39,9 +38,9 @@ export interface IOrder {
 export interface IProductManagement {
   id: number;
   name: string;
-  category: string;
-  gender: string;
-  types: IProductTypes[];
+  category: { en: string; fa: string };
+  gender: { en: string; fa: string };
+  images: string[];
 }
 export interface IPriceManagement {
   id: number;

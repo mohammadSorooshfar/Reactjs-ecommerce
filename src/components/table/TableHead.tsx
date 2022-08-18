@@ -15,7 +15,7 @@ import { IOrderManagement, IProduct, TOrder } from "types/interfaces.types";
 import { useLocation } from "react-router-dom";
 import TrPrice from "./TrPrice";
 import TrOrder from "./TrOrder";
-import { getProductsAdminService } from "services/services";
+import { getProductsAdminService } from "services/services.services";
 // import { descendingComparator } from "utils/functions.util";
 import {
   Button,
