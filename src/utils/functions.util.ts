@@ -176,3 +176,47 @@ export const colorGenerator = (color: string) => {
       break;
   }
 };
+
+export const persianNumber = (number: string) => {
+  let output = "";
+  for (let index = 0; index < number.length; index++) {
+    const num = number[index];
+
+    switch (num) {
+      case "1":
+        output += "۱";
+        break;
+      case "2":
+        output += "۲";
+        break;
+      case "3":
+        output += "۳";
+        break;
+      case "4":
+        output += "۴";
+        break;
+      case "5":
+        output += "۵";
+        break;
+      case "6":
+        output += "۶";
+        break;
+      case "7":
+        output += "۷";
+        break;
+      case "8":
+        output += "۸";
+        break;
+      case "9":
+        output += "۹";
+        break;
+      case "0":
+        output += "۰";
+        break;
+
+      default:
+        break;
+    }
+  }
+  return output + " تومان";
+};

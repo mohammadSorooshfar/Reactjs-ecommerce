@@ -93,7 +93,12 @@ export async function getProductsService(
 ) {
   try {
     const filtersString = filters.reduce((prev, filter) => {
-      return prev + `${filter.name}=${filter.value}&`;
+      console.log(filter.value);
+      if (filter.value !== "") {
+        return prev + `${filter.name}=${filter.value}&`;
+      } else {
+        return prev;
+      }
     }, "");
     const response = await getProducts(page, pageSize, filtersString);
     return { data: response.data, total: response.headers["x-total-count"] };

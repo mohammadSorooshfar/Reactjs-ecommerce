@@ -40,7 +40,7 @@ const Products: React.FC<props> = () => {
   const [page, setPage] = useState(0);
   const [filters, setFilters] = useState<{ name: string; value: string }[]>([
     { name: "gender.en", value: gender },
-    { name: "category.en", value: category },
+    { name: "category.en", value: category === "all" ? "" : category },
   ]);
   const handleChangePage = (event: unknown, newPage: number) => {
     getProductsData(newPage.toString());
@@ -54,7 +54,6 @@ const Products: React.FC<props> = () => {
       })
       .catch((e) => console.log(e));
   };
-  console.log(products);
 
   useEffect(() => {
     getProductsData("1");
@@ -62,7 +61,7 @@ const Products: React.FC<props> = () => {
   useEffect(() => {
     setFilters([
       { name: "gender.en", value: gender },
-      { name: "category.en", value: category },
+      { name: "category.en", value: category === "all" ? "" : category },
     ]);
   }, [gender, category]);
   return (

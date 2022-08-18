@@ -17,7 +17,7 @@ const categories: any = [
   {
     image: men,
     title: "مردانه",
-    link: "products/men",
+    link: "products/men/all",
     width: 230,
     height: 230,
     background: "#F7F7F7",
@@ -27,7 +27,7 @@ const categories: any = [
   {
     image: women,
     title: "زنانه",
-    link: "products/women",
+    link: "products/women/all",
     width: 230,
     height: 230,
     background: "#F7E7F1",
@@ -37,7 +37,7 @@ const categories: any = [
   {
     image: kid,
     title: "بچگانه",
-    link: "products/kid",
+    link: "products/kid/all",
     width: 150,
     height: 150,
     background: "#e8e9f3",

@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import { Box, BoxProps, CardActionArea, styled } from "@mui/material";
 import { IProduct } from "types/interfaces.types";
 import { BASE_URL, IMAGES } from "configs/url.config";
-import { colorGenerator } from "utils/functions.util";
+import { colorGenerator, persianNumber } from "utils/functions.util";
 import { useNavigate } from "react-router-dom";
 
 export default function ProductCard({ product }: { product: IProduct }) {
@@ -97,7 +97,7 @@ export default function ProductCard({ product }: { product: IProduct }) {
               ))}
             </Box>
             <Typography variant="subtitle1" textAlign={"left"}>
-              {product.price}
+              {persianNumber(product.price.toString())}
             </Typography>
           </Box>
         </CardContent>
