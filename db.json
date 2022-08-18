@@ -18,10 +18,12 @@
       "price": 5750000,
       "inventory": 150,
       "gender": {
-        "men": "مردانه"
+        "en": "men",
+        "fa": "مردانه"
       },
       "category": {
-        "sport": "ورزشی"
+        "en": "sport",
+        "fa": "ورزشی"
       },
       "description": "دارای رویه جیر و مدرن می باشد که این کفش رو انقدر جذاب جلوه میدهد مناسب برای تیپ های اسپورت و کژاول می باشد ."
     },
@@ -29,10 +31,12 @@
       "id": 2,
       "name": "کفش نایک فری ران ",
       "gender": {
-        "female": "زنانه"
+        "en": "women",
+        "fa": "زنانه"
       },
       "category": {
-        "sport": "ورزشی"
+        "en": "sport",
+        "fa": "ورزشی"
       },
       "price": 3000000,
       "inventory": 170,
@@ -54,10 +58,12 @@
       "id": 3,
       "name": "کفش آدیداس پردیتور ادج 3",
       "gender": {
-        "male": "مردانه"
+        "en": "men",
+        "fa": "مردانه"
       },
       "category": {
-        "sport": "ورزشی"
+        "en": "sport",
+        "fa": "ورزشی"
       },
       "price": 2660000,
       "inventory": 80,
@@ -79,10 +85,12 @@
       "id": 4,
       "name": "کفش ادیداس کوپا سنس",
       "gender": {
-        "female": "زنانه"
+        "en": "women",
+        "fa": "زنانه"
       },
       "category": {
-        "sport": "ورزشی"
+        "en": "sport",
+        "fa": "ورزشی"
       },
       "price": 1500000,
       "inventory": 180,
@@ -104,10 +112,12 @@
       "id": 5,
       "name": "کفش پوما الترا",
       "gender": {
-        "male": "مردانه"
+        "en": "men",
+        "fa": "مردانه"
       },
       "category": {
-        "sport": "ورزشی"
+        "en": "sport",
+        "fa": "ورزشی"
       },
       "price": 1000000,
       "inventory": 130,
@@ -129,10 +139,12 @@
       "id": 6,
       "name": "کفش پوما نیترو",
       "gender": {
-        "female": "زنانه"
+        "en": "women",
+        "fa": "زنانه"
       },
       "category": {
-        "sport": "ورزشی"
+        "en": "sport",
+        "fa": "ورزشی"
       },
       "price": 1300000,
       "inventory": 220,
@@ -154,10 +166,12 @@
       "id": 7,
       "name": "کفش نایک ایر هوراکی ",
       "gender": {
-        "male": "مردانه"
+        "en": "men",
+        "fa": "مردانه"
       },
       "category": {
-        "sneaker": "کتانی"
+        "en": "sneaker",
+        "fa": "کتانی"
       },
       "price": 4200000,
       "inventory": 300,
@@ -179,10 +193,12 @@
       "id": 8,
       "name": "کفش نایک ایر مکس ",
       "gender": {
-        "female": "زنانه"
+        "en": "women",
+        "fa": "زنانه"
       },
       "category": {
-        "sneaker": "کتانی"
+        "en": "sneaker",
+        "fa": "کتانی"
       },
       "price": 3450000,
       "inventory": 155,
@@ -200,10 +216,12 @@
       "id": 9,
       "name": "کفش پوما اویتور پروفوم",
       "gender": {
-        "male": "مردانه"
+        "en": "men",
+        "fa": "مردانه"
       },
       "category": {
-        "sneaker": "کتانی"
+        "en": "sneaker",
+        "fa": "کتانی"
       },
       "price": 1500000,
       "inventory": 100,
@@ -225,10 +243,12 @@
       "id": 10,
       "name": "کفش پوما مونوکروم",
       "gender": {
-        "female": "زنانه"
+        "en": "women",
+        "fa": "زنانه"
       },
       "category": {
-        "sneaker": "کتانی"
+        "en": "sneaker",
+        "fa": "کتانی"
       },
       "price": 3150000,
       "inventory": 220,
@@ -250,10 +270,12 @@
       "id": 11,
       "name": "کفش ادیداس کلودفوم",
       "gender": {
-        "female": "زنانه"
+        "en": "women",
+        "fa": "زنانه"
       },
       "category": {
-        "sneaker": "کتانی"
+        "en": "sneaker",
+        "fa": "کتانی"
       },
       "price": 1120000,
       "inventory": 120,
@@ -275,10 +297,12 @@
       "id": 12,
       "name": "کفش ادیداس دراپ ست",
       "gender": {
-        "male": "مردانه"
+        "en": "men",
+        "fa": "مردانه"
       },
       "category": {
-        "sneaker": "کتانی"
+        "en": "sneaker",
+        "fa": "کتانی"
       },
       "price": 2300000,
       "inventory": 40,
@@ -300,10 +324,12 @@
       "id": 13,
       "name": "کفش ادیداس سوپراستار",
       "gender": {
-        "kid": "بچگانه"
+        "en": "kid",
+        "fa": "بچگانه"
       },
       "category": {
-        "sneaker": "کتانی"
+        "en": "sneaker",
+        "fa": "کتانی"
       },
       "price": 800000,
       "inventory": 70,
@@ -325,10 +351,12 @@
       "id": 14,
       "name": "کفش ادیداس دیزنی گرند",
       "gender": {
-        "kid": "بچگانه"
+        "en": "kid",
+        "fa": "بچگانه"
       },
       "category": {
-        "sneaker": "کتانی"
+        "en": "sneaker",
+        "fa": "کتانی"
       },
       "price": 1000000,
       "inventory": 140,
@@ -346,10 +374,12 @@
       "id": 15,
       "name": "کفش ادیداس اسپید پورتال",
       "gender": {
-        "kid": "بچگانه"
+        "en": "kid",
+        "fa": "بچگانه"
       },
       "category": {
-        "sport": "ورزشی"
+        "en": "sport",
+        "fa": "ورزشی"
       },
       "price": 1200000,
       "inventory": 150,
@@ -371,10 +401,12 @@
       "id": 16,
       "name": "کفش نایک دانک",
       "gender": {
-        "kid": "بچگانه"
+        "en": "kid",
+        "fa": "بچگانه"
       },
       "category": {
-        "sneaker": "کتانی"
+        "en": "sneaker",
+        "fa": "کتانی"
       },
       "price": 1300000,
       "inventory": 90,
@@ -392,10 +424,12 @@
       "id": 17,
       "name": "کفش نایک ایر مکس 90",
       "gender": {
-        "kid": "بچگانه"
+        "en": "kid",
+        "fa": "بچگانه"
       },
       "category": {
-        "sneaker": "کتانی"
+        "en": "sneaker",
+        "fa": "کتانی"
       },
       "price": 700000,
       "inventory": 10,
@@ -413,10 +447,12 @@
       "id": 18,
       "name": "کفش پوما بتمن",
       "gender": {
-        "kid": "بچگانه"
+        "en": "kid",
+        "fa": "بچگانه"
       },
       "category": {
-        "sneaker": "کتانی"
+        "en": "sneaker",
+        "fa": "کتانی"
       },
       "price": 1500000,
       "inventory": 60,

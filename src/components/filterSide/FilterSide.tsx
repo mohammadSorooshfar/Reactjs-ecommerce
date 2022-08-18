@@ -46,7 +46,10 @@ const CategorySelect: React.FC<{
         {Object.entries(genders).map((gender, index) => (
           <ListItem>
             <Accordion elevation={0}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                sx={{ "&::before": { backgroundColor: "none" } }}
+              >
                 <Typography>{gender[1]}</Typography>
               </AccordionSummary>
               <AccordionDetails
@@ -125,6 +128,7 @@ const FilterSide: React.FC<props> = () => {
             borderRadius: "10px",
             backgroundColor: "white",
             position: "static",
+            minHeight: "80vh",
           },
         }}
         open

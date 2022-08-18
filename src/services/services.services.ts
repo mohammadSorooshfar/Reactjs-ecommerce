@@ -8,6 +8,7 @@ import {
 } from "api/admin/products.api";
 import { Login } from "api/auth/login.api";
 import { getPosters } from "api/user/posters.api";
+import { getProducts } from "api/user/products.api";
 import { ACCESS_TOKEN } from "configs/variables.config";
 import { IProduct, TDeliveryStatus } from "types/interfaces.types";
 export const loginService = async (data: any) => {
@@ -81,6 +82,21 @@ export async function getPostersService() {
   try {
     const response = await getPosters();
     return response.data;
+  } catch (e) {
+    return Promise.reject(e);
+  }
+}
+export async function getProductsService(
+  page: string,
+  pageSize: string,
+  filters: { name: string; value: string }[]
+) {
+  try {
+    const filtersString = filters.reduce((prev, filter) => {
+      return prev + `${filter.name}=${filter.value}&`;
+    }, "");
+    const response = await getProducts(page, pageSize, filtersString);
+    return { data: response.data, total: response.headers["x-total-count"] };
   } catch (e) {
     return Promise.reject(e);
   }

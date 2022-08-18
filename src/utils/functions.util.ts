@@ -148,3 +148,31 @@ export const categoryEnglish = (category: string) => {
       break;
   }
 };
+
+export const colorGenerator = (color: string) => {
+  switch (color) {
+    case "قرمز":
+      return "red";
+    case "نارنجی":
+      return "orange";
+    case "مشکی":
+      return "black";
+    case "بنفش":
+      return "purple";
+    case "سفید":
+      return "white";
+    case "زرد":
+      return "yellow";
+    case "آبی":
+      return "blue";
+    case "نقره ای":
+      return "silver";
+    case "صورتی":
+      return "pink";
+    case "سبز":
+      return "green";
+
+    default:
+      break;
+  }
+};

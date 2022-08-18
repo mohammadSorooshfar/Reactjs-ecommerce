@@ -87,8 +87,8 @@ const TrProduct: React.FC<{
         images: [...product.current.images, ...arrOfResults],
         price: +data.price,
         inventory: +data.inventory,
-        gender: { [data.gender.en]: data.gender.fa },
-        category: { [data.category.en]: data.category.fa },
+        gender: { en: data.gender.en, fa: data.gender.fa },
+        category: { en: data.category.en, fa: data.category.fa },
         description: data.description,
       };
 
@@ -114,9 +114,7 @@ const TrProduct: React.FC<{
           />
         </TableCell>
         <TableCell align="right">{rowData.name}</TableCell>
-        <TableCell align="right">{`${Object.values(rowData.gender)[0]}/${
-          Object.values(rowData.category)[0]
-        }`}</TableCell>
+        <TableCell align="right">{`${rowData.gender.fa}/${rowData.category.fa}`}</TableCell>
         <TableCell align="right">
           <ButtonGroup
             disableElevation

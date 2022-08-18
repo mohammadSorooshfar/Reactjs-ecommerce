@@ -44,11 +44,9 @@ interface props {
 }
 const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit, data }) => {
   const [files, setFiles] = React.useState<any>([]);
-  const [gender, setGender] = React.useState<any>(
-    data ? Object.values(data.gender)[0] : ""
-  );
+  const [gender, setGender] = React.useState<any>(data ? data.gender.fa : "");
   const [category, setCategory] = React.useState<any>(
-    data ? Object.values(data.category)[0] : ""
+    data ? data.category.fa : ""
   );
   const [customErrors, setCustomErrors] = React.useState<any>({});
   // const [currentImages, setCurrentImages] = React.useState<string[]>(
