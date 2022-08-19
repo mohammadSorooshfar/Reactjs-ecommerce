@@ -106,7 +106,6 @@ export default function Slider({ images }: props) {
                 style={{
                   width: "100%",
                   height: " 600px",
-                  borderRadius: "15px",
                 }}
                 alt=""
               />
