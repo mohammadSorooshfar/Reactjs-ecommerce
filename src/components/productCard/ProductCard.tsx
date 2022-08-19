@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { Box, styled } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Box, BoxProps, CardActionArea, styled } from "@mui/material";
-import { IProduct } from "types/interfaces.types";
 import { BASE_URL, IMAGES } from "configs/url.config";
-import { colorGenerator, persianNumber } from "utils/functions.util";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { IProduct } from "types/interfaces.types";
+import { colorGenerator, persianNumber } from "utils/functions.util";
 
 export default function ProductCard({ product }: { product: IProduct }) {
   const [img, setImg] = useState(`${BASE_URL}${IMAGES}/${product.images[0]}`);
@@ -51,11 +51,13 @@ export default function ProductCard({ product }: { product: IProduct }) {
           image={img}
           alt="shoe photo"
           onMouseEnter={() =>
+            product.images.length >= selectedColor * 3 + 2 &&
             setImg(
               `${BASE_URL}${IMAGES}/${product.images[selectedColor * 3 + 2]}`
             )
           }
           onMouseLeave={() =>
+            product.images.length >= selectedColor * 3 &&
             setImg(`${BASE_URL}${IMAGES}/${product.images[selectedColor * 3]}`)
           }
           sx={{

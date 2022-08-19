@@ -9,7 +9,7 @@ import {
 import AddModal from "components/modals/AddModal";
 import DeleteModal from "components/modals/DeleteModal";
 import { BASE_URL, IMAGES } from "configs/url.config";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import {
@@ -26,9 +26,13 @@ const TrProduct: React.FC<{
   const [openDelete, setOpenDelete] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const products = useSelector((state: any) => state.products.products);
-  const product = useRef<IProduct>(
+  const [product, setProduct] = useState<IProduct>(
     products.find((product: IProduct) => product.id == rowData.id)
   );
+  useEffect(() => {
+    setProduct(products.find((product: IProduct) => product.id == rowData.id));
+    console.log(rowData, products);
+  }, [products]);
 
   const DeleteButton = styled(Button)<{}>(({ theme }) => ({
     backgroundColor: theme.palette.error.main,
@@ -71,6 +75,7 @@ const TrProduct: React.FC<{
         token: localStorage.getItem("ACCESS_TOKEN"),
       },
     };
+
     const imagePromises = Object.values(data.files).map((file: any) => {
       let formData = new FormData();
       formData.append("image", file);
@@ -78,13 +83,13 @@ const TrProduct: React.FC<{
     });
     Promise.all(imagePromises).then((arrOfResults) => {
       const allFormData = {
-        id: product.current.id,
+        id: product.id,
         name: data.name,
         colors: [
-          data.color ? data.color : product.current.colors[0],
-          ...product.current.colors.slice(1),
+          data.color ? data.color : product.colors[0],
+          ...product.colors.slice(1),
         ],
-        images: [...product.current.images, ...arrOfResults],
+        images: [...product.images, ...arrOfResults],
         price: +data.price,
         inventory: +data.inventory,
         gender: { en: data.gender.en, fa: data.gender.fa },
@@ -142,7 +147,8 @@ const TrProduct: React.FC<{
         open={openUpdate}
         setOpen={setOpenUpdate}
         handleSubmit={handleEdit}
-        data={product.current}
+        data={product}
+        edit={true}
       />
     </>
   );

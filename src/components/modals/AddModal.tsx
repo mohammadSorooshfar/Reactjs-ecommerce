@@ -24,39 +24,65 @@ import { categoryEnglish, genderEnglish } from "utils/functions.util";
 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { IProduct } from "types/interfaces.types";
+import {
+  CKEditor,
+  CKEditorEventHandler,
+  prefixEventName,
+  useCKEditor,
+} from "ckeditor4-react";
 
-const MultilineText: React.FC = () => {
-  return (
-    <TextField
-      multiline
-      rows={4}
-      placeholder="Default Value"
-      variant="standard"
-    />
-  );
-};
+function Editor() {
+  const [element, setElement] = React.useState<HTMLDivElement | null>(null);
+  console.log(element);
 
+  useCKEditor<"customEvent" | "anotherCustomEvent">({
+    element,
+    dispatchEvent: ({ type }: { type: any }) => {
+      if (type === prefixEventName("customEvent")) {
+        console.log(type); // '__CKE__customEvent'
+      } else {
+        console.log(type); // '__CKE__anotherCustomEvent'
+      }
+    },
+    subscribeTo: ["customEvent", "anotherCustomEvent"],
+  });
+
+  return <div ref={setElement} />;
+}
 interface props {
   open: any;
   setOpen: any;
   handleSubmit: any;
   data?: IProduct;
+  edit: boolean;
 }
-const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit, data }) => {
+const AddModal: React.FC<props> = ({
+  open,
+  setOpen,
+  handleSubmit,
+  data,
+  edit,
+}) => {
   const [files, setFiles] = React.useState<any>([]);
   const [gender, setGender] = React.useState<any>(data ? data.gender.fa : "");
   const [category, setCategory] = React.useState<any>(
     data ? data.category.fa : ""
   );
   const [customErrors, setCustomErrors] = React.useState<any>({});
+  const [description, setDescription] = React.useState<any>(
+    data ? data.description : ""
+  );
   // const [currentImages, setCurrentImages] = React.useState<string[]>(
   //   data ? data.images : ""
   // );
-  console.log(data);
-
-  const handleClose = () => {
+  React.useEffect(() => {
     setFiles([]);
     setCustomErrors({});
+    setGender(data ? data.gender.fa : "");
+    setCategory(data ? data.category.fa : "");
+    setDescription(data ? data.description : "");
+  }, [data]);
+  const handleClose = () => {
     setOpen(false);
   };
   const BoxFormStyle: any = styled(Box)<BoxProps>(({ theme }) => ({
@@ -94,7 +120,6 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit, data }) => {
             color: data ? data.colors[0] : "",
             price: data ? data.price.toString() : "",
             inventory: data ? data.inventory.toString() : "",
-            description: data ? data.description : "",
           }}
           validate={(values) => {
             const errors: any = {};
@@ -125,21 +150,23 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit, data }) => {
             return errors;
           }}
           onSubmit={(data, { setSubmitting }) => {
-            if (gender && category && files.length) {
+            if (gender && category && (edit || files.length)) {
               setCustomErrors({});
               const genderTranslate = genderEnglish(gender);
               const categoryTranslate = categoryEnglish(category);
+              console.log(data);
 
               handleSubmit({
                 name: data.name,
                 price: data.price,
-                colors: data.color,
+                color: data.color,
                 inventory: data.inventory,
                 gender: genderTranslate,
                 category: categoryTranslate,
                 files,
-                description: data.description,
+                description: description,
               });
+
               handleClose();
               return;
             }
@@ -327,7 +354,6 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit, data }) => {
                                 index,
                                 image
                               );
-
                               current[indexType].images.splice(index, 1);
                               console.log(current[indexType]);
                               return current;
@@ -352,12 +378,11 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit, data }) => {
                 ) : (
                   ""
                 )} */}
-                <Field
-                  name="description"
-                  placeholder="توضیحات"
-                  required
-                  type="text"
-                  as={DescriptionTextFieldStyle}
+                <CKEditor
+                  initData={`${description}`}
+                  onChange={({ editor }) => {
+                    setDescription(editor.getData());
+                  }}
                 />
               </div>
               <DialogActions sx={{ mt: 3, pb: 1, justifyContent: "center" }}>

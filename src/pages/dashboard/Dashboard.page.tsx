@@ -114,16 +114,19 @@ const ActionButtons: React.FC<{
       return uploadImagesAdminService(formData, reqConfig);
     });
     Promise.all(imagePromises).then((arrOfResults) => {
+      console.log(data.color);
+
       const allFormData = {
         name: data.name,
         colors: [data.color],
         images: [...arrOfResults],
         price: +data.price,
         inventory: +data.inventory,
-        gender: { [data.gender.en]: data.gender.fa },
-        category: { [data.category.en]: data.category.fa },
+        gender: { en: data.gender.en, fa: data.gender.fa },
+        category: { en: data.category.en, fa: data.category.fa },
         description: data.description,
       };
+      console.log([data.color], allFormData.colors);
 
       addProductAdminService(allFormData)
         .then((res) => {
@@ -161,6 +164,7 @@ const ActionButtons: React.FC<{
           open={addOpen}
           setOpen={setAddOpen}
           handleSubmit={handleAdd}
+          edit={false}
         />
       </>
     );

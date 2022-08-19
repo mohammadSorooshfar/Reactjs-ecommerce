@@ -1,37 +1,15 @@
-import CategoryIcon from "@mui/icons-material/Category";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import InventoryIcon from "@mui/icons-material/Inventory";
-import ListAltIcon from "@mui/icons-material/ListAlt";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Button,
-  Container,
-  Grid,
-  Pagination,
-} from "@mui/material";
+import { Button, Container, Grid, Pagination } from "@mui/material";
 import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { getProducts } from "api/user/products.api";
 import FilterSide from "components/filterSide/FilterSide";
 import ProductCard from "components/productCard/ProductCard";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import {
-  getProductsAdminService,
-  getProductsService,
-} from "services/services.services";
+import { useNavigate, useParams } from "react-router-dom";
+import { getProductsService } from "services/services.services";
 import { IProduct } from "types/interfaces.types";
 
-interface props {}
-
-const Products: React.FC<props> = () => {
+const Products: React.FC = () => {
   const { category = "", gender = "" } = useParams();
   const navigate = useNavigate();
   const [products, setProducts] = useState<IProduct[]>([]);

@@ -11,6 +11,7 @@ export const productsSlice = createSlice({
   reducers: {
     addProducts(state, action) {
       state.products = action.payload;
+      console.log(action.payload);
     },
     editableToggle(state) {
       state.editable = !state.editable;
