@@ -25,7 +25,6 @@ import {
 import AddModal from "components/modals/AddModal";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { editableToggle } from "redux/products";
 import {
   addProductAdminService,
   updateProductsAdminService,
@@ -39,16 +38,23 @@ const RowType: React.FC<{
   handleChangePriceInventory: any;
 }> = ({ rowData, refreshFunction, handleChangePriceInventory }) => {
   if (isAnProductManagement(rowData)) {
-    return <TrProduct rowData={rowData} refreshFunction={refreshFunction} />;
+    return (
+      <TrProduct
+        rowData={rowData}
+        refreshFunction={refreshFunction}
+        key={rowData.id}
+      />
+    );
   } else if (isAnPriceManagement(rowData)) {
     return (
       <TrPrice
         rowData={rowData}
         handleChangePriceInventory={handleChangePriceInventory}
+        key={rowData.id}
       />
     );
   } else {
-    return <TrOrder rowData={rowData} />;
+    return <TrOrder rowData={rowData} key={rowData.id} />;
   }
 };
 const ActionButtons: React.FC<{
@@ -58,15 +64,14 @@ const ActionButtons: React.FC<{
   refreshFunction: any;
 }> = ({ path, setDelivered, rowsData, refreshFunction }) => {
   const [addOpen, setAddOpen] = useState(false);
-  const editable = useSelector((state: any) => state.products.editable);
   const products = useSelector((state: any) => state.products.products);
+  const editList = useSelector((state: any) => state.products.editList);
   const dispatch = useDispatch();
   const handleEditPrice = (
     rowsData: IPriceManagement[],
     dispatch: any,
     products: IProduct[]
   ) => {
-    dispatch(editableToggle());
     const editedProducts: IProduct[] = [];
     products.forEach((product: IProduct, index) => {
       if (
@@ -183,7 +188,7 @@ const ActionButtons: React.FC<{
           variant="contained"
           color={"success"}
           onClick={() => handleEditPrice(rowsData, dispatch, products)}
-          disabled={!editable}
+          // disabled={!editable}
         >
           ذخیره
         </Button>

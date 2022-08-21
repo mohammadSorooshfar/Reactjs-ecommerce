@@ -1,3 +1,4 @@
+import { CircularProgress } from "@mui/material";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
@@ -56,7 +57,7 @@ const EnhancedTable: React.FC<ITableProps> = ({
   const [rowsData, setRowsData] = React.useState<any[]>([]);
   const [totalRows, setTotalRows] = React.useState(0);
   const [delivered, setDelivered] = React.useState(false);
-  const editable = useSelector((state: any) => state.products.editable);
+  const [loading, setLoading] = React.useState(true);
   const dispatch = useDispatch();
   const location = useLocation();
 
@@ -79,6 +80,7 @@ const EnhancedTable: React.FC<ITableProps> = ({
         const data = createOrderDataForManagementTable(res.data);
         setRowsData(data);
         setTotalRows(+res.total);
+        setLoading(false);
       })
       .catch((e) => {
         console.log(e);
@@ -98,6 +100,7 @@ const EnhancedTable: React.FC<ITableProps> = ({
           setTotalRows(+res.total);
         }
         dispatch(addProducts(res.data));
+        setLoading(false);
       })
       .catch((e) => console.log(e));
   };
@@ -116,8 +119,10 @@ const EnhancedTable: React.FC<ITableProps> = ({
     }
   };
   const handleChangePage = (event: unknown, newPage: number) => {
-    handleData(newPage);
+    setLoading(true);
     setPage(newPage);
+    handleData(newPage);
+    console.log("here");
   };
   React.useEffect(() => {
     handleChangePage("", 0);
@@ -152,47 +157,50 @@ const EnhancedTable: React.FC<ITableProps> = ({
         refreshFunction: refresh,
       })}
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <TableContainer>
-          <Table sx={{ minWidth: "60%" }} size="medium">
-            <EnhancedTableHead
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-              rowCount={8}
-              headers={headers}
-            />
-            <TableBody>
-              {rowsData.sort(getComparator(order, orderBy)).map((row) => {
-                return RowType({
-                  rowData: row,
-                  refreshFunction: refresh,
-                  handleChangePriceInventory: handleChangePriceInventory,
-                });
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        {editable ? (
-          ""
+        {loading ? (
+          <CircularProgress />
         ) : (
-          <TablePagination
-            count={totalRows}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            rowsPerPageOptions={[5, 8, 10]}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            labelDisplayedRows={({ from, to, count, page }) => {
-              return `${persianNumber(from.toString())}–${persianNumber(
-                to.toString()
-              )} از ${
-                count !== -1
-                  ? `${persianNumber(count.toString())} آیتم`
-                  : `more than ${to}`
-              }`;
-            }}
-            sx={{ div: { margin: 0 } }}
-          />
+          <>
+            <TableContainer>
+              <Table sx={{ minWidth: "60%" }} size="medium">
+                <EnhancedTableHead
+                  order={order}
+                  orderBy={orderBy}
+                  onRequestSort={handleRequestSort}
+                  rowCount={8}
+                  headers={headers}
+                />
+                <TableBody>
+                  {rowsData.sort(getComparator(order, orderBy)).map((row) => {
+                    return RowType({
+                      rowData: row,
+                      refreshFunction: refresh,
+                      handleChangePriceInventory: handleChangePriceInventory,
+                    });
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+
+            <TablePagination
+              count={totalRows}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              rowsPerPageOptions={[5, 8, 10]}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              labelDisplayedRows={({ from, to, count, page }) => {
+                return `${persianNumber(from.toString())}–${persianNumber(
+                  to.toString()
+                )} از ${
+                  count !== -1
+                    ? `${persianNumber(count.toString())} آیتم`
+                    : `more than ${to}`
+                }`;
+              }}
+              sx={{ div: { margin: 0 } }}
+            />
+          </>
         )}
       </Paper>
     </Box>

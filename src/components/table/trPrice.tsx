@@ -1,7 +1,7 @@
 import { TableCell, TableRow, TextField, Typography } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { editableToggle } from "redux/products";
+import { addToEditList } from "redux/products";
 import { IPriceManagement } from "types/interfaces.types";
 
 interface props {
@@ -10,7 +10,8 @@ interface props {
 }
 
 const TrPrice: React.FC<props> = ({ rowData, handleChangePriceInventory }) => {
-  const editable = useSelector((state: any) => state.products.editable);
+  const [editablePrice, setEditablePrice] = useState(false);
+  const [editableInventory, setEditableInventory] = useState(false);
   const dispatch = useDispatch();
   const handleChange = (e: any) => {
     handleChangePriceInventory(
@@ -23,28 +24,39 @@ const TrPrice: React.FC<props> = ({ rowData, handleChangePriceInventory }) => {
     <TableRow hover role="checkbox" tabIndex={-1} key={rowData.name}>
       <TableCell align="right">{rowData.name}</TableCell>
       <TableCell align="right">
-        {editable ? (
+        {editablePrice ? (
           <TextField
             name="price"
             defaultValue={rowData.price}
             onChange={handleChange}
           />
         ) : (
-          <Typography onClick={() => dispatch(editableToggle())}>
+          <Typography
+            onClick={() => {
+              !(editableInventory && editablePrice) &&
+                dispatch(addToEditList(rowData.id));
+              setEditablePrice(true);
+            }}
+          >
             {rowData.price}
           </Typography>
         )}
       </TableCell>
       <TableCell align="right">
-        {editable ? (
+        {editableInventory ? (
           <TextField
             name="inventory"
             defaultValue={rowData.inventory}
             onChange={handleChange}
           />
         ) : (
-          <Typography onClick={() => dispatch(editableToggle())}>
-            {" "}
+          <Typography
+            onClick={() => {
+              !(editableInventory && editablePrice) &&
+                dispatch(addToEditList(rowData.id));
+              setEditableInventory(true);
+            }}
+          >
             {rowData.inventory}
           </Typography>
         )}
