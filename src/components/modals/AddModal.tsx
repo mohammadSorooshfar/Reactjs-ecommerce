@@ -1,6 +1,7 @@
 import {
   Box,
   BoxProps,
+  Grid,
   Input,
   InputLabel,
   MenuItem,
@@ -31,24 +32,6 @@ import {
   useCKEditor,
 } from "ckeditor4-react";
 
-function Editor() {
-  const [element, setElement] = React.useState<HTMLDivElement | null>(null);
-  console.log(element);
-
-  useCKEditor<"customEvent" | "anotherCustomEvent">({
-    element,
-    dispatchEvent: ({ type }: { type: any }) => {
-      if (type === prefixEventName("customEvent")) {
-        console.log(type); // '__CKE__customEvent'
-      } else {
-        console.log(type); // '__CKE__anotherCustomEvent'
-      }
-    },
-    subscribeTo: ["customEvent", "anotherCustomEvent"],
-  });
-
-  return <div ref={setElement} />;
-}
 interface props {
   open: any;
   setOpen: any;
@@ -63,7 +46,7 @@ const AddModal: React.FC<props> = ({
   data,
   edit,
 }) => {
-  const [files, setFiles] = React.useState<any>([]);
+  const [files, setFiles] = React.useState<FileList | null>(null);
   const [gender, setGender] = React.useState<any>(data ? data.gender.fa : "");
   const [category, setCategory] = React.useState<any>(
     data ? data.category.fa : ""
@@ -76,7 +59,7 @@ const AddModal: React.FC<props> = ({
   //   data ? data.images : ""
   // );
   React.useEffect(() => {
-    setFiles([]);
+    setFiles(null);
     setCustomErrors({});
     setGender(data ? data.gender.fa : "");
     setCategory(data ? data.category.fa : "");
@@ -93,11 +76,6 @@ const AddModal: React.FC<props> = ({
   const FormTextFieldStyle: any = styled(TextField)<TextFieldProps>(
     ({ theme }) => ({
       width: "255px",
-    })
-  );
-  const DescriptionTextFieldStyle: any = styled(TextField)<TextFieldProps>(
-    ({ theme }) => ({
-      width: "520px",
     })
   );
   const ErrorTypographyStyle: any = styled(Typography)<TypographyProps>(
@@ -150,12 +128,10 @@ const AddModal: React.FC<props> = ({
             return errors;
           }}
           onSubmit={(data, { setSubmitting }) => {
-            if (gender && category && (edit || files.length)) {
+            if (gender && category && (edit || files?.length)) {
               setCustomErrors({});
               const genderTranslate = genderEnglish(gender);
               const categoryTranslate = categoryEnglish(category);
-              console.log(data);
-
               handleSubmit({
                 name: data.name,
                 price: data.price,
@@ -182,7 +158,7 @@ const AddModal: React.FC<props> = ({
                 ...prev,
               }));
             }
-            if (!files.length) {
+            if (!files?.length) {
               setCustomErrors((prev: any) => ({
                 files: "عکس را انتخاب کنید",
                 ...prev,
@@ -331,6 +307,27 @@ const AddModal: React.FC<props> = ({
                   }
                   sx={{ mb: 4, width: "90%" }}
                 />
+                {files ? (
+                  <Box>
+                    <Grid container spacing={1}>
+                      {Object.values(files).map((image) => (
+                        <Grid item xs={4}>
+                          <img
+                            src={URL.createObjectURL(image)}
+                            alt=""
+                            style={{
+                              width: "100%",
+                              height: "200px",
+                              objectFit: "cover",
+                            }}
+                          />
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </Box>
+                ) : (
+                  ""
+                )}
                 {customErrors.files && (
                   <ErrorTypographyStyle>
                     {customErrors.files}

@@ -62,7 +62,6 @@ const ActionButtons: React.FC<{
   setLoading: any;
 }> = ({ path, setDelivered, rowsData, refreshFunction, setLoading }) => {
   const [addOpen, setAddOpen] = useState(false);
-  const products = useSelector((state: any) => state.products.products);
   const editList = useSelector((state: any) => state.products.editList);
   const dispatch = useDispatch();
 
@@ -73,9 +72,7 @@ const ActionButtons: React.FC<{
         dispatch(deleteEditList());
       }
     };
-
     document.addEventListener("keydown", keyDownHandler);
-
     return () => {
       document.removeEventListener("keydown", keyDownHandler);
     };
