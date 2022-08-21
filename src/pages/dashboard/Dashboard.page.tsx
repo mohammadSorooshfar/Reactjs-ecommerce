@@ -34,6 +34,7 @@ import {
 } from "services/services.services";
 import { toast } from "react-toastify";
 import { deleteEditList } from "redux/products";
+import { Aos, AosEventType } from "aos";
 
 const RowType: React.FC<{
   rowData: IProductManagement | IPriceManagement | IOrderManagement;
@@ -63,8 +64,23 @@ const ActionButtons: React.FC<{
   const [addOpen, setAddOpen] = useState(false);
   const products = useSelector((state: any) => state.products.products);
   const editList = useSelector((state: any) => state.products.editList);
-
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const keyDownHandler = (event: any) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        dispatch(deleteEditList());
+      }
+    };
+
+    document.addEventListener("keydown", keyDownHandler);
+
+    return () => {
+      document.removeEventListener("keydown", keyDownHandler);
+    };
+  }, []);
+
   const handleEditPrice = () => {
     setLoading(true);
     const getPromises = editList.map((editedRow: IEditRow) => {
