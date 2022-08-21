@@ -17,7 +17,7 @@ export const productsSlice = createSlice({
   initialState,
   reducers: {
     addProducts(state, action) {
-      state.products.push(action.payload);
+      state.products = action.payload;
     },
     addToEditList(state, action) {
       state.editList.push(action.payload);

@@ -26,13 +26,7 @@ const TrProduct: React.FC<{
   const [openDelete, setOpenDelete] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const products = useSelector((state: any) => state.products.products);
-  const [product, setProduct] = useState<IProduct>(
-    products.find((product: IProduct) => product.id == rowData.id)
-  );
-  useEffect(() => {
-    setProduct(products.find((product: IProduct) => product.id == rowData.id));
-    console.log(rowData, products);
-  }, [products]);
+  console.log(products);
 
   const DeleteButton = styled(Button)<{}>(({ theme }) => ({
     backgroundColor: theme.palette.error.main,
@@ -59,16 +53,19 @@ const TrProduct: React.FC<{
         toast.error("حذف کالا با خطا روبرو شد");
       });
   };
-  const handleEdit = (data: {
-    name: string;
-    price: string;
-    color: string;
-    inventory: string;
-    gender: { fa: string; en: string };
-    category: { fa: string; en: string };
-    files: FileList;
-    description: string;
-  }) => {
+  const handleEdit = (
+    data: {
+      name: string;
+      price: string;
+      color: string;
+      inventory: string;
+      gender: { fa: string; en: string };
+      category: { fa: string; en: string };
+      files: FileList;
+      description: string;
+    },
+    productBeforeEdit: IProduct
+  ) => {
     const reqConfig = {
       headers: {
         "content-type": "multipart/form-data",
@@ -83,13 +80,13 @@ const TrProduct: React.FC<{
     });
     Promise.all(imagePromises).then((arrOfResults) => {
       const allFormData = {
-        id: product.id,
+        id: productBeforeEdit.id,
         name: data.name,
         colors: [
-          data.color ? data.color : product.colors[0],
-          ...product.colors.slice(1),
+          data.color ? data.color : productBeforeEdit.colors[0],
+          ...productBeforeEdit.colors.slice(1),
         ],
-        images: [...product.images, ...arrOfResults],
+        images: [...productBeforeEdit.images, ...arrOfResults],
         price: +data.price,
         inventory: +data.inventory,
         gender: { en: data.gender.en, fa: data.gender.fa },
@@ -147,7 +144,7 @@ const TrProduct: React.FC<{
         open={openUpdate}
         setOpen={setOpenUpdate}
         handleSubmit={handleEdit}
-        data={product}
+        data={products.find((product: IProduct) => product.id === rowData.id)}
         edit={true}
       />
     </>
