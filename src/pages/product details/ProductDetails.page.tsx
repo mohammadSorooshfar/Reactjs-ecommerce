@@ -109,7 +109,9 @@ const ProductDetails: React.FC<props> = () => {
               {product?.name}
             </Typography>
             <Typography variant="subtitle2" textAlign={"right"}>
-              {product?.description}
+              <div
+                dangerouslySetInnerHTML={{ __html: product?.description || "" }}
+              ></div>
             </Typography>
             <Box
               display={"flex"}
@@ -146,6 +148,7 @@ const ProductDetails: React.FC<props> = () => {
                 placeholder="تعداد"
                 size="small"
                 sx={{ width: "20%" }}
+                InputProps={{ inputProps: { min: 1, max: 50 } }}
               />
               <Button variant="contained" color="success" size="large">
                 افزودن به سبد خرید

@@ -275,7 +275,7 @@ const AddModal: React.FC<props> = ({
                         return selected;
                       }}
                     >
-                      <MenuItem disabled value="جنسیت">
+                      <MenuItem disabled value="">
                         <em>جنسیت</em>
                       </MenuItem>
                       <MenuItem value="مردانه">مردانه</MenuItem>

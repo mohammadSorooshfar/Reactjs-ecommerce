@@ -183,6 +183,7 @@ const EnhancedTable: React.FC<ITableProps> = ({
             onPageChange={handleChangePage}
             rowsPerPageOptions={[5, 8, 10]}
             onRowsPerPageChange={handleChangeRowsPerPage}
+            labelRowsPerPage={"تعداد آیتم ها در هر صفحه:"}
           />
         )}
       </Paper>
