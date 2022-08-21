@@ -15,8 +15,8 @@
         "944784b411cdb3a75eb6a44f3109c744",
         "73b831f5db3230d1f4b20c263ce28eda"
       ],
-      "price": 3250000,
-      "inventory": 150,
+      "price": 5250000,
+      "inventory": 80,
       "gender": {
         "en": "women",
         "fa": "زنانه"
@@ -38,8 +38,8 @@
         "en": "sport",
         "fa": "ورزشی"
       },
-      "price": 2000000,
-      "inventory": 170,
+      "price": 2400000,
+      "inventory": 115,
       "colors": [
         "بنفش",
         "قرمز"
@@ -65,8 +65,8 @@
         "en": "sport",
         "fa": "ورزشی"
       },
-      "price": 2660000,
-      "inventory": 80,
+      "price": 3330000,
+      "inventory": 90,
       "colors": [
         "مشکی",
         "سفید"
@@ -93,7 +93,7 @@
         "fa": "ورزشی"
       },
       "price": 1500000,
-      "inventory": 200,
+      "inventory": 220,
       "colors": [
         "زرد",
         "آبی"
@@ -146,7 +146,7 @@
         "en": "sport",
         "fa": "ورزشی"
       },
-      "price": 1300000,
+      "price": 3300000,
       "inventory": 220,
       "colors": [
         "صورتی",
@@ -223,7 +223,7 @@
         "en": "sneaker",
         "fa": "کتانی"
       },
-      "price": 1500000,
+      "price": 3500000,
       "inventory": 100,
       "colors": [
         "آبی",
@@ -358,8 +358,8 @@
         "en": "sneaker",
         "fa": "کتانی"
       },
-      "price": 1000000,
-      "inventory": 140,
+      "price": 3300000,
+      "inventory": 600,
       "colors": [
         "سفید"
       ],

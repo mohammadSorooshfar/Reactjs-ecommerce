@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { IProduct } from "types/interfaces.types";
+import { IEditRow, IProduct } from "types/interfaces.types";
 
 interface IState {
   products: IProduct[];
   editedProducts: IProduct[];
-  editList: number[];
+  editList: IEditRow[];
 }
 
 const initialState: IState = {
@@ -17,13 +17,26 @@ export const productsSlice = createSlice({
   initialState,
   reducers: {
     addProducts(state, action) {
-      state.products = action.payload;
+      state.products.push(action.payload);
     },
     addToEditList(state, action) {
       state.editList.push(action.payload);
     },
+    changeEditList(state, action) {
+      const index = state.editList.findIndex(
+        (product) => product.id === action.payload.id
+      );
+      state.editList[index] = {
+        ...state.editList[index],
+        ...action.payload.data,
+      };
+    },
+    deleteEditList(state) {
+      state.editList = [];
+    },
   },
 });
 
-export const { addProducts, addToEditList } = productsSlice.actions;
+export const { addProducts, addToEditList, changeEditList, deleteEditList } =
+  productsSlice.actions;
 export default productsSlice.reducer;

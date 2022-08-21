@@ -122,7 +122,6 @@ const EnhancedTable: React.FC<ITableProps> = ({
     setLoading(true);
     setPage(newPage);
     handleData(newPage);
-    console.log("here");
   };
   React.useEffect(() => {
     handleChangePage("", 0);
@@ -137,17 +136,6 @@ const EnhancedTable: React.FC<ITableProps> = ({
     setPage(0);
     handleChangePage("", 0);
   };
-  const handleChangePriceInventory = (
-    value: string,
-    id: number,
-    property: string
-  ) => {
-    setRowsData((prevRows) => {
-      const index = prevRows.findIndex((row) => row.id === id);
-      prevRows[index][property] = +value;
-      return [...prevRows];
-    });
-  };
   return (
     <Box sx={{ width: "90%", mr: "auto", ml: "auto" }}>
       {ActionButtons({
@@ -155,6 +143,7 @@ const EnhancedTable: React.FC<ITableProps> = ({
         setDelivered,
         rowsData: rowsData,
         refreshFunction: refresh,
+        setLoading,
       })}
       <Paper sx={{ width: "100%", mb: 2 }}>
         {loading ? (
@@ -175,7 +164,6 @@ const EnhancedTable: React.FC<ITableProps> = ({
                     return RowType({
                       rowData: row,
                       refreshFunction: refresh,
-                      handleChangePriceInventory: handleChangePriceInventory,
                     });
                   })}
                 </TableBody>

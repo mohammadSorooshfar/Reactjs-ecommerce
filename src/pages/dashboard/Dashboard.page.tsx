@@ -2,6 +2,7 @@ import EnhancedTable from "components/table/Table";
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import {
+  IEditRow,
   IOrderManagement,
   IPriceManagement,
   IProduct,
@@ -27,16 +28,17 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import {
   addProductAdminService,
+  getProductService,
   updateProductsAdminService,
   uploadImagesAdminService,
 } from "services/services.services";
 import { toast } from "react-toastify";
+import { deleteEditList } from "redux/products";
 
 const RowType: React.FC<{
   rowData: IProductManagement | IPriceManagement | IOrderManagement;
   refreshFunction: any;
-  handleChangePriceInventory: any;
-}> = ({ rowData, refreshFunction, handleChangePriceInventory }) => {
+}> = ({ rowData, refreshFunction }) => {
   if (isAnProductManagement(rowData)) {
     return (
       <TrProduct
@@ -46,13 +48,7 @@ const RowType: React.FC<{
       />
     );
   } else if (isAnPriceManagement(rowData)) {
-    return (
-      <TrPrice
-        rowData={rowData}
-        handleChangePriceInventory={handleChangePriceInventory}
-        key={rowData.id}
-      />
-    );
+    return <TrPrice rowData={rowData} key={rowData.id} />;
   } else {
     return <TrOrder rowData={rowData} key={rowData.id} />;
   }
@@ -62,35 +58,36 @@ const ActionButtons: React.FC<{
   setDelivered?: any;
   rowsData: [];
   refreshFunction: any;
-}> = ({ path, setDelivered, rowsData, refreshFunction }) => {
+  setLoading: any;
+}> = ({ path, setDelivered, rowsData, refreshFunction, setLoading }) => {
   const [addOpen, setAddOpen] = useState(false);
   const products = useSelector((state: any) => state.products.products);
   const editList = useSelector((state: any) => state.products.editList);
+
   const dispatch = useDispatch();
-  const handleEditPrice = (
-    rowsData: IPriceManagement[],
-    dispatch: any,
-    products: IProduct[]
-  ) => {
-    const editedProducts: IProduct[] = [];
-    products.forEach((product: IProduct, index) => {
-      if (
-        product.price !== rowsData[index].price ||
-        product.inventory !== rowsData[index].inventory
-      ) {
-        const newProduct = { ...product };
-        newProduct.price = rowsData[index].price;
-        newProduct.inventory = rowsData[index].inventory;
-        return editedProducts.push(newProduct);
-      }
-    }, []);
-    const promises = editedProducts.map((product) =>
-      updateProductsAdminService(product.id.toString(), product)
-    );
-    Promise.all(promises)
-      .then((res) => {
-        toast.success("ویرایش محصولات با موفقیت انجام شد");
-        refreshFunction();
+  const handleEditPrice = () => {
+    setLoading(true);
+    const getPromises = editList.map((editedRow: IEditRow) => {
+      return getProductService(editedRow.id.toString());
+    });
+    Promise.all(getPromises)
+      .then((products) => {
+        const putPromises = products.map((product, index) => {
+          editList[index].priceEdit &&
+            (product.price = editList[index].priceData);
+          editList[index].inventoryEdit &&
+            (product.inventory = editList[index].inventoryData);
+          return updateProductsAdminService(product.id.toString(), product);
+        });
+        Promise.all(putPromises)
+          .then(() => {
+            toast.success("ویرایش محصولات با موفقیت انجام شد");
+            dispatch(deleteEditList());
+            refreshFunction();
+          })
+          .catch((res) => {
+            toast.error("در ویرایش کالاها خطایی صورت گرفت");
+          });
       })
       .catch((res) => {
         toast.error("در ویرایش کالاها خطایی صورت گرفت");
@@ -118,8 +115,6 @@ const ActionButtons: React.FC<{
       return uploadImagesAdminService(formData, reqConfig);
     });
     Promise.all(imagePromises).then((arrOfResults) => {
-      console.log(data.color);
-
       const allFormData = {
         name: data.name,
         colors: [data.color],
@@ -187,8 +182,8 @@ const ActionButtons: React.FC<{
         <Button
           variant="contained"
           color={"success"}
-          onClick={() => handleEditPrice(rowsData, dispatch, products)}
-          // disabled={!editable}
+          onClick={() => handleEditPrice()}
+          disabled={editList.length === 0}
         >
           ذخیره
         </Button>

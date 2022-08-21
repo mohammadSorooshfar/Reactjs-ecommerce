@@ -54,3 +54,11 @@ export interface IOrderManagement {
   totalPrice: number;
   orderSubmitDate: string;
 }
+
+export interface IEditRow {
+  id: number;
+  priceEdit: boolean;
+  inventoryEdit: boolean;
+  priceData: number;
+  inventoryData: number;
+}
