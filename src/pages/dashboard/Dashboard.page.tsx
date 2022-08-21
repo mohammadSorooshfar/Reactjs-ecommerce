@@ -66,7 +66,6 @@ const ActionButtons: React.FC<{
     dispatch: any,
     products: IProduct[]
   ) => {
-    console.log(rowsData);
     dispatch(editableToggle());
     const editedProducts: IProduct[] = [];
     products.forEach((product: IProduct, index) => {

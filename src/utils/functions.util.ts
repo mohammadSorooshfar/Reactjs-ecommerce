@@ -218,5 +218,5 @@ export const persianNumber = (number: string) => {
         break;
     }
   }
-  return output + " تومان";
+  return output;
 };

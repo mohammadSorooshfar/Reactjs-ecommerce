@@ -22,6 +22,7 @@ import {
   createPriceDataForManagementTable,
   createProductDataForManagementTable,
   descendingComparator,
+  persianNumber,
 } from "utils/functions.util";
 import EnhancedTableHead from "./TableHead";
 
@@ -55,7 +56,6 @@ const EnhancedTable: React.FC<ITableProps> = ({
   const [rowsData, setRowsData] = React.useState<any[]>([]);
   const [totalRows, setTotalRows] = React.useState(0);
   const [delivered, setDelivered] = React.useState(false);
-  // const [editable, setEditable] = React.useState(false);
   const editable = useSelector((state: any) => state.products.editable);
   const dispatch = useDispatch();
   const location = useLocation();
@@ -176,14 +176,22 @@ const EnhancedTable: React.FC<ITableProps> = ({
           ""
         ) : (
           <TablePagination
-            component="div"
             count={totalRows}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
             rowsPerPageOptions={[5, 8, 10]}
             onRowsPerPageChange={handleChangeRowsPerPage}
-            labelRowsPerPage={"تعداد آیتم ها در هر صفحه:"}
+            labelDisplayedRows={({ from, to, count, page }) => {
+              return `${persianNumber(from.toString())}–${persianNumber(
+                to.toString()
+              )} از ${
+                count !== -1
+                  ? `${persianNumber(count.toString())} آیتم`
+                  : `more than ${to}`
+              }`;
+            }}
+            sx={{ div: { margin: 0 } }}
           />
         )}
       </Paper>

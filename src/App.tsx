@@ -5,40 +5,44 @@ import MainRoutes from "routes/index.Routes";
 import { createTheme, ThemeProvider } from "@mui/material";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { faIR } from "@mui/material/locale";
 function App() {
   AOS.init();
-  const mainTheme = createTheme({
-    typography: {
-      fontFamily: "Vazirmatn, sans-serif",
+  const mainTheme = createTheme(
+    {
+      typography: {
+        fontFamily: "Vazirmatn, sans-serif",
+      },
+      direction: "rtl",
+      palette: {
+        primary: {
+          main: "#1e272e",
+        },
+        secondary: {
+          light: "#EFEFEF",
+          main: "#dce4ec",
+          dark: "#808e9b",
+        },
+        success: {
+          main: "#0be881",
+          dark: "#05c46b",
+        },
+        info: {
+          main: "#575fcf",
+          dark: "#3c40c6",
+        },
+        error: {
+          main: "#ff5e57",
+          dark: "#ff3f34",
+        },
+        warning: {
+          main: "#ffdd59",
+          dark: "#ffd32a",
+        },
+      },
     },
-    direction: "rtl",
-    palette: {
-      primary: {
-        main: "#1e272e",
-      },
-      secondary: {
-        light: "#EFEFEF",
-        main: "#dce4ec",
-        dark: "#808e9b",
-      },
-      success: {
-        main: "#0be881",
-        dark: "#05c46b",
-      },
-      info: {
-        main: "#575fcf",
-        dark: "#3c40c6",
-      },
-      error: {
-        main: "#ff5e57",
-        dark: "#ff3f34",
-      },
-      warning: {
-        main: "#ffdd59",
-        dark: "#ffd32a",
-      },
-    },
-  });
+    faIR
+  );
   return (
     <div className="App">
       <BrowserRouter>

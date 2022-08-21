@@ -102,7 +102,7 @@ export default function ProductCard({ product }: { product: IProduct }) {
                 ))}
               </Box>
               <Typography variant="subtitle1" textAlign={"left"}>
-                {persianNumber(product.price.toString())}
+                {persianNumber(product.price.toString()) + " تومان"}
               </Typography>
             </Box>
           </CardContent>
