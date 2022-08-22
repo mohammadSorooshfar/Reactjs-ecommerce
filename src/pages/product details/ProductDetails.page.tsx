@@ -101,7 +101,7 @@ const ProductDetails: React.FC<props> = () => {
           >
             <Breadcrumbs separator={<NavigateBeforeIcon fontSize="small" />}>
               <Link
-                to={`/tehranshoes/products/all/all`}
+                to={`/tehranshoes/products`}
                 style={{ textDecoration: "none" }}
               >
                 <Typography color="text.primary">محصولات</Typography>{" "}
