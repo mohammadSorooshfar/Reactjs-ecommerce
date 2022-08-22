@@ -47,28 +47,10 @@ const AddModal: React.FC<props> = ({
   initProduct,
   edit,
 }) => {
-  const [files, setFiles] = React.useState<FileList | null>(null);
-  const [gender, setGender] = React.useState<any>(
-    initProduct ? initProduct.gender.fa : ""
-  );
-  // const [category, setCategory] = React.useState<any>(
-  //   initProduct ? initProduct.category.fa : ""
-  // );
-  const [customErrors, setCustomErrors] = React.useState<any>({});
-  const [description, setDescription] = React.useState<any>(
-    initProduct ? initProduct.description : ""
-  );
   const [deletedImageIndex, setDeletedImageIndex] = React.useState<number[]>(
     []
   );
 
-  React.useEffect(() => {
-    setFiles(null);
-    setCustomErrors({});
-    setGender(initProduct ? initProduct.gender.fa : "");
-    // setCategory(initProduct ? initProduct.category.fa : "");
-    setDescription(initProduct ? initProduct.description : "");
-  }, [initProduct]);
   const handleClose = () => {
     setOpen(false);
   };
@@ -103,6 +85,9 @@ const AddModal: React.FC<props> = ({
             price: initProduct ? initProduct.price.toString() : "",
             inventory: initProduct ? initProduct.inventory.toString() : "",
             category: initProduct ? initProduct.category.fa : "",
+            gender: initProduct ? initProduct.gender.fa : "",
+            description: initProduct ? initProduct.description : "",
+            files: [],
           }}
           validate={(values) => {
             const errors: any = {};
@@ -130,18 +115,21 @@ const AddModal: React.FC<props> = ({
               errors.inventory = "موجودی کالا باید بزرگتر از 0 باشد";
             }
             if (!values.category) {
-              errors.category = "جنسیت را انتخاب کنید";
+              errors.category = "دسته بندی را انتخاب کنید";
             }
-            console.log(values.category);
+            if (!values.gender) {
+              errors.gender = "جنسیت را انتخاب کنید";
+            }
+            if (!values.files.length && !edit) {
+              errors.files = "عکس را انتخاب کنید";
+            }
 
             return errors;
           }}
           onSubmit={(data, { setSubmitting }) => {
-            if (gender && (edit || files?.length)) {
-              setCustomErrors({});
-
-              const genderTranslate = genderEnglish(gender);
-              const categoryTranslate = categoryEnglish(data.category);
+            const genderTranslate = genderEnglish(data.gender);
+            const categoryTranslate = categoryEnglish(data.category);
+            if (edit) {
               handleSubmit(
                 {
                   name: data.name,
@@ -150,28 +138,25 @@ const AddModal: React.FC<props> = ({
                   inventory: data.inventory,
                   gender: genderTranslate,
                   category: categoryTranslate,
-                  files,
-                  description: description,
+                  files: data.files,
+                  description: data.description,
                   deletedImages: deletedImageIndex,
                 },
                 initProduct
               );
-
-              handleClose();
-              return;
+            } else {
+              handleSubmit({
+                name: data.name,
+                price: data.price,
+                color: data.color,
+                inventory: data.inventory,
+                gender: genderTranslate,
+                category: categoryTranslate,
+                files: data.files,
+                description: data.description,
+              });
             }
-            if (!gender) {
-              setCustomErrors((prev: any) => ({
-                gender: "جنسیت را انتخاب کنید",
-                ...prev,
-              }));
-            }
-            if (!files?.length) {
-              setCustomErrors((prev: any) => ({
-                files: "عکس را انتخاب کنید",
-                ...prev,
-              }));
-            }
+            handleClose();
           }}
         >
           {({ isSubmitting, errors, touched, values, setFieldValue }) => (
@@ -246,10 +231,10 @@ const AddModal: React.FC<props> = ({
                   <Box>
                     <Select
                       displayEmpty
-                      value={gender}
+                      value={values.gender}
                       sx={{ width: "255px" }}
                       onChange={(e) => {
-                        setGender(e.target.value);
+                        setFieldValue("gender", e.target.value);
                       }}
                       input={<OutlinedInput />}
                       renderValue={(selected: any) => {
@@ -266,9 +251,9 @@ const AddModal: React.FC<props> = ({
                       <MenuItem value="زنانه">زنانه</MenuItem>
                       <MenuItem value="بچگانه">بچگانه</MenuItem>
                     </Select>
-                    {customErrors.gender && (
+                    {errors.gender && touched.gender && (
                       <ErrorTypographyStyle>
-                        {customErrors.gender}
+                        {errors.gender}
                       </ErrorTypographyStyle>
                     )}
                   </Box>
@@ -295,9 +280,9 @@ const AddModal: React.FC<props> = ({
                       <MenuItem value="رسمی">رسمی</MenuItem>
                       <MenuItem value="کتانی">کتانی</MenuItem>
                     </Select>
-                    {customErrors.category && (
+                    {errors.category && touched.category && (
                       <ErrorTypographyStyle>
-                        {customErrors.category}
+                        {errors.category}
                       </ErrorTypographyStyle>
                     )}
                   </Box>
@@ -311,20 +296,18 @@ const AddModal: React.FC<props> = ({
                   type="file"
                   inputProps={{ multiple: true }}
                   onChange={(e) =>
-                    setFiles((e.target as HTMLInputElement).files)
+                    setFieldValue("files", (e.target as HTMLInputElement).files)
                   }
                   sx={{ mb: 4, width: "90%" }}
                 />
 
-                {customErrors.files && (
-                  <ErrorTypographyStyle>
-                    {customErrors.files}
-                  </ErrorTypographyStyle>
+                {errors.files && touched.files && (
+                  <ErrorTypographyStyle>{errors.files}</ErrorTypographyStyle>
                 )}
-                {files ? (
+                {values.files ? (
                   <Box>
                     <Grid container spacing={1} marginBottom={4}>
-                      {Object.values(files).map((image) => (
+                      {Object.values(values.files).map((image) => (
                         <Grid item xs={4}>
                           <img
                             src={URL.createObjectURL(image)}
@@ -388,9 +371,9 @@ const AddModal: React.FC<props> = ({
                   ""
                 )}
                 <CKEditor
-                  initData={`${description}`}
+                  initData={`${values.description}`}
                   onChange={({ editor }) => {
-                    setDescription(editor.getData());
+                    setFieldValue("description", editor.getData());
                   }}
                 />
               </div>
@@ -400,10 +383,16 @@ const AddModal: React.FC<props> = ({
                   onClick={handleClose}
                   color="error"
                   sx={{ ml: 3 }}
+                  disabled={isSubmitting}
                 >
                   انصراف
                 </Button>
-                <Button variant={"contained"} color="success" type="submit">
+                <Button
+                  variant={"contained"}
+                  color="success"
+                  type="submit"
+                  disabled={isSubmitting}
+                >
                   {initProduct ? "ویرایش" : "افزودن"}
                 </Button>
               </DialogActions>

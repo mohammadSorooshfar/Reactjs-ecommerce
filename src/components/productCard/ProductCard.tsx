@@ -9,7 +9,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { IProduct } from "types/interfaces.types";
 import { colorGenerator, persianNumber } from "utils/functions.util";
 
-export default function ProductCard({ product }: { product: IProduct }) {
+export default function ProductCard({
+  product,
+  height,
+}: {
+  product: IProduct;
+  height: string;
+}) {
   const [img, setImg] = useState(`${BASE_URL}${IMAGES}/${product.images[0]}`);
   const [selectedColor, setSelectedColor] = useState(0);
   const navigate = useNavigate();
@@ -39,16 +45,21 @@ export default function ProductCard({ product }: { product: IProduct }) {
     },
   }));
   return (
-    <Link to={`/tehranshoes/product/${product.id}`}>
+    <Link
+      to={`/tehranshoes/product/${product.id}`}
+      style={{
+        textDecoration: "none",
+      }}
+    >
       <Card elevation={1}>
         <Box
           sx={{
-            minHeight: "400px",
+            minHeight: height,
           }}
         >
           <CardMedia
             component="img"
-            height="250"
+            height={`${+height - +height / 3}px`}
             image={img}
             alt="shoe photo"
             onMouseEnter={() =>

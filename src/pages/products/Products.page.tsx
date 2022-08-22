@@ -17,7 +17,7 @@ const Products: React.FC = () => {
   const [productsPerPage, setProductsPerPage] = useState(6);
   const [page, setPage] = useState(0);
   const [filters, setFilters] = useState<{ name: string; value: string }[]>([
-    { name: "gender.en", value: gender },
+    { name: "gender.en", value: gender === "all" ? "" : gender },
     { name: "category.en", value: category === "all" ? "" : category },
   ]);
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -38,7 +38,7 @@ const Products: React.FC = () => {
   }, [filters]);
   useEffect(() => {
     setFilters([
-      { name: "gender.en", value: gender },
+      { name: "gender.en", value: gender === "all" ? "" : gender },
       { name: "category.en", value: category === "all" ? "" : category },
     ]);
   }, [gender, category]);
@@ -57,7 +57,7 @@ const Products: React.FC = () => {
             {products.length ? (
               products.map((product) => (
                 <Grid item sm={4}>
-                  <ProductCard product={product} />
+                  <ProductCard product={product} height={"400"} />
                 </Grid>
               ))
             ) : (
