@@ -8,19 +8,21 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getProductsService } from "services/services.services";
 import { IProduct } from "types/interfaces.types";
-
+import { CircularProgress } from "@mui/material";
 const Products: React.FC = () => {
   const { category = "", gender = "" } = useParams();
   const navigate = useNavigate();
   const [products, setProducts] = useState<IProduct[]>([]);
   const [totalProducts, setTotalProducts] = useState(0);
   const [productsPerPage, setProductsPerPage] = useState(6);
+  const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [filters, setFilters] = useState<{ name: string; value: string }[]>([
     { name: "gender.en", value: gender === "all" ? "" : gender },
     { name: "category.en", value: category === "all" ? "" : category },
   ]);
   const handleChangePage = (event: unknown, newPage: number) => {
+    setLoading(true);
     getProductsData(newPage.toString());
     setPage(newPage);
   };
@@ -31,6 +33,8 @@ const Products: React.FC = () => {
         setTotalProducts(+res.total);
       })
       .catch((e) => console.log(e));
+
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -54,7 +58,9 @@ const Products: React.FC = () => {
             <Button>جدید ترین</Button>
           </Toolbar>
           <Grid container spacing={3} padding={2}>
-            {products.length ? (
+            {loading ? (
+              <CircularProgress sx={{ margin: "auto", marginTop: "100px" }} />
+            ) : products.length ? (
               products.map((product) => (
                 <Grid item sm={4}>
                   <ProductCard product={product} height={"400"} />
@@ -66,7 +72,7 @@ const Products: React.FC = () => {
               </Typography>
             )}
           </Grid>
-          {products.length ? (
+          {products.length && !loading ? (
             <Pagination
               sx={{
                 marginTop: 3,
