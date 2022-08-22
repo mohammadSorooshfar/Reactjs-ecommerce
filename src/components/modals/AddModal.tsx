@@ -51,9 +51,9 @@ const AddModal: React.FC<props> = ({
   const [gender, setGender] = React.useState<any>(
     initProduct ? initProduct.gender.fa : ""
   );
-  const [category, setCategory] = React.useState<any>(
-    initProduct ? initProduct.category.fa : ""
-  );
+  // const [category, setCategory] = React.useState<any>(
+  //   initProduct ? initProduct.category.fa : ""
+  // );
   const [customErrors, setCustomErrors] = React.useState<any>({});
   const [description, setDescription] = React.useState<any>(
     initProduct ? initProduct.description : ""
@@ -66,7 +66,7 @@ const AddModal: React.FC<props> = ({
     setFiles(null);
     setCustomErrors({});
     setGender(initProduct ? initProduct.gender.fa : "");
-    setCategory(initProduct ? initProduct.category.fa : "");
+    // setCategory(initProduct ? initProduct.category.fa : "");
     setDescription(initProduct ? initProduct.description : "");
   }, [initProduct]);
   const handleClose = () => {
@@ -102,6 +102,7 @@ const AddModal: React.FC<props> = ({
             color: initProduct ? initProduct.colors[0] : "",
             price: initProduct ? initProduct.price.toString() : "",
             inventory: initProduct ? initProduct.inventory.toString() : "",
+            category: initProduct ? initProduct.category.fa : "",
           }}
           validate={(values) => {
             const errors: any = {};
@@ -128,16 +129,19 @@ const AddModal: React.FC<props> = ({
             } else if (+values.inventory <= 0) {
               errors.inventory = "موجودی کالا باید بزرگتر از 0 باشد";
             }
+            if (!values.category) {
+              errors.category = "جنسیت را انتخاب کنید";
+            }
+            console.log(values.category);
 
             return errors;
           }}
           onSubmit={(data, { setSubmitting }) => {
-            if (gender && category && (edit || files?.length)) {
+            if (gender && (edit || files?.length)) {
               setCustomErrors({});
 
               const genderTranslate = genderEnglish(gender);
-              const categoryTranslate = categoryEnglish(category);
-              console.log("hiiiiiii");
+              const categoryTranslate = categoryEnglish(data.category);
               handleSubmit(
                 {
                   name: data.name,
@@ -162,12 +166,6 @@ const AddModal: React.FC<props> = ({
                 ...prev,
               }));
             }
-            if (!category) {
-              setCustomErrors((prev: any) => ({
-                category: "جنسیت را انتخاب کنید",
-                ...prev,
-              }));
-            }
             if (!files?.length) {
               setCustomErrors((prev: any) => ({
                 files: "عکس را انتخاب کنید",
@@ -176,7 +174,7 @@ const AddModal: React.FC<props> = ({
             }
           }}
         >
-          {({ isSubmitting, errors, touched }) => (
+          {({ isSubmitting, errors, touched, values, setFieldValue }) => (
             <Form
               style={{
                 display: "flex",
@@ -277,10 +275,10 @@ const AddModal: React.FC<props> = ({
                   <Box>
                     <Select
                       displayEmpty
-                      value={category}
+                      value={values.category}
                       sx={{ width: "255px" }}
                       onChange={(e) => {
-                        setCategory(e.target.value);
+                        setFieldValue("category", e.target.value);
                       }}
                       input={<OutlinedInput />}
                       renderValue={(selected: any) => {

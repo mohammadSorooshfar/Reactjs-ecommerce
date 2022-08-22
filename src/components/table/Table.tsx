@@ -126,6 +126,11 @@ const EnhancedTable: React.FC<ITableProps> = ({
   React.useEffect(() => {
     handleChangePage("", 0);
   }, [location.pathname, delivered]);
+  React.useEffect(() => {
+    if (rowsData.length === 0 && page > 0) {
+      handleChangePage("", page - 1);
+    }
+  }, [rowsData]);
   const refresh = () => {
     handleChangePage("", page);
   };
