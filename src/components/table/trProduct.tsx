@@ -26,7 +26,6 @@ const TrProduct: React.FC<{
   const [openDelete, setOpenDelete] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const products = useSelector((state: any) => state.products.products);
-  console.log(products);
 
   const DeleteButton = styled(Button)<{}>(({ theme }) => ({
     backgroundColor: theme.palette.error.main,
@@ -46,7 +45,6 @@ const TrProduct: React.FC<{
         setOpenDelete(false);
         toast.success("کالا با موفقیت حذف شد");
         refreshFunction();
-        console.log(res);
       })
       .catch((e) => {
         setOpenDelete(false);
@@ -63,9 +61,17 @@ const TrProduct: React.FC<{
       category: { fa: string; en: string };
       files: FileList;
       description: string;
+      deletedImages: number[];
     },
     productBeforeEdit: IProduct
   ) => {
+    const initialProduct = JSON.parse(JSON.stringify(productBeforeEdit));
+    console.log(data.deletedImages);
+    data.deletedImages.forEach((imgIndex) => {
+      console.log(imgIndex, initialProduct.images[imgIndex]);
+
+      initialProduct.images.splice(imgIndex, 1);
+    });
     const reqConfig = {
       headers: {
         "content-type": "multipart/form-data",
@@ -73,20 +79,22 @@ const TrProduct: React.FC<{
       },
     };
 
-    const imagePromises = Object.values(data.files).map((file: any) => {
-      let formData = new FormData();
-      formData.append("image", file);
-      return uploadImagesAdminService(formData, reqConfig);
-    });
+    const imagePromises = data.files
+      ? Object.values(data.files).map((file: any) => {
+          let formData = new FormData();
+          formData.append("image", file);
+          return uploadImagesAdminService(formData, reqConfig);
+        })
+      : "";
     Promise.all(imagePromises).then((arrOfResults) => {
       const allFormData = {
-        id: productBeforeEdit.id,
+        id: initialProduct.id,
         name: data.name,
         colors: [
-          data.color ? data.color : productBeforeEdit.colors[0],
-          ...productBeforeEdit.colors.slice(1),
+          data.color ? data.color : initialProduct.colors[0],
+          ...initialProduct.colors.slice(1),
         ],
-        images: [...productBeforeEdit.images, ...arrOfResults],
+        images: [...initialProduct.images, ...arrOfResults],
         price: +data.price,
         inventory: +data.inventory,
         gender: { en: data.gender.en, fa: data.gender.fa },
@@ -144,7 +152,9 @@ const TrProduct: React.FC<{
         open={openUpdate}
         setOpen={setOpenUpdate}
         handleSubmit={handleEdit}
-        data={products.find((product: IProduct) => product.id === rowData.id)}
+        initProduct={products.find(
+          (product: IProduct) => product.id === rowData.id
+        )}
         edit={true}
       />
     </>

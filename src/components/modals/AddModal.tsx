@@ -22,7 +22,7 @@ import { TextFieldProps } from "material-ui";
 import * as React from "react";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { categoryEnglish, genderEnglish } from "utils/functions.util";
-
+import CancelIcon from "@mui/icons-material/Cancel";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { IProduct } from "types/interfaces.types";
 import {
@@ -31,40 +31,44 @@ import {
   prefixEventName,
   useCKEditor,
 } from "ckeditor4-react";
+import { BASE_URL, IMAGES } from "configs/url.config";
 
 interface props {
   open: any;
   setOpen: any;
   handleSubmit: any;
-  data?: IProduct;
+  initProduct?: IProduct;
   edit: boolean;
 }
 const AddModal: React.FC<props> = ({
   open,
   setOpen,
   handleSubmit,
-  data,
+  initProduct,
   edit,
 }) => {
   const [files, setFiles] = React.useState<FileList | null>(null);
-  const [gender, setGender] = React.useState<any>(data ? data.gender.fa : "");
+  const [gender, setGender] = React.useState<any>(
+    initProduct ? initProduct.gender.fa : ""
+  );
   const [category, setCategory] = React.useState<any>(
-    data ? data.category.fa : ""
+    initProduct ? initProduct.category.fa : ""
   );
   const [customErrors, setCustomErrors] = React.useState<any>({});
   const [description, setDescription] = React.useState<any>(
-    data ? data.description : ""
+    initProduct ? initProduct.description : ""
   );
-  // const [currentImages, setCurrentImages] = React.useState<string[]>(
-  //   data ? data.images : ""
-  // );
+  const [deletedImageIndex, setDeletedImageIndex] = React.useState<number[]>(
+    []
+  );
+
   React.useEffect(() => {
     setFiles(null);
     setCustomErrors({});
-    setGender(data ? data.gender.fa : "");
-    setCategory(data ? data.category.fa : "");
-    setDescription(data ? data.description : "");
-  }, [data]);
+    setGender(initProduct ? initProduct.gender.fa : "");
+    setCategory(initProduct ? initProduct.category.fa : "");
+    setDescription(initProduct ? initProduct.description : "");
+  }, [initProduct]);
   const handleClose = () => {
     setOpen(false);
   };
@@ -89,15 +93,15 @@ const AddModal: React.FC<props> = ({
   return (
     <Dialog open={open} onClose={handleClose} dir="rtl" fullWidth>
       <DialogTitle sx={{ pt: 2 }}>
-        {data ? "ویرایش" : "افزودن"} کالا
+        {initProduct ? "ویرایش" : "افزودن"} کالا
       </DialogTitle>
       <DialogContent sx={{ textAlign: "center", p: 1 }}>
         <Formik
           initialValues={{
-            name: data ? data.name : "",
-            color: data ? data.colors[0] : "",
-            price: data ? data.price.toString() : "",
-            inventory: data ? data.inventory.toString() : "",
+            name: initProduct ? initProduct.name : "",
+            color: initProduct ? initProduct.colors[0] : "",
+            price: initProduct ? initProduct.price.toString() : "",
+            inventory: initProduct ? initProduct.inventory.toString() : "",
           }}
           validate={(values) => {
             const errors: any = {};
@@ -130,18 +134,24 @@ const AddModal: React.FC<props> = ({
           onSubmit={(data, { setSubmitting }) => {
             if (gender && category && (edit || files?.length)) {
               setCustomErrors({});
+
               const genderTranslate = genderEnglish(gender);
               const categoryTranslate = categoryEnglish(category);
-              handleSubmit({
-                name: data.name,
-                price: data.price,
-                color: data.color,
-                inventory: data.inventory,
-                gender: genderTranslate,
-                category: categoryTranslate,
-                files,
-                description: description,
-              });
+              console.log("hiiiiiii");
+              handleSubmit(
+                {
+                  name: data.name,
+                  price: data.price,
+                  color: data.color,
+                  inventory: data.inventory,
+                  gender: genderTranslate,
+                  category: categoryTranslate,
+                  files,
+                  description: description,
+                  deletedImages: deletedImageIndex,
+                },
+                initProduct
+              );
 
               handleClose();
               return;
@@ -307,9 +317,15 @@ const AddModal: React.FC<props> = ({
                   }
                   sx={{ mb: 4, width: "90%" }}
                 />
+
+                {customErrors.files && (
+                  <ErrorTypographyStyle>
+                    {customErrors.files}
+                  </ErrorTypographyStyle>
+                )}
                 {files ? (
                   <Box>
-                    <Grid container spacing={1}>
+                    <Grid container spacing={1} marginBottom={4}>
                       {Object.values(files).map((image) => (
                         <Grid item xs={4}>
                           <img
@@ -328,53 +344,51 @@ const AddModal: React.FC<props> = ({
                 ) : (
                   ""
                 )}
-                {customErrors.files && (
-                  <ErrorTypographyStyle>
-                    {customErrors.files}
-                  </ErrorTypographyStyle>
-                )}
-                {/* {data ? (
-                  <Grid container spacing={2} marginBottom={4}>
-                    {currentImages.map((type: any, indexType: number) =>
-                      type.images.map((image: string, indexImage: number) => (
+                {initProduct ? (
+                  <Box>
+                    <Grid container spacing={1} marginBottom={4}>
+                      {initProduct.images.map((image, index) => (
                         <Grid
                           item
                           xs={4}
-                          onClick={() => {
-                            setCurrentImages((prev: any) => {
-                              let current = [...prev];
-                              const index = current[indexType].images.findIndex(
-                                (img: string) => img === image
-                              );
-                              console.log(
-                                current[indexType].images,
-                                index,
-                                image
-                              );
-                              current[indexType].images.splice(index, 1);
-                              console.log(current[indexType]);
-                              return current;
-                            });
-                            console.log(type, image);
-                          }}
+                          key={index}
+                          position={"relative"}
+                          display={
+                            deletedImageIndex.findIndex((img: number) => {
+                              return img === index;
+                            }) !== -1
+                              ? "none"
+                              : "inline-block"
+                          }
                         >
-                          <Avatar
-                            variant="rounded"
-                            src={`${BASE_URL}${IMAGES}/${image}`}
+                          <CancelIcon
                             sx={{
-                              width: 100,
-                              height: 100,
-                              mr: "auto",
-                              ml: "auto",
+                              position: "absolute",
+                              "&:hover": { cursor: "pointer" },
+                            }}
+                            onClick={() =>
+                              setDeletedImageIndex([
+                                ...deletedImageIndex,
+                                index,
+                              ])
+                            }
+                          />
+                          <img
+                            src={`${BASE_URL}${IMAGES}/${image}`}
+                            alt=""
+                            style={{
+                              width: "100%",
+                              height: "200px",
+                              objectFit: "cover",
                             }}
                           />
                         </Grid>
-                      ))
-                    )}
-                  </Grid>
+                      ))}
+                    </Grid>
+                  </Box>
                 ) : (
                   ""
-                )} */}
+                )}
                 <CKEditor
                   initData={`${description}`}
                   onChange={({ editor }) => {
@@ -392,7 +406,7 @@ const AddModal: React.FC<props> = ({
                   انصراف
                 </Button>
                 <Button variant={"contained"} color="success" type="submit">
-                  {data ? "ویرایش" : "افزودن"}
+                  {initProduct ? "ویرایش" : "افزودن"}
                 </Button>
               </DialogActions>
             </Form>
