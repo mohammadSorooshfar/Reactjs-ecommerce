@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { BASE_URL, IMAGES } from "configs/url.config";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getProductService } from "services/services.services";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Controller, Navigation, Pagination, Thumbs } from "swiper";
@@ -25,6 +25,7 @@ const ProductDetails: React.FC<props> = () => {
   const [product, setProduct] = useState<IProduct>();
   const [selectedColor, setSelectedColor] = useState(0);
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
+  const [quantity, setQuantity] = useState(1);
   useEffect(() => {
     getProductService(id)
       .then((res) => setProduct(res))
@@ -99,11 +100,28 @@ const ProductDetails: React.FC<props> = () => {
             minHeight={"70%"}
           >
             <Breadcrumbs separator={<NavigateBeforeIcon fontSize="small" />}>
-              <Typography color="text.primary">محصولات</Typography>
-              <Typography color="text.primary">{product?.gender.fa}</Typography>
-              <Typography color="text.primary">
-                {product?.category.fa}
-              </Typography>
+              <Link
+                to={`/tehranshoes/products/all/all`}
+                style={{ textDecoration: "none" }}
+              >
+                <Typography color="text.primary">محصولات</Typography>{" "}
+              </Link>
+              <Link
+                to={`/tehranshoes/products/${product?.gender.en}/all`}
+                style={{ textDecoration: "none" }}
+              >
+                <Typography color="text.primary">
+                  {product?.gender.fa}
+                </Typography>
+              </Link>
+              <Link
+                to={`/tehranshoes/products/all/${product?.category.en}`}
+                style={{ textDecoration: "none" }}
+              >
+                <Typography color="text.primary">
+                  {product?.category.fa}
+                </Typography>
+              </Link>
             </Breadcrumbs>
             <Typography variant="h3" textAlign={"right"}>
               {product?.name}
@@ -148,11 +166,34 @@ const ProductDetails: React.FC<props> = () => {
                 placeholder="تعداد"
                 size="small"
                 sx={{ width: "20%" }}
-                InputProps={{ inputProps: { min: 1, max: 50 } }}
+                InputProps={{ inputProps: { min: 1, max: product?.inventory } }}
+                value={quantity}
+                onChange={(e) => {
+                  if (+e.target.value < 1) {
+                    setQuantity(1);
+                  } else if (product && +e.target.value > product?.inventory) {
+                    setQuantity(product?.inventory);
+                  } else {
+                    setQuantity(+e.target.value);
+                  }
+                }}
               />
-              <Button variant="contained" color="success" size="large">
-                افزودن به سبد خرید
-              </Button>
+              <Box>
+                <Button
+                  variant="contained"
+                  color="success"
+                  size="large"
+                  disabled={product?.inventory === 0}
+                >
+                  افزودن به سبد خرید
+                </Button>
+                <Typography
+                  color={"error"}
+                  display={product?.inventory === 0 ? "block" : "none"}
+                >
+                  موجودی به اتمام رسیده است!
+                </Typography>
+              </Box>
             </Box>
           </Box>
         </Grid>

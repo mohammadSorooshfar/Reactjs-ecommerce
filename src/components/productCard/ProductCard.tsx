@@ -45,16 +45,16 @@ export default function ProductCard({
     },
   }));
   return (
-    <Link
-      to={`/tehranshoes/product/${product.id}`}
-      style={{
-        textDecoration: "none",
-      }}
-    >
-      <Card elevation={1}>
-        <Box
-          sx={{
-            minHeight: height,
+    <Card elevation={1}>
+      <Box
+        sx={{
+          minHeight: height,
+        }}
+      >
+        <Link
+          to={`/tehranshoes/product/${product.id}`}
+          style={{
+            textDecoration: "none",
           }}
         >
           <CardMedia
@@ -79,9 +79,15 @@ export default function ProductCard({
                 cursor: "pointer",
               },
             }}
-            onClick={() => navigate(`/tehranshoes/product/${product.id}`)}
           />
-          <CardContent>
+        </Link>
+        <CardContent>
+          <Link
+            to={`/tehranshoes/product/${product.id}`}
+            style={{
+              textDecoration: "none",
+            }}
+          >
             <Typography
               gutterBottom
               variant="h6"
@@ -92,33 +98,32 @@ export default function ProductCard({
                   cursor: "pointer",
                 },
               }}
-              onClick={() => navigate(`/tehranshoes/product/${product.id}`)}
             >
               {product.name}
             </Typography>
-            <Box
-              display={"flex"}
-              justifyContent={"space-between"}
-              marginTop={5}
-              alignItems={"center"}
-            >
-              <Box display={"flex"}>
-                {product.colors.map((color, index) => (
-                  <CircleBoxStyle
-                    selected={index === selectedColor}
-                    onClick={() => setSelectedColor(index)}
-                  >
-                    <ColorCircleStyle shoeColor={colorGenerator(color)} />
-                  </CircleBoxStyle>
-                ))}
-              </Box>
-              <Typography variant="subtitle1" textAlign={"left"}>
-                {persianNumber(product.price.toString()) + " تومان"}
-              </Typography>
+          </Link>
+          <Box
+            display={"flex"}
+            justifyContent={"space-between"}
+            marginTop={5}
+            alignItems={"center"}
+          >
+            <Box display={"flex"}>
+              {product.colors.map((color, index) => (
+                <CircleBoxStyle
+                  selected={index === selectedColor}
+                  onClick={() => setSelectedColor(index)}
+                >
+                  <ColorCircleStyle shoeColor={colorGenerator(color)} />
+                </CircleBoxStyle>
+              ))}
             </Box>
-          </CardContent>
-        </Box>
-      </Card>
-    </Link>
+            <Typography variant="subtitle1" textAlign={"left"}>
+              {persianNumber(product.price.toString()) + " تومان"}
+            </Typography>
+          </Box>
+        </CardContent>
+      </Box>
+    </Card>
   );
 }
