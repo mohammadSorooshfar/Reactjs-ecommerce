@@ -51,7 +51,7 @@ const BestSeller: React.FC<{
         </Link>
         <Grid container spacing={2}>
           {products.map((product: IProduct, index: number) => (
-            <Grid item sm={4} data-aos="fade-up" data-aos-duration={1000}>
+            <Grid item sm={4} data-aos="fade-up" data-aos-duration={500}>
               <ProductCard product={product} height={"500"} />
             </Grid>
           ))}
