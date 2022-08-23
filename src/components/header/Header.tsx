@@ -100,7 +100,7 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
       backgroundColor: management ? theme.palette.info.dark : "#000000df",
     },
     padding: small ? "0 5px " : "0 30px",
-    width: small ? "" : "20%",
+    width: small ? "" : "40%",
     minHeight: small ? "20px" : "35px",
     fontSize: small ? "10px" : "",
   }));
@@ -161,7 +161,7 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
   return (
     <>
       <AppBar position="fixed" sx={{ backgroundColor: "white" }} elevation={0}>
-        <Container maxWidth="lg">
+        <Container maxWidth="xl">
           <Toolbar disableGutters sx={{ maxHeight: navHeight }}>
             <Box
               sx={{
@@ -172,7 +172,7 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
                 textAlign: "right",
               }}
             >
-              <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box sx={{ display: "flex", alignItems: "center", width: "25%" }}>
                 <Box>
                   <img src={logo} alt="logo" style={{ width: "40px" }} />
                 </Box>
@@ -247,7 +247,7 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
               </Box>
               <ButtonGroup
                 variant="contained"
-                sx={{ flexDirection: "row-reverse" }}
+                sx={{ flexDirection: "row-reverse", width: "25%" }}
                 disableElevation
               >
                 {checkAuth() ? (

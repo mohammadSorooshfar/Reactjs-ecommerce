@@ -34,7 +34,7 @@ const Footer: React.FC<props> = () => {
     })
   );
   return (
-    <Container maxWidth="lg" sx={{ paddingY: 5 }}>
+    <Container maxWidth="xl" sx={{ paddingY: 5 }}>
       <Grid container>
         <Grid item sm={3} xs={6}>
           <List>
