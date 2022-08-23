@@ -22,8 +22,20 @@ export const cartSlice = createSlice({
         state.cartProducts[index].quantity += action.payload.quantity;
       }
     },
+    changeItemQuantity(state, action) {
+      const index = state.cartProducts.findIndex(
+        (product) => product.id === action.payload.id
+      );
+      state.cartProducts[index].quantity = action.payload.quantity;
+    },
+    deleteItem(state, action) {
+      const index = state.cartProducts.findIndex(
+        (product) => product.id === action.payload.id
+      );
+      state.cartProducts.slice(index, 1);
+    },
   },
 });
 
-export const { addToCart } = cartSlice.actions;
+export const { addToCart, changeItemQuantity, deleteItem } = cartSlice.actions;
 export default cartSlice.reducer;
