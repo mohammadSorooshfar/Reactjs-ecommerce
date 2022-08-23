@@ -56,6 +56,7 @@ const CartItem: React.FC<props> = ({ product }) => {
               })
             )
           }
+          disabled={product.quantity - 1 === 0}
         >
           <RemoveIcon fontSize="small" />
         </ListItemButton>
@@ -69,6 +70,7 @@ const CartItem: React.FC<props> = ({ product }) => {
               })
             )
           }
+          disabled={product.quantity === product.inventory}
         >
           <AddIcon fontSize="small" />
         </ListItemButton>
@@ -88,7 +90,7 @@ const CartItem: React.FC<props> = ({ product }) => {
             )
           }
         >
-          <DeleteIcon fontSize="medium" />
+          <DeleteIcon fontSize="medium" color="error" />
         </ListItemButton>
       </Box>
     </>

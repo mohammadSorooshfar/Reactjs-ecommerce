@@ -3,10 +3,12 @@ import { ICart, IProduct } from "types/interfaces.types";
 
 interface IState {
   cartProducts: ICart[];
+  total: number;
 }
 
 const initialState: IState = {
   cartProducts: [],
+  total: 0,
 };
 export const cartSlice = createSlice({
   name: "cart",
@@ -21,18 +23,25 @@ export const cartSlice = createSlice({
       } else {
         state.cartProducts[index].quantity += action.payload.quantity;
       }
+      state.total += action.payload.quantity * action.payload.price;
     },
     changeItemQuantity(state, action) {
       const index = state.cartProducts.findIndex(
         (product) => product.id === action.payload.id
       );
+      state.total +=
+        (action.payload.quantity - state.cartProducts[index].quantity) *
+        state.cartProducts[index].price;
+
       state.cartProducts[index].quantity = action.payload.quantity;
     },
     deleteItem(state, action) {
       const index = state.cartProducts.findIndex(
         (product) => product.id === action.payload.id
       );
-      state.cartProducts.slice(index, 1);
+      state.total -=
+        state.cartProducts[index].quantity * state.cartProducts[index].price;
+      state.cartProducts.splice(index, 1);
     },
   },
 });
