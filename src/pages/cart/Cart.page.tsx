@@ -143,7 +143,9 @@ const Cart: React.FC<props> = () => {
                   variant={"body1"}
                   paddingBottom={1}
                 >
-                  {`${persianNumber((15000).toString())} تومان`}
+                  {`${persianNumber(
+                    (cartProducts.length === 0 ? 0 : 15000).toString()
+                  )} تومان`}
                 </Typography>
               </Box>
             </Box>
@@ -159,13 +161,21 @@ const Cart: React.FC<props> = () => {
               </Typography>
               <Typography textAlign={"right"} variant={"h6"} paddingBottom={1}>
                 {`${persianNumber(
-                  (total + total / 20 + 15000).toString()
+                  (cartProducts.length === 0
+                    ? 0
+                    : total + total / 20 + 15000
+                  ).toString()
                 )} تومان`}
               </Typography>
             </Box>
             <Divider />
             <Box padding={2}>
-              <Button fullWidth variant="contained" color="info">
+              <Button
+                fullWidth
+                variant="contained"
+                color="info"
+                disabled={cartProducts.length === 0}
+              >
                 نهایی کردن خرید
               </Button>
             </Box>
