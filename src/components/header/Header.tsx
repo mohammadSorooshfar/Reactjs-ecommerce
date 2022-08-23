@@ -5,7 +5,9 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Badge,
   Button,
+  ButtonGroup,
   Drawer,
   ListItem,
   MenuItemProps,
@@ -21,10 +23,13 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { checkAuth } from "utils/functions.util";
 import logo from "../../assets/logo.png";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useSelector } from "react-redux";
+import { ICart } from "types/interfaces.types";
 
 interface Iprops {
   navHeight: string;
@@ -51,7 +56,16 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
     women: "black",
     kid: "black",
   });
+  const [cartItemCounts, setCartItemCounts] = useState(0);
   const navigate = useNavigate();
+  const cartProducts = useSelector((state: any) => state.cart.cartProducts);
+  useEffect(() => {
+    const totalItems = cartProducts.reduce(
+      (prev: number, current: ICart) => prev + current.quantity,
+      0
+    );
+    setCartItemCounts(totalItems);
+  }, [cartProducts]);
   const handleOpenCategoryMenu = (event: React.MouseEvent<HTMLElement>) => {
     if (anchorElCategory !== event.currentTarget) {
       setAnchorElCategory(event.currentTarget);
@@ -86,7 +100,7 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
       backgroundColor: management ? theme.palette.info.dark : "#000000df",
     },
     padding: small ? "0 5px " : "0 30px",
-    width: small ? "" : "13%",
+    width: small ? "" : "20%",
     minHeight: small ? "20px" : "35px",
     fontSize: small ? "10px" : "",
   }));
@@ -231,20 +245,35 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
                   ))}
                 </Menu>
               </Box>
-              {checkAuth() ? (
-                <LoginManagementButton
-                  onClick={() => navigate("/tehranshoes/dashboard/products")}
-                  management
-                >
-                  مدیریت
-                </LoginManagementButton>
-              ) : (
-                <LoginManagementButton
-                  onClick={() => navigate("/tehranshoes/login")}
-                >
-                  ورود
-                </LoginManagementButton>
-              )}
+              <ButtonGroup
+                variant="contained"
+                sx={{ flexDirection: "row-reverse" }}
+                disableElevation
+              >
+                {checkAuth() ? (
+                  <LoginManagementButton
+                    onClick={() => navigate("/tehranshoes/dashboard/products")}
+                    management
+                  >
+                    مدیریت
+                  </LoginManagementButton>
+                ) : (
+                  <LoginManagementButton
+                    onClick={() => navigate("/tehranshoes/login")}
+                  >
+                    ورود
+                  </LoginManagementButton>
+                )}
+                <Button>
+                  <Badge
+                    badgeContent={cartItemCounts}
+                    color="secondary"
+                    onClick={() => navigate(`/tehranshoes/pay/cart`)}
+                  >
+                    سبد خرید <ShoppingCartIcon />{" "}
+                  </Badge>
+                </Button>
+              </ButtonGroup>
             </Box>
 
             <Box
