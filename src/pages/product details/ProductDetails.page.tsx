@@ -14,9 +14,11 @@ import { Link, useParams } from "react-router-dom";
 import { getProductService } from "services/services.services";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Controller, Navigation, Pagination, Thumbs } from "swiper";
-import { IProduct } from "types/interfaces.types";
+import { ICart, IProduct } from "types/interfaces.types";
 import { colorGenerator, persianNumber } from "utils/functions.util";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+import { useDispatch, useSelector } from "react-redux";
+import cart, { addToCart } from "redux/cart";
 
 interface props {}
 
@@ -26,6 +28,17 @@ const ProductDetails: React.FC<props> = () => {
   const [selectedColor, setSelectedColor] = useState(0);
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [quantity, setQuantity] = useState(1);
+  const cartProducts = useSelector((state: any) => state.cart.cartProducts);
+  const [cartItem, setCartItem] = useState(
+    cartProducts.find((product: ICart) => product.id === +id)
+  );
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setCartItem(cartProducts.find((product: ICart) => product.id === +id));
+    console.log(cartItem);
+  }, [cartProducts]);
+
   useEffect(() => {
     getProductService(id)
       .then((res) => setProduct(res))
@@ -171,8 +184,12 @@ const ProductDetails: React.FC<props> = () => {
                 onChange={(e) => {
                   if (+e.target.value < 1) {
                     setQuantity(1);
-                  } else if (product && +e.target.value > product?.inventory) {
-                    setQuantity(product?.inventory);
+                  } else if (
+                    product &&
+                    cartItem &&
+                    +e.target.value > product?.inventory - cartItem.quantity
+                  ) {
+                    setQuantity(product?.inventory - cartItem.quantity);
                   } else {
                     setQuantity(+e.target.value);
                   }
@@ -183,13 +200,35 @@ const ProductDetails: React.FC<props> = () => {
                   variant="contained"
                   color="success"
                   size="large"
-                  disabled={product?.inventory === 0}
+                  disabled={
+                    product &&
+                    cartItem &&
+                    product?.inventory - cartItem.quantity === 0
+                  }
+                  onClick={() =>
+                    dispatch(
+                      addToCart({
+                        id: product?.id,
+                        inventory: product?.inventory,
+                        name: product?.name,
+                        price: product?.price,
+                        image: product?.images[0],
+                        quantity,
+                      })
+                    )
+                  }
                 >
                   افزودن به سبد خرید
                 </Button>
                 <Typography
                   color={"error"}
-                  display={product?.inventory === 0 ? "block" : "none"}
+                  display={
+                    product &&
+                    cartItem &&
+                    product?.inventory - cartItem.quantity === 0
+                      ? "block"
+                      : "none"
+                  }
                 >
                   موجودی به اتمام رسیده است!
                 </Typography>

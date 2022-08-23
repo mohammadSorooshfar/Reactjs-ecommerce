@@ -62,3 +62,12 @@ export interface IEditRow {
   priceData: number;
   inventoryData: number;
 }
+
+export interface ICart {
+  id: number;
+  name: string;
+  price: number;
+  inventory: number;
+  image: string;
+  quantity: number;
+}
