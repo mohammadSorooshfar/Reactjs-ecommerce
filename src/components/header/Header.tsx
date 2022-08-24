@@ -93,11 +93,9 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
     management?: boolean;
   }>(({ theme, small, management }) => ({
     color: theme.palette.secondary.main,
-    backgroundColor: management
-      ? theme.palette.info.main
-      : theme.palette.primary.main,
+    backgroundColor: theme.palette.info.main,
     "&:hover": {
-      backgroundColor: management ? theme.palette.info.dark : "#000000df",
+      backgroundColor: theme.palette.info.dark,
     },
     padding: small ? "0 5px " : "0 30px",
     width: small ? "" : "40%",
