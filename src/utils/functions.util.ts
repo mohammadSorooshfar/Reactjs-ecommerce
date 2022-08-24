@@ -176,8 +176,13 @@ export const colorGenerator = (color: string) => {
       break;
   }
 };
-
+function addComma(num: string) {
+  var str = num;
+  str = str.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return str;
+}
 export const persianNumber = (number: string) => {
+  number = addComma(number);
   let output = "";
   for (let index = 0; index < number.length; index++) {
     const num = number[index];
@@ -213,10 +218,26 @@ export const persianNumber = (number: string) => {
       case "0":
         output += "۰";
         break;
-
+      case ",":
+        output += ",";
+        break;
       default:
         break;
     }
   }
+
   return output;
+};
+
+export const disablePastDate = () => {
+  let dtToday = new Date();
+
+  let month = dtToday.getMonth() + 1;
+  let day = dtToday.getDate();
+  let year = dtToday.getFullYear();
+  let monthString, dayString;
+  if (month < 10) monthString = "0" + month.toString();
+  if (day < 10) dayString = "0" + day.toString();
+
+  return year + "-" + monthString + "-" + dayString;
 };

@@ -14,6 +14,7 @@ import {
 import CartItem from "components/cartItem/CartItem";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { Navigate, useNavigate } from "react-router-dom";
 import { ICart } from "types/interfaces.types";
 import { persianNumber } from "utils/functions.util";
 
@@ -22,6 +23,7 @@ interface props {}
 const Cart: React.FC<props> = () => {
   const cartProducts = useSelector((state: any) => state.cart.cartProducts);
   const total = useSelector((state: any) => state.cart.total);
+  const navigate = useNavigate();
   useEffect(() => {
     console.log(cartProducts);
   }, [cartProducts]);
@@ -175,6 +177,7 @@ const Cart: React.FC<props> = () => {
                 variant="contained"
                 color="info"
                 disabled={cartProducts.length === 0}
+                onClick={() => navigate("/tehranshoes/pay/checkout")}
               >
                 نهایی کردن خرید
               </Button>

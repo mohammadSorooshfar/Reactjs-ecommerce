@@ -20,10 +20,8 @@ import TextField from "@mui/material/TextField";
 import { Field, Form, Formik } from "formik";
 import { TextFieldProps } from "material-ui";
 import * as React from "react";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { categoryEnglish, genderEnglish } from "utils/functions.util";
 import CancelIcon from "@mui/icons-material/Cancel";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { IProduct } from "types/interfaces.types";
 import {
   CKEditor,

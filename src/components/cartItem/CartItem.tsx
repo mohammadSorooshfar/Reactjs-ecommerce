@@ -1,24 +1,19 @@
-import {
-  Avatar,
-  Box,
-  Divider,
-  ListItemAvatar,
-  ListItemButton,
-  ListItemSecondaryAction,
-  ListItemText,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { BASE_URL, IMAGES } from "configs/url.config";
-import React, { useState } from "react";
-import { ICart } from "types/interfaces.types";
-import Button from "@material-ui/core/Button";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
-import { useDispatch } from "react-redux";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RemoveIcon from "@mui/icons-material/Remove";
+import {
+  Avatar,
+  Box,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemText,
+  Typography,
+} from "@mui/material";
+import { BASE_URL, IMAGES } from "configs/url.config";
+import React from "react";
+import { useDispatch } from "react-redux";
 import { changeItemQuantity, deleteItem } from "redux/cart";
+import { ICart } from "types/interfaces.types";
 import { persianNumber } from "utils/functions.util";
 interface props {
   product: ICart;
