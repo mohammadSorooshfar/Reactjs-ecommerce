@@ -12,6 +12,7 @@ import {
 import { BASE_URL, IMAGES } from "configs/url.config";
 import React from "react";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import { changeItemQuantity, deleteItem } from "redux/cart";
 import { ICart } from "types/interfaces.types";
 import { persianNumber } from "utils/functions.util";
@@ -31,10 +32,15 @@ const CartItem: React.FC<props> = ({ product }) => {
         />
       </ListItemAvatar>
       <Box sx={{ textAlign: "right", width: "200px" }}>
-        <ListItemText
-          primary={product.name}
-          secondary={`${persianNumber(product.price.toString())} تومان`}
-        />
+        <Link
+          to={`/tehranshoes/product/${product.id}`}
+          style={{ textDecoration: "none" }}
+        >
+          <ListItemText
+            primary={product.name}
+            secondary={`${persianNumber(product.price.toString())} تومان`}
+          />
+        </Link>
       </Box>
       <Box
         display={"flex"}
