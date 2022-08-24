@@ -12,7 +12,7 @@ const PayRoutes: React.FC = () => {
         <Route path="/cart" element={<Cart />} />
         <Route element={<ProtectedRoutes />}>
           <Route path="/checkout" element={<Checkout />} />
-          <Route path="/payment" element={<Payment />} />
+          <Route path="/payment/:result" element={<Payment />} />
         </Route>
       </Routes>
     </UserLayout>

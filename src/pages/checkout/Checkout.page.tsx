@@ -24,12 +24,14 @@ import React, { useRef, useState } from "react";
 import { disablePastDate, persianNumber } from "utils/functions.util";
 import { useSelector } from "react-redux";
 import { ICart } from "types/interfaces.types";
+import { useNavigate } from "react-router-dom";
 
 interface props {}
 
 const validationSchema = yup.object({});
 
 const Checkout: React.FC<props> = () => {
+  const navigate = useNavigate();
   const cartProducts = useSelector((state: any) => state.cart.cartProducts);
   const total = useSelector((state: any) => state.cart.total);
   const BootstrapInput = styled(TextField)(({ theme }) => ({
@@ -284,6 +286,9 @@ const Checkout: React.FC<props> = () => {
                       variant="contained"
                       type="submit"
                       sx={{ width: "60%" }}
+                      onClick={() =>
+                        navigate("/tehranshoes/pay/payment/successful")
+                      }
                     >
                       پرداخت
                     </Button>
@@ -292,6 +297,9 @@ const Checkout: React.FC<props> = () => {
                       variant="contained"
                       type="submit"
                       sx={{ width: "30%" }}
+                      onClick={() =>
+                        navigate("/tehranshoes/pay/payment/failed")
+                      }
                     >
                       انصراف
                     </Button>
