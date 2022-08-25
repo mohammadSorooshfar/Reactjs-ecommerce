@@ -98,6 +98,7 @@ export default function ProductCard({
                   cursor: "pointer",
                 },
               }}
+              color={"primary"}
             >
               {product.name}
             </Typography>

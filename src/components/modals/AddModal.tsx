@@ -20,10 +20,8 @@ import TextField from "@mui/material/TextField";
 import { Field, Form, Formik } from "formik";
 import { TextFieldProps } from "material-ui";
 import * as React from "react";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { categoryEnglish, genderEnglish } from "utils/functions.util";
 import CancelIcon from "@mui/icons-material/Cancel";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { IProduct } from "types/interfaces.types";
 import {
   CKEditor,
@@ -174,7 +172,6 @@ const AddModal: React.FC<props> = ({
                     <Field
                       placeholder="نام کالا"
                       name="name"
-                      required
                       type="text"
                       as={FormTextFieldStyle}
                     />
@@ -186,7 +183,6 @@ const AddModal: React.FC<props> = ({
                     <Field
                       placeholder="قیمت"
                       name="price"
-                      required
                       type="text"
                       as={FormTextFieldStyle}
                     />
@@ -202,7 +198,6 @@ const AddModal: React.FC<props> = ({
                     <Field
                       placeholder="موجودی"
                       name="inventory"
-                      required
                       type="text"
                       as={FormTextFieldStyle}
                     />
@@ -216,7 +211,6 @@ const AddModal: React.FC<props> = ({
                     <Field
                       placeholder="رنگ"
                       name="color"
-                      required
                       type="text"
                       as={FormTextFieldStyle}
                     />
