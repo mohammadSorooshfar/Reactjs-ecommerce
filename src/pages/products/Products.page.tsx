@@ -16,14 +16,14 @@ const Products: React.FC = () => {
   const [totalProducts, setTotalProducts] = useState(0);
   const [productsPerPage, setProductsPerPage] = useState(6);
   const [sortBy, setSortBy] = useState("createdAt");
-  const [ascDesc, setAscDesc] = useState("desc");
+  const [order, setOrder] = useState("desc");
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState<{ name: string; value: string }[]>([
     { name: "gender.en", value: gender === "all" ? "" : gender },
     { name: "category.en", value: category === "all" ? "" : category },
     { name: "_sort", value: sortBy },
-    { name: "_order", value: ascDesc },
+    { name: "_order", value: order },
   ]);
   const handleChangePage = (event: unknown, newPage: number) => {
     setLoading(true);
@@ -52,9 +52,15 @@ const Products: React.FC = () => {
       { name: "gender.en", value: gender === "all" ? "" : gender },
       { name: "category.en", value: category === "all" ? "" : category },
       { name: "_sort", value: sortBy },
-      { name: "_order", value: ascDesc },
+      { name: "_order", value: order },
     ]);
-  }, [gender, category, sortBy]);
+  }, [gender, category, sortBy, order]);
+
+  const changeSort = (sort: string, order: string) => {
+    setSortBy(sort);
+    setOrder(order);
+  };
+
   return (
     <Container maxWidth={"lg"} sx={{ marginTop: 10, marginBottom: 10 }}>
       <Box display={"flex"} width={"100%"} minHeight={"50vh"}>
@@ -62,11 +68,32 @@ const Products: React.FC = () => {
         <Box width={"100%"} minHeight={"100%"}>
           <Toolbar sx={{ borderBottom: "1px solid #5661686d" }}>
             <Typography mb={0}>مرتب سازی:</Typography>
-            <Button color={sortBy === "createdAt" ? "info" : "primary"}>
+            <Button
+              color={sortBy === "createdAt" ? "info" : "primary"}
+              onClick={() => {
+                changeSort("createdAt", "desc");
+              }}
+            >
               جدید ترین
             </Button>
-            <Button>گران ترین</Button>
-            <Button>ارزان ترین</Button>
+            <Button
+              color={
+                sortBy === "price" && order === "desc" ? "info" : "primary"
+              }
+              onClick={() => {
+                changeSort("price", "desc");
+              }}
+            >
+              گران ترین
+            </Button>
+            <Button
+              color={sortBy === "price" && order === "asc" ? "info" : "primary"}
+              onClick={() => {
+                changeSort("price", "asc");
+              }}
+            >
+              ارزان ترین
+            </Button>
           </Toolbar>
           <Grid container spacing={3} padding={2}>
             {loading ? (
