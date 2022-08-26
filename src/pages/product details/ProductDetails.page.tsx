@@ -71,6 +71,7 @@ const ProductDetails: React.FC<props> = () => {
       cursor: "pointer",
     },
   }));
+
   return (
     <Container>
       <Grid container spacing={2}>
@@ -165,7 +166,8 @@ const ProductDetails: React.FC<props> = () => {
                 </Box>
               </Box>
               <Typography variant="h5">
-                قیمت: {product ? persianNumber(product.price.toString()) : ""}
+                قیمت: {product ? persianNumber(product.price.toString()) : ""}{" "}
+                تومان
               </Typography>
             </Box>
             <Box
@@ -182,14 +184,26 @@ const ProductDetails: React.FC<props> = () => {
                 InputProps={{ inputProps: { min: 1, max: product?.inventory } }}
                 value={quantity}
                 onChange={(e) => {
+                  console.log(
+                    product &&
+                      cartItem &&
+                      +e.target.value > product?.inventory - cartItem.quantity
+                  );
+
                   if (+e.target.value < 1) {
                     setQuantity(1);
                   } else if (
                     product &&
-                    cartItem &&
-                    +e.target.value > product?.inventory - cartItem.quantity
+                    ((cartItem &&
+                      +e.target.value >
+                        product?.inventory - cartItem.quantity) ||
+                      +e.target.value > product?.inventory)
                   ) {
-                    setQuantity(product?.inventory - cartItem.quantity);
+                    if (cartItem) {
+                      setQuantity(product?.inventory - cartItem.quantity);
+                    } else {
+                      setQuantity(product?.inventory);
+                    }
                   } else {
                     setQuantity(+e.target.value);
                   }
@@ -203,9 +217,9 @@ const ProductDetails: React.FC<props> = () => {
                   disabled={
                     product &&
                     cartItem &&
-                    product?.inventory - cartItem.quantity === 0
+                    product?.inventory - cartItem.quantity <= 0
                   }
-                  onClick={() =>
+                  onClick={() => {
                     dispatch(
                       addToCart({
                         id: product?.id,
@@ -215,8 +229,9 @@ const ProductDetails: React.FC<props> = () => {
                         image: product?.images[0],
                         quantity,
                       })
-                    )
-                  }
+                    );
+                    setQuantity(1);
+                  }}
                 >
                   افزودن به سبد خرید
                 </Button>
@@ -225,7 +240,7 @@ const ProductDetails: React.FC<props> = () => {
                   display={
                     product &&
                     cartItem &&
-                    product?.inventory - cartItem.quantity === 0
+                    product?.inventory - cartItem.quantity <= 0
                       ? "block"
                       : "none"
                   }

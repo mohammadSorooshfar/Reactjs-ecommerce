@@ -44,12 +44,14 @@ export default function ProductCard({
       cursor: "pointer",
     },
   }));
+
   return (
-    <Card elevation={1}>
+    <Card elevation={1} sx={{ width: "100%" }}>
       <Box
         sx={{
           minHeight: height,
         }}
+        width={"100%"}
       >
         <Link
           to={`/tehranshoes/product/${product.id}`}
@@ -60,6 +62,7 @@ export default function ProductCard({
           <CardMedia
             component="img"
             height={`${+height - +height / 3}px`}
+            width={"100%"}
             image={img}
             alt="shoe photo"
             onMouseEnter={() =>
@@ -78,6 +81,7 @@ export default function ProductCard({
               "&:hover": {
                 cursor: "pointer",
               },
+              // objectFit: "contain",
             }}
           />
         </Link>
@@ -98,6 +102,7 @@ export default function ProductCard({
                   cursor: "pointer",
                 },
               }}
+              color={"primary"}
             >
               {product.name}
             </Typography>

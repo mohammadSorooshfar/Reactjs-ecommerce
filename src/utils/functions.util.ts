@@ -150,6 +150,7 @@ export const categoryEnglish = (category: string) => {
 };
 
 export const colorGenerator = (color: string) => {
+  console.log(color === "کرم", color);
   switch (color) {
     case "قرمز":
       return "red";
@@ -171,6 +172,10 @@ export const colorGenerator = (color: string) => {
       return "pink";
     case "سبز":
       return "green";
+    case "قهوه ای":
+      return "brown";
+    case "کرم":
+      return "#E5C9B3";
 
     default:
       break;
