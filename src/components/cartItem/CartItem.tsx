@@ -34,7 +34,7 @@ const CartItem: React.FC<props> = ({ product }) => {
       <Box sx={{ textAlign: "right", width: "200px" }}>
         <Link
           to={`/tehranshoes/product/${product.id}`}
-          style={{ textDecoration: "none" }}
+          style={{ textDecoration: "none", color: "inherit" }}
         >
           <ListItemText
             primary={product.name}

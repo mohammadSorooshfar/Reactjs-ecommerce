@@ -128,6 +128,7 @@ const ActionButtons: React.FC<{
       return uploadImagesAdminService(formData, reqConfig);
     });
     Promise.all(imagePromises).then((arrOfResults) => {
+      const now = new Date();
       const allFormData = {
         name: data.name,
         colors: [data.color],
@@ -137,6 +138,7 @@ const ActionButtons: React.FC<{
         gender: { en: data.gender.en, fa: data.gender.fa },
         category: { en: data.category.en, fa: data.category.fa },
         description: data.description,
+        createdAt: now,
       };
       console.log([data.color], allFormData.colors);
 

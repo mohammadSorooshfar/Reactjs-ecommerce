@@ -42,7 +42,7 @@ const genders = {
 const categories = {
   sport: "ورزشی",
   sneaker: "کتانی",
-  oxfords: "رسمی",
+  oxford: "رسمی",
 };
 
 const Header: React.FC<Iprops> = ({ navHeight }) => {

@@ -15,16 +15,21 @@ const Products: React.FC = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [totalProducts, setTotalProducts] = useState(0);
   const [productsPerPage, setProductsPerPage] = useState(6);
+  const [sortBy, setSortBy] = useState("createdAt");
+  const [ascDesc, setAscDesc] = useState("desc");
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [filters, setFilters] = useState<{ name: string; value: string }[]>([
     { name: "gender.en", value: gender === "all" ? "" : gender },
     { name: "category.en", value: category === "all" ? "" : category },
+    { name: "_sort", value: sortBy },
+    { name: "_order", value: ascDesc },
   ]);
   const handleChangePage = (event: unknown, newPage: number) => {
     setLoading(true);
     getProductsData(newPage.toString());
     setPage(newPage);
+    document.documentElement.scrollTo(0, 0);
   };
   const getProductsData = (page: string) => {
     getProductsService(page, productsPerPage.toString(), filters)
@@ -32,20 +37,24 @@ const Products: React.FC = () => {
         setProducts(res.data);
         setTotalProducts(+res.total);
       })
-      .catch((e) => console.log(e));
-
-    setLoading(false);
+      .catch((e) => console.log(e))
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
+    setLoading(true);
     getProductsData("1");
   }, [filters]);
   useEffect(() => {
     setFilters([
       { name: "gender.en", value: gender === "all" ? "" : gender },
       { name: "category.en", value: category === "all" ? "" : category },
+      { name: "_sort", value: sortBy },
+      { name: "_order", value: ascDesc },
     ]);
-  }, [gender, category]);
+  }, [gender, category, sortBy]);
   return (
     <Container maxWidth={"lg"} sx={{ marginTop: 10, marginBottom: 10 }}>
       <Box display={"flex"} width={"100%"} minHeight={"50vh"}>
@@ -53,9 +62,11 @@ const Products: React.FC = () => {
         <Box width={"100%"} minHeight={"100%"}>
           <Toolbar sx={{ borderBottom: "1px solid #5661686d" }}>
             <Typography mb={0}>مرتب سازی:</Typography>
+            <Button color={sortBy === "createdAt" ? "info" : "primary"}>
+              جدید ترین
+            </Button>
             <Button>گران ترین</Button>
             <Button>ارزان ترین</Button>
-            <Button>جدید ترین</Button>
           </Toolbar>
           <Grid container spacing={3} padding={2}>
             {loading ? (

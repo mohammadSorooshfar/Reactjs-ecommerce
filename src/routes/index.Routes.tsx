@@ -6,14 +6,7 @@ import LoginRoutes from "./Login.Routes";
 import PayRoutes from "./Pay.Routes";
 import ProductRoutes from "./Product.Routes";
 import ProductsRoutes from "./Products.Routes";
-
-const ScrollToTop = ({ children }: any) => {
-  const location = useLocation();
-  useLayoutEffect(() => {
-    document.documentElement.scrollTo(0, 0);
-  }, [location.pathname]);
-  return children;
-};
+import { ScrollToTop } from "utils/functions.util";
 
 const MainRoutes: React.FC = () => {
   return (

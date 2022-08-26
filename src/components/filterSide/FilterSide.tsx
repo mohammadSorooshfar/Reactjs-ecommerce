@@ -28,7 +28,7 @@ const genders = {
 const categories = {
   sport: "ورزشی",
   sneaker: "کتانی",
-  oxfords: "رسمی",
+  oxford: "رسمی",
 };
 
 const CategorySelect: React.FC<{

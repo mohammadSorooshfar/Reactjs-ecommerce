@@ -1,5 +1,6 @@
 import { ACCESS_TOKEN } from "configs/variables.config";
-import { NavigateFunction } from "react-router-dom";
+import { useLayoutEffect } from "react";
+import { NavigateFunction, useLocation } from "react-router-dom";
 import {
   IOrder,
   IOrderManagement,
@@ -245,4 +246,12 @@ export const disablePastDate = () => {
   if (day < 10) dayString = "0" + day.toString();
 
   return year + "-" + monthString + "-" + dayString;
+};
+
+export const ScrollToTop = ({ children }: any) => {
+  const location = useLocation();
+  useLayoutEffect(() => {
+    document.documentElement.scrollTo(0, 0);
+  }, [location.pathname]);
+  return children;
 };
