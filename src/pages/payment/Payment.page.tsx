@@ -1,4 +1,4 @@
-import { Container, Typography } from "@mui/material";
+import { Box, Container, Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Lottie from "react-lottie";
 import animationSuccessful from "assets/lotties/successful.json";
@@ -11,13 +11,11 @@ const Payment: React.FC<props> = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [duration, setDuration] = useState(5);
+  const failed = location.pathname === "/tehranshoes/pay/payment/failed";
   const defaultOptions = {
     loop: false,
     autoplay: true,
-    animationData:
-      location.pathname === "/tehranshoes/pay/payment/failed"
-        ? animationFailed
-        : animationSuccessful,
+    animationData: failed ? animationFailed : animationSuccessful,
     rendererSettings: {
       preserveAspectRatio: "xMidYMid slice",
     },
@@ -28,19 +26,30 @@ const Payment: React.FC<props> = () => {
       1000
     );
     setTimeout(() => {
-      navigate("/");
+      failed ? navigate("/tehranshoes/pay/checkout") : navigate("/");
     }, 5000);
     return () => {
       clearInterval(timer);
     };
   }, []);
   return (
-    <Container
-      maxWidth={"lg"}
-      sx={{ padding: 5, display: "flex", justifyContent: "space-between" }}
-    >
-      <Typography variant="h6">{duration}</Typography>
-      <Lottie options={defaultOptions} height={400} width={400} />
+    <Container maxWidth={"lg"} sx={{ padding: 5 }}>
+      <Grid container alignItems={"center"}>
+        <Grid item sm={6}>
+          <Lottie options={defaultOptions} height={500} width={500} />
+        </Grid>{" "}
+        <Grid item sm={6} paddingLeft={10}>
+          <Typography variant="h6" textAlign={"right"}>
+            {failed
+              ? "پرداخت موفقیت آمیز نبود، سفارش شما در انتظار پرداخت است"
+              : "با تشکر از پرداخت شما، سفارش شما ثبت شده و جهت هماهنگی ارسال با شما تماس گرفته خواهد شد"}
+          </Typography>
+          <Typography variant="body1" textAlign={"right"} marginTop={3}>
+            بعد از {duration} ثانیه به {failed ? "صفحه قبل" : "خانه"} باز
+            گردانده می‌شوید...
+          </Typography>
+        </Grid>
+      </Grid>
     </Container>
   );
 };
