@@ -19,21 +19,29 @@ import {
   TextareaAutosize,
 } from "@mui/material";
 import { Field, Form, Formik, useFormik } from "formik";
-import * as yup from "yup";
+import * as Yup from "yup";
 import React, { useRef, useState } from "react";
 import { disablePastDate, persianNumber } from "utils/functions.util";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ICart } from "types/interfaces.types";
 import { useNavigate } from "react-router-dom";
+import { removeCart } from "redux/cart";
 
 interface props {}
 
-const validationSchema = yup.object({});
+const CheckoutSchema = Yup.object().shape({
+  name: Yup.string().required("نام خود را وارد کنید"),
+  family: Yup.string().required("نام خانوادگی خود را وارد کنید"),
+  phone: Yup.number().required("شماره خود را وارد کنید"),
+  email: Yup.string().email("فرمت ایمیل اشتباه است"),
+  requestedDeliveryDate: Yup.date(),
+});
 
 const Checkout: React.FC<props> = () => {
   const navigate = useNavigate();
   const cartProducts = useSelector((state: any) => state.cart.cartProducts);
   const total = useSelector((state: any) => state.cart.total);
+  const dispatch = useDispatch();
   const BootstrapInput = styled(TextField)(({ theme }) => ({
     "label + &": {
       marginTop: theme.spacing(3),
@@ -107,11 +115,7 @@ const Checkout: React.FC<props> = () => {
                 address: "",
                 requestedDeliveryDate: "",
               }}
-              validate={(values) => {
-                const errors: any = {};
-
-                return errors;
-              }}
+              validationSchema={CheckoutSchema}
               onSubmit={(data, { setSubmitting }) => {}}
             >
               {({ isSubmitting, errors, touched, values, setFieldValue }) => (
@@ -286,9 +290,9 @@ const Checkout: React.FC<props> = () => {
                       variant="contained"
                       type="submit"
                       sx={{ width: "60%" }}
-                      onClick={() =>
-                        navigate("/tehranshoes/pay/payment/successful")
-                      }
+                      onClick={() => {
+                        navigate("/tehranshoes/pay/payment/successful");
+                      }}
                     >
                       پرداخت
                     </Button>
