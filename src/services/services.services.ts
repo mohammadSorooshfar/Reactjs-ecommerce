@@ -7,10 +7,11 @@ import {
   uploadImageAdmin,
 } from "api/admin/products.api";
 import { Login } from "api/auth/login.api";
+import { addOrder } from "api/user/checkout.api";
 import { getPosters } from "api/user/posters.api";
 import { getProduct, getProducts } from "api/user/products.api";
 import { ACCESS_TOKEN } from "configs/variables.config";
-import { IProduct, TDeliveryStatus } from "types/interfaces.types";
+import { IOrder, IProduct, TDeliveryStatus } from "types/interfaces.types";
 export const loginService = async (data: any) => {
   try {
     const response = await Login(data);
@@ -113,3 +114,12 @@ export async function getProductService(id: string) {
     return Promise.reject(e);
   }
 }
+
+export const addOrderService = async (data: IOrder) => {
+  try {
+    const response = await addOrder(data);
+    return response;
+  } catch (e) {
+    return Promise.reject(e);
+  }
+};

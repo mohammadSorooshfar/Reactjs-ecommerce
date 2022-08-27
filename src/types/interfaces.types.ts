@@ -13,8 +13,16 @@ export interface IProduct {
   images: string[];
   description: string;
 }
-export interface IOrder {
+export interface ICart {
   id: number;
+  name: string;
+  price: number;
+  inventory: number;
+  image: string;
+  quantity: number;
+}
+export interface IOrder {
+  id?: number;
   userDescription: {
     name: string;
     family: string;
@@ -23,16 +31,10 @@ export interface IOrder {
   };
   totalPrice: number;
   requestedDeliveryDate: string;
-  deliveryDate: string;
+  deliveryDate?: string;
   deliveryStatus: TDeliveryStatus;
   orderSubmitDate: string;
-  products: [
-    {
-      productId: number;
-      quantity: number;
-      type: number;
-    }
-  ];
+  products: ICart[];
 }
 
 export interface IProductManagement {
@@ -49,7 +51,7 @@ export interface IPriceManagement {
   inventory: number;
 }
 export interface IOrderManagement {
-  id: number;
+  id?: number;
   name: string;
   totalPrice: number;
   orderSubmitDate: string;
@@ -61,13 +63,4 @@ export interface IEditRow {
   inventoryEdit: boolean;
   priceData: number;
   inventoryData: number;
-}
-
-export interface ICart {
-  id: number;
-  name: string;
-  price: number;
-  inventory: number;
-  image: string;
-  quantity: number;
 }

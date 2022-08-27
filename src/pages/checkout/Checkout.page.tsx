@@ -30,6 +30,7 @@ import DatePicker, { DateObject } from "react-multi-date-picker";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import type { Value } from "react-multi-date-picker";
+import { addOrderService } from "services/services.services";
 
 interface props {}
 
@@ -121,7 +122,29 @@ const Checkout: React.FC<props> = () => {
               }}
               validationSchema={CheckoutSchema}
               onSubmit={(data) => {
-                navigate("/tehranshoes/pay/payment/successful");
+                const now = new DateObject({
+                  date: new Date(),
+                  calendar: persian,
+                  locale: persian_fa,
+                });
+                addOrderService({
+                  userDescription: {
+                    name: data.name,
+                    family: data.family,
+                    address: data.address,
+                    phone: data.phone,
+                  },
+                  totalPrice: total,
+                  requestedDeliveryDate:
+                    typeof data.requestedDeliveryDate === "string"
+                      ? data.requestedDeliveryDate
+                      : data.requestedDeliveryDate.format(),
+                  deliveryStatus: "notDelivered",
+                  orderSubmitDate: now.format(),
+                  products: cartProducts,
+                })
+                  .then(() => navigate("/tehranshoes/pay/payment/successful"))
+                  .catch(() => navigate("/tehranshoes/pay/payment/failed"));
               }}
             >
               {({ errors, touched, values, setFieldValue }) => (

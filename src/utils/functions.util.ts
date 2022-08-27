@@ -151,7 +151,6 @@ export const categoryEnglish = (category: string) => {
 };
 
 export const colorGenerator = (color: string) => {
-  console.log(color === "کرم", color);
   switch (color) {
     case "قرمز":
       return "red";
