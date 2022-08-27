@@ -2,9 +2,7 @@ import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
 
 export const ProtectedRoutes = () => {
-  const cartProducts = useSelector((state: any) => state.cart.cartProducts);
-
-  return cartProducts.length !== 0 ? (
+  return localStorage.getItem("cart") ? (
     <Outlet />
   ) : (
     <Navigate to={"/tehranshoes/pay/cart"} />

@@ -26,6 +26,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { ICart } from "types/interfaces.types";
 import { useNavigate } from "react-router-dom";
 import { removeCart } from "redux/cart";
+import DatePicker, { DateObject } from "react-multi-date-picker";
+import persian from "react-date-object/calendars/persian";
+import persian_fa from "react-date-object/locales/persian_fa";
+import type { Value } from "react-multi-date-picker";
 
 interface props {}
 
@@ -34,14 +38,14 @@ const CheckoutSchema = Yup.object().shape({
   family: Yup.string().required("نام خانوادگی خود را وارد کنید"),
   phone: Yup.number().required("شماره خود را وارد کنید"),
   email: Yup.string().email("فرمت ایمیل اشتباه است"),
-  requestedDeliveryDate: Yup.date(),
+  address: Yup.mixed().required("آدرس تحویل گیرنده را وارد کنید"),
+  requestedDeliveryDate: Yup.mixed().required("تاریخ تحویل را وارد نمایید"),
 });
 
 const Checkout: React.FC<props> = () => {
   const navigate = useNavigate();
   const cartProducts = useSelector((state: any) => state.cart.cartProducts);
   const total = useSelector((state: any) => state.cart.total);
-  const dispatch = useDispatch();
   const BootstrapInput = styled(TextField)(({ theme }) => ({
     "label + &": {
       marginTop: theme.spacing(3),
@@ -113,12 +117,14 @@ const Checkout: React.FC<props> = () => {
                 phone: "",
                 email: "",
                 address: "",
-                requestedDeliveryDate: "",
+                requestedDeliveryDate: new DateObject(),
               }}
               validationSchema={CheckoutSchema}
-              onSubmit={(data, { setSubmitting }) => {}}
+              onSubmit={(data) => {
+                navigate("/tehranshoes/pay/payment/successful");
+              }}
             >
-              {({ isSubmitting, errors, touched, values, setFieldValue }) => (
+              {({ errors, touched, values, setFieldValue }) => (
                 <Form
                   style={{
                     display: "flex",
@@ -269,13 +275,23 @@ const Checkout: React.FC<props> = () => {
                       >
                         تاریخ تحویل
                       </InputLabel>
-                      <Field
-                        id={"requestedDeliveryDate-input"}
-                        name="requestedDeliveryDate"
-                        type="date"
-                        min={disablePastDate()}
-                        as={BootstrapInput}
-                      />
+
+                      <div style={{ direction: "rtl" }}>
+                        <DatePicker
+                          id="requestedDeliveryDate-input"
+                          calendar={persian}
+                          locale={persian_fa}
+                          calendarPosition="top-right"
+                          value={values.requestedDeliveryDate}
+                          onChange={(e: any) =>
+                            setFieldValue("requestedDeliveryDate", e.format())
+                          }
+                          minDate={new DateObject()}
+                          maxDate={new Date(Date.now() + 12096e5)}
+                          style={{ marginTop: "20px" }}
+                          editable={false}
+                        />
+                      </div>
                       {errors.requestedDeliveryDate &&
                         touched.requestedDeliveryDate && (
                           <ErrorTypographyStyle>
@@ -290,9 +306,6 @@ const Checkout: React.FC<props> = () => {
                       variant="contained"
                       type="submit"
                       sx={{ width: "60%" }}
-                      onClick={() => {
-                        navigate("/tehranshoes/pay/payment/successful");
-                      }}
                     >
                       پرداخت
                     </Button>

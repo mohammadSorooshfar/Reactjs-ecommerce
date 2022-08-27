@@ -56,8 +56,10 @@ export const cartSlice = createSlice({
     removeCart(state) {
       state.cartProducts = [];
       state.total = 0;
-      localStorage.removeItem("cart");
-      localStorage.removeItem("total");
+      setTimeout(() => {
+        localStorage.removeItem("cart");
+        localStorage.removeItem("total");
+      }, 6000);
     },
   },
 });

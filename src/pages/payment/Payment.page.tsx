@@ -4,12 +4,15 @@ import Lottie from "react-lottie";
 import animationSuccessful from "assets/lotties/successful.json";
 import animationFailed from "assets/lotties/failed.json";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { removeCart } from "redux/cart";
 
 interface props {}
 
 const Payment: React.FC<props> = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [duration, setDuration] = useState(5);
   const failed = location.pathname === "/tehranshoes/pay/payment/failed";
   const defaultOptions = {
@@ -21,6 +24,7 @@ const Payment: React.FC<props> = () => {
     },
   };
   useEffect(() => {
+    !failed && dispatch(removeCart());
     const timer = setInterval(
       () => setDuration((prev: number) => prev - 1),
       1000
