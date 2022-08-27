@@ -8,6 +8,7 @@ import TablePagination from "@mui/material/TablePagination";
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { addOrders } from "redux/orders";
 import { addProducts } from "redux/products";
 import {
   getOrdersAdminService,
@@ -81,6 +82,7 @@ const EnhancedTable: React.FC<ITableProps> = ({
         setRowsData(data);
         setTotalRows(+res.total);
         setLoading(false);
+        dispatch(addOrders(res.data));
       })
       .catch((e) => {
         console.log(e);
