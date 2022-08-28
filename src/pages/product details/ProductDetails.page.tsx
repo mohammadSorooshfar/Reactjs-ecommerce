@@ -13,6 +13,7 @@ import { BASE_URL, IMAGES } from "configs/url.config";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import { addToCart } from "redux/cart";
 import { getProductService } from "services/services.services";
 import { Navigation, Pagination, Thumbs } from "swiper";
@@ -36,7 +37,6 @@ const ProductDetails: React.FC<props> = () => {
 
   useEffect(() => {
     setCartItem(cartProducts.find((product: ICart) => product.id === +id));
-    console.log(cartItem);
   }, [cartProducts]);
 
   useEffect(() => {
@@ -231,6 +231,11 @@ const ProductDetails: React.FC<props> = () => {
                       })
                     );
                     setQuantity(1);
+                    cartItem
+                      ? toast.success(
+                          "تعداد مد نظر به کالا در سبد خرید افزوده شد"
+                        )
+                      : toast.success("کالا به سبد خرید اضافه شد");
                   }}
                 >
                   افزودن به سبد خرید
