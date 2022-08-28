@@ -1,4 +1,3 @@
-import { Box, Container, Grid, Typography } from "@mui/material";
 import BestSeller from "components/bestSeller/bestSeller";
 import Category from "components/category/Category";
 import NewsLetter from "components/newsLetter/NewsLetter";

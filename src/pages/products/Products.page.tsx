@@ -1,4 +1,10 @@
-import { Button, Container, Grid, Pagination } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Container,
+  Grid,
+  Pagination,
+} from "@mui/material";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -8,7 +14,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getProductsService } from "services/services.services";
 import { IProduct } from "types/interfaces.types";
-import { CircularProgress } from "@mui/material";
 const Products: React.FC = () => {
   const { category = "", gender = "" } = useParams();
   const navigate = useNavigate();

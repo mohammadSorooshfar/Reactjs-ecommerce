@@ -1,20 +1,3 @@
-import EnhancedTable from "components/table/Table";
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import {
-  IEditRow,
-  IOrderManagement,
-  IPriceManagement,
-  IProduct,
-  IProductManagement,
-} from "types/interfaces.types";
-import {
-  isAnPriceManagement,
-  isAnProductManagement,
-} from "utils/functions.util";
-import TrOrder from "components/table/TrOrder";
-import TrPrice from "components/table/TrPrice";
-import TrProduct from "components/table/TrProduct";
 import {
   Box,
   Button,
@@ -24,17 +7,31 @@ import {
   Typography,
 } from "@mui/material";
 import AddModal from "components/modals/AddModal";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import EnhancedTable from "components/table/Table";
+import TrOrder from "components/table/TrOrder";
+import TrPrice from "components/table/TrPrice";
+import TrProduct from "components/table/TrProduct";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
+import { deleteEditList } from "redux/products";
 import {
   addProductAdminService,
   getProductService,
   updateProductsAdminService,
   uploadImagesAdminService,
 } from "services/services.services";
-import { toast } from "react-toastify";
-import { deleteEditList } from "redux/products";
-import { Aos, AosEventType } from "aos";
+import {
+  IEditRow,
+  IOrderManagement,
+  IPriceManagement,
+  IProductManagement,
+} from "types/interfaces.types";
+import {
+  isAnPriceManagement,
+  isAnProductManagement,
+} from "utils/functions.util";
 
 const RowType: React.FC<{
   rowData: IProductManagement | IPriceManagement | IOrderManagement;
@@ -51,7 +48,13 @@ const RowType: React.FC<{
   } else if (isAnPriceManagement(rowData)) {
     return <TrPrice rowData={rowData} key={rowData.id} />;
   } else {
-    return <TrOrder rowData={rowData} key={rowData.id} />;
+    return (
+      <TrOrder
+        rowData={rowData}
+        refreshFunction={refreshFunction}
+        key={rowData.id}
+      />
+    );
   }
 };
 const ActionButtons: React.FC<{

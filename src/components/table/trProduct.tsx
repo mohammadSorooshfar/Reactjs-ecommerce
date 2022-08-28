@@ -9,7 +9,7 @@ import {
 import AddModal from "components/modals/AddModal";
 import DeleteModal from "components/modals/DeleteModal";
 import { BASE_URL, IMAGES } from "configs/url.config";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import {

@@ -724,8 +724,8 @@
       },
       "totalPrice": 5000000,
       "requestedDeliveryDate": "۱۴۰۱/۰۶/۰۱",
-      "deliveryDate": null,
-      "deliveryStatus": "notDelivered",
+      "deliveryDate": "۱۴۰۱/۰۶/۰۶",
+      "deliveryStatus": "delivered",
       "orderSubmitDate": "۱۴۰۱/۰۵/۲۹",
       "products": [
         {
@@ -1035,7 +1035,7 @@
       },
       "totalPrice": 2400000,
       "requestedDeliveryDate": "۱۴۰۱/۰۶/۰۷",
-      "deliveryStatus": "notDelivered",
+      "deliveryStatus": "delivered",
       "orderSubmitDate": "۱۴۰۱/۰۶/۰۵",
       "products": [
         {
@@ -1048,7 +1048,8 @@
         }
       ],
       "createdAt": 1661590734432,
-      "id": 14
+      "id": 14,
+      "deliveryDate": "۱۴۰۱/۰۶/۰۶"
     }
   ],
   "posters": [

@@ -4,7 +4,6 @@ import {
   Container,
   Divider,
   Grid,
-  InputBase,
   List,
   ListItem,
   Paper,
@@ -14,7 +13,7 @@ import {
 import CartItem from "components/cartItem/CartItem";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ICart } from "types/interfaces.types";
 import { persianNumber } from "utils/functions.util";
 

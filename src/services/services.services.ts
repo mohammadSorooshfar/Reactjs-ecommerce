@@ -1,4 +1,4 @@
-import { getOrdersAdmin } from "api/admin/order.api";
+import { getOrdersAdmin, updateOrdersAdmin } from "api/admin/order.api";
 import {
   addProductAdmin,
   deleteProductsAdmin,
@@ -118,6 +118,15 @@ export async function getProductService(id: string) {
 export const addOrderService = async (data: IOrder) => {
   try {
     const response = await addOrder(data);
+    return response;
+  } catch (e) {
+    return Promise.reject(e);
+  }
+};
+
+export const updateOrdersAdminService = async (id: string, data: IOrder) => {
+  try {
+    const response = await updateOrdersAdmin(id, data);
     return response;
   } catch (e) {
     return Promise.reject(e);

@@ -1,3 +1,4 @@
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import {
   Box,
   Breadcrumbs,
@@ -10,15 +11,14 @@ import {
 } from "@mui/material";
 import { BASE_URL, IMAGES } from "configs/url.config";
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
+import { addToCart } from "redux/cart";
 import { getProductService } from "services/services.services";
+import { Navigation, Pagination, Thumbs } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Controller, Navigation, Pagination, Thumbs } from "swiper";
 import { ICart, IProduct } from "types/interfaces.types";
 import { colorGenerator, persianNumber } from "utils/functions.util";
-import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
-import { useDispatch, useSelector } from "react-redux";
-import cart, { addToCart } from "redux/cart";
 
 interface props {}
 
