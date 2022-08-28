@@ -1050,6 +1050,30 @@
       "createdAt": 1661590734432,
       "id": 14,
       "deliveryDate": "۱۴۰۱/۰۶/۰۶"
+    },
+    {
+      "userDescription": {
+        "name": "علی",
+        "family": "بزرگ زاد",
+        "address": "تهران، شهرک غرب، پلاک 1",
+        "phone": "09371993465"
+      },
+      "totalPrice": 2485000,
+      "requestedDeliveryDate": "۱۴۰۱/۰۶/۰۸",
+      "deliveryStatus": "notDelivered",
+      "orderSubmitDate": "۱۴۰۱/۰۶/۰۶",
+      "products": [
+        {
+          "id": 16,
+          "inventory": 90,
+          "name": "کفش نایک دانک",
+          "price": 1300000,
+          "image": "7177d5c23f73637be2daa588e67a4085",
+          "quantity": 2
+        }
+      ],
+      "createdAt": 1661702907256,
+      "id": 15
     }
   ],
   "posters": [
@@ -1061,5 +1085,11 @@
     "156c0c6e0be9c9a0fa9258627cfe1cac",
     "d28a654d36977453547c544bb3b591a8",
     "c4c39dff62ffc81e55d96c7b8af7489b"
+  ],
+  "saleCodes": [
+    "tehranShoes",
+    "nice",
+    "nikeShoes",
+    "canada"
   ]
 }

@@ -40,7 +40,7 @@ const CheckoutSchema = Yup.object().shape({
 const Checkout: React.FC<props> = () => {
   const navigate = useNavigate();
   const cartProducts = useSelector((state: any) => state.cart.cartProducts);
-  const total = useSelector((state: any) => state.cart.total);
+  const totalToPay = useSelector((state: any) => state.cart.totalToPay);
   const BootstrapInput = styled(TextField)(({ theme }) => ({
     "label + &": {
       marginTop: theme.spacing(3),
@@ -128,7 +128,7 @@ const Checkout: React.FC<props> = () => {
                     address: data.address,
                     phone: data.phone,
                   },
-                  totalPrice: total,
+                  totalPrice: totalToPay,
                   requestedDeliveryDate:
                     typeof data.requestedDeliveryDate === "string"
                       ? data.requestedDeliveryDate
@@ -379,7 +379,7 @@ const Checkout: React.FC<props> = () => {
                 هزینه پرداختی
               </Typography>
               <Typography variant="body1" fontWeight={"bold"}>
-                {persianNumber(total.toString())} تومان{" "}
+                {persianNumber(totalToPay.toString())} تومان{" "}
               </Typography>
             </Box>
           </Paper>

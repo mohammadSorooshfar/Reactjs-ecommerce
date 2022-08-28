@@ -10,6 +10,7 @@ import { Login } from "api/auth/login.api";
 import { addOrder } from "api/user/checkout.api";
 import { getPosters } from "api/user/posters.api";
 import { getProduct, getProducts } from "api/user/products.api";
+import { getSaleCodes } from "api/user/sale.api";
 import { ACCESS_TOKEN } from "configs/variables.config";
 import { IOrder, IProduct, TDeliveryStatus } from "types/interfaces.types";
 export const loginService = async (data: any) => {
@@ -132,3 +133,11 @@ export const updateOrdersAdminService = async (id: string, data: IOrder) => {
     return Promise.reject(e);
   }
 };
+export async function getSaleCodesService() {
+  try {
+    const response = await getSaleCodes();
+    return response.data;
+  } catch (e) {
+    return Promise.reject(e);
+  }
+}

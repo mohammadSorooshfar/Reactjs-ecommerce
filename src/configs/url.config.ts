@@ -4,6 +4,7 @@ export const GET_PRODUCT = "/product";
 export const GET_CATEGORIES = "/category";
 export const GET_ORDERS = "/orders";
 export const GET_POSTERS = "/posters";
+export const GET_SALE_CODES = "/saleCodes";
 export const UPLOAD_IMAGE = "/upload";
 export const IMAGES = "/files";
 export const BASE_URL = "http://localhost:3001";

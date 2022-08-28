@@ -4,6 +4,7 @@ import { ICart, IProduct } from "types/interfaces.types";
 interface IState {
   cartProducts: ICart[];
   total: number;
+  totalToPay: number;
 }
 
 const initialState: IState = {
@@ -12,6 +13,9 @@ const initialState: IState = {
     : [],
   total: localStorage.getItem("total")
     ? JSON.parse(localStorage.getItem("total") || "")
+    : 0,
+  totalToPay: localStorage.getItem("totalToPay")
+    ? JSON.parse(localStorage.getItem("totalToPay") || "")
     : 0,
 };
 export const cartSlice = createSlice({
@@ -61,9 +65,18 @@ export const cartSlice = createSlice({
         localStorage.removeItem("total");
       }, 6000);
     },
+    setTotalToPay(state, action) {
+      state.totalToPay = action.payload;
+      localStorage.setItem("totalToPay", JSON.stringify(state.totalToPay));
+    },
   },
 });
 
-export const { addToCart, changeItemQuantity, deleteItem, removeCart } =
-  cartSlice.actions;
+export const {
+  addToCart,
+  changeItemQuantity,
+  deleteItem,
+  removeCart,
+  setTotalToPay,
+} = cartSlice.actions;
 export default cartSlice.reducer;
