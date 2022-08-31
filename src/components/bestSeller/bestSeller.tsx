@@ -1,5 +1,13 @@
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import { Box, Container, Grid, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Container,
+  Grid,
+  Paper,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import ProductCard from "components/productCard/ProductCard";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -11,6 +19,8 @@ const BestSeller: React.FC<{
   background: string;
   category: string;
 }> = ({ products, title, background, category }) => {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down("lg"));
   return (
     <Box
       sx={{
@@ -28,7 +38,7 @@ const BestSeller: React.FC<{
         >
           <Typography
             fontWeight={"400"}
-            variant="h4"
+            variant={matches ? "h5" : "h4"}
             mb={3}
             textAlign={"right"}
             sx={{
@@ -37,12 +47,20 @@ const BestSeller: React.FC<{
                 theme.palette.mode === "dark" ? "white" : "primary.main",
             }}
           >
-            محصولات برتر دسته {title} <ArrowBackIosIcon />
+            محصولات برتر دسته {title}{" "}
+            <ArrowBackIosIcon fontSize={matches ? "small" : "medium"} />
           </Typography>
         </Link>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} justifyContent="center">
           {products.map((product: IProduct, index: number) => (
-            <Grid item sm={4} data-aos="fade-up" data-aos-duration={500}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              lg={4}
+              data-aos="fade-up"
+              data-aos-duration={500}
+            >
               <ProductCard product={product} height={"500"} />
             </Grid>
           ))}

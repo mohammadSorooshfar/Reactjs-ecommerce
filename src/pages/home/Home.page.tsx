@@ -40,7 +40,7 @@ const Home: React.FC = () => {
 
   return (
     <UserLayout>
-      <Slider images={posters} />
+      {/* <Slider images={posters} /> */}
       <Offer />
       <Category />
       {Object.values(productsCategories).map((productCategory, index) => (

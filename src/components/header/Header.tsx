@@ -28,7 +28,8 @@ import Typography from "@mui/material/Typography";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { checkAuth } from "utils/functions.util";
-import logo from "../../assets/logo.png";
+import logoDark from "../../assets/logo1.png";
+import logoLight from "../../assets/logo.png";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useDispatch, useSelector } from "react-redux";
 import { ICart } from "types/interfaces.types";
@@ -144,10 +145,22 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
     direction: "rtl",
   }));
   const getList = () => (
-    <div style={{ direction: "rtl" }}>
+    <Box
+      sx={{
+        backgroundColor: (theme) =>
+          theme.palette.mode === "dark" ? "#1e1e1e" : "white",
+        direction: "rtl",
+      }}
+    >
       {Object.entries(genders).map((gender, index) => (
         <ListItem key={index} sx={{ paddingRight: 0 }}>
-          <Accordion elevation={0}>
+          <Accordion
+            elevation={0}
+            sx={{
+              backgroundColor: (theme) =>
+                theme.palette.mode === "dark" ? "#1e1e1e" : "white",
+            }}
+          >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography color={Object.values(navOptionColor)[index]}>
                 {gender[1]}
@@ -177,7 +190,7 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
           </Accordion>
         </ListItem>
       ))}
-    </div>
+    </Box>
   );
   return (
     <>
@@ -189,8 +202,15 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
             theme.palette.mode === "dark" ? "#1E1E1E" : "white",
         }}
       >
-        <Container maxWidth="xl">
-          <Toolbar disableGutters sx={{ maxHeight: navHeight }}>
+        <Container maxWidth={theme.breakpoints.down("md") ? false : "xl"}>
+          <Toolbar
+            disableGutters
+            sx={{
+              maxHeight: navHeight,
+              width: "100%",
+              justifyContent: "flex-start",
+            }}
+          >
             <Box
               sx={{
                 display: { xs: "none", sm: "flex" },
@@ -202,7 +222,11 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
             >
               <Box sx={{ display: "flex", alignItems: "center", width: "25%" }}>
                 <Box>
-                  <img src={logo} alt="logo" style={{ width: "40px" }} />
+                  <img
+                    src={theme.palette.mode === "dark" ? logoDark : logoLight}
+                    alt="logo"
+                    style={{ width: "40px" }}
+                  />
                 </Box>
                 <BrandTypographyStyle
                   variant="h6"
@@ -315,20 +339,23 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
                 </Button>
               </ButtonGroup>
             </Box>
-
             <Box
               sx={{
                 display: { xs: "flex", sm: "none" },
                 justifyContent: "space-between",
                 alignItems: "center",
                 width: "100%",
+                right: 0,
               }}
             >
               <Box sx={{ width: "20%", textAlign: "right" }}>
                 <IconButton
                   size="large"
                   onClick={() => setOpen(true)}
-                  color="primary"
+                  sx={{
+                    color:
+                      theme.palette.mode === "dark" ? "white" : "primary.main",
+                  }}
                 >
                   <MenuIcon />
                 </IconButton>
@@ -339,6 +366,7 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
                 sx={{
                   fontWeight: 700,
                   textDecoration: "none",
+                  color: theme.palette.mode === "dark" ? "white" : "black",
                 }}
               >
                 کفش طهران
@@ -373,22 +401,49 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
         <Box
           display={"flex"}
           justifyContent={"space-between"}
-          marginTop="5px"
+          paddingTop="5px"
           alignItems={"center"}
           width="200px"
+          sx={{
+            backgroundColor: (theme) =>
+              theme.palette.mode === "dark" ? "#1e1e1e" : "white",
+          }}
         >
           <IconButton
             size="large"
             onClick={() => setOpen(false)}
             color="inherit"
+            sx={{
+              height: "10px",
+              color: theme.palette.mode === "dark" ? "white" : "primary.main",
+            }}
           >
             <CloseIcon />
           </IconButton>
-          <Box sx={{ mr: 1 }} onClick={() => navigate("/")}>
-            <img src={logo} alt="logo" style={{ width: "40px" }} />
-          </Box>
+
+          <IconButton
+            onClick={() => dispatch(changeDark())}
+            sx={{
+              color: theme.palette.mode === "dark" ? "white" : "primary.main",
+              ml: 2,
+            }}
+          >
+            {theme.palette.mode === "dark" ? (
+              <Brightness7Icon />
+            ) : (
+              <Brightness4Icon />
+            )}
+          </IconButton>
         </Box>
-        <Container maxWidth="md">{getList()}</Container>
+        <Box
+          height={"100%"}
+          sx={{
+            backgroundColor: (theme) =>
+              theme.palette.mode === "dark" ? "#1e1e1e" : "white",
+          }}
+        >
+          {getList()}
+        </Box>
       </Drawer>
     </>
   );

@@ -8,6 +8,8 @@ import {
   Paper,
   Slide,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import React from "react";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -47,6 +49,8 @@ const offers: any = [
 ];
 
 const Offer: React.FC = () => {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down("lg"));
   return (
     <Box
       sx={{
@@ -61,7 +65,7 @@ const Offer: React.FC = () => {
         <Typography
           color="error.main"
           fontWeight={"700"}
-          variant="h3"
+          variant={matches ? "h4" : "h3"}
           mb={3}
           textAlign={"center"}
         >
@@ -72,7 +76,7 @@ const Offer: React.FC = () => {
               color: (theme) =>
                 theme.palette.mode === "dark" ? "white" : "primary.main",
             }}
-            variant="h3"
+            variant={matches ? "h4" : "h3"}
             fontWeight={"700"}
           >
             کفش طهران
@@ -82,7 +86,9 @@ const Offer: React.FC = () => {
           {offers.map((offer: any, index: number) => (
             <Grid
               item
-              sm={3}
+              xs={12}
+              md={6}
+              lg={3}
               data-aos="fade-up"
               data-aos-duration={offer.animation}
             >
