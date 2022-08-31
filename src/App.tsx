@@ -1,13 +1,15 @@
-import React from "react";
-import "./App.css";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import MainRoutes from "routes/index.Routes";
 import { createTheme, ThemeProvider } from "@mui/material";
+import { faIR } from "@mui/material/locale";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { faIR } from "@mui/material/locale";
+import { useSelector } from "react-redux";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import MainRoutes from "routes/index.Routes";
+import "./App.css";
+
 function App() {
   AOS.init();
+  const mode = useSelector((state: any) => state.theme.mode);
   const mainTheme = createTheme(
     {
       typography: {
@@ -15,7 +17,9 @@ function App() {
       },
       direction: "rtl",
       palette: {
+        mode: mode,
         primary: {
+          light: "#6b6e70",
           main: "#1e272e",
         },
         secondary: {
@@ -44,16 +48,14 @@ function App() {
     faIR
   );
   return (
-    <div className="App">
-      <BrowserRouter>
-        <ThemeProvider theme={mainTheme}>
-          <Routes>
-            <Route path="/tehranshoes/*" element={<MainRoutes />} />
-            <Route path="/" element={<Navigate to="/tehranshoes" replace />} />
-          </Routes>
-        </ThemeProvider>
-      </BrowserRouter>
-    </div>
+    <BrowserRouter>
+      <ThemeProvider theme={mainTheme}>
+        <Routes>
+          <Route path="/tehranshoes/*" element={<MainRoutes />} />
+          <Route path="/" element={<Navigate to="/tehranshoes" replace />} />
+        </Routes>
+      </ThemeProvider>
+    </BrowserRouter>
   );
 }
 

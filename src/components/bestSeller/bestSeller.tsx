@@ -1,22 +1,9 @@
-import {
-  Avatar,
-  Box,
-  Card,
-  CardContent,
-  Container,
-  Grid,
-  Slide,
-  Typography,
-} from "@mui/material";
-import React from "react";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import PercentIcon from "@mui/icons-material/Percent";
-import VerifiedIcon from "@mui/icons-material/Verified";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import { IProduct } from "types/interfaces.types";
+import { Box, Container, Grid, Paper, Typography } from "@mui/material";
 import ProductCard from "components/productCard/ProductCard";
+import React from "react";
 import { Link } from "react-router-dom";
+import { IProduct } from "types/interfaces.types";
 
 const BestSeller: React.FC<{
   products: IProduct[];
@@ -27,11 +14,12 @@ const BestSeller: React.FC<{
   return (
     <Box
       sx={{
-        backgroundColor: background,
+        backgroundColor: (theme) =>
+          theme.palette.mode === "dark" ? undefined : background,
         paddingX: { sm: 20, xs: 3 },
-        paddingY: { sm: 7, xs: 3 },
+        paddingY: { sm: 5, xs: 3 },
+        marginTop: 2,
       }}
-      mt={2}
     >
       <Container maxWidth="lg">
         <Link
@@ -43,8 +31,11 @@ const BestSeller: React.FC<{
             variant="h4"
             mb={3}
             textAlign={"right"}
-            sx={{ "&:hover": { cursor: "pointer" } }}
-            color={"primary"}
+            sx={{
+              "&:hover": { cursor: "pointer" },
+              color: (theme) =>
+                theme.palette.mode === "dark" ? "white" : "primary.main",
+            }}
           >
             محصولات برتر دسته {title} <ArrowBackIosIcon />
           </Typography>

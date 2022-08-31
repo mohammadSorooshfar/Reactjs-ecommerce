@@ -13,6 +13,7 @@ import {
   TextField,
   Typography,
   TypographyProps,
+  useTheme,
 } from "@mui/material";
 import { Field, Form, Formik } from "formik";
 import React from "react";
@@ -39,6 +40,7 @@ const CheckoutSchema = Yup.object().shape({
 
 const Checkout: React.FC<props> = () => {
   const navigate = useNavigate();
+  const theme = useTheme();
   const cartProducts = useSelector((state: any) => state.cart.cartProducts);
   const totalToPay = useSelector((state: any) => state.cart.totalToPay);
   const BootstrapInput = styled(TextField)(({ theme }) => ({
@@ -65,13 +67,13 @@ const Checkout: React.FC<props> = () => {
     maxWidth: "300px",
     minHeight: "100px",
     maxHeight: "200px",
+    backgroundColor: theme.palette.mode === "light" ? "#fcfcfb" : "#2b2b2b",
     "label + &": {
       marginTop: theme.spacing(3),
     },
     "& .MuiInputBase-input": {
       borderRadius: 4,
       position: "relative",
-      backgroundColor: theme.palette.mode === "light" ? "#fcfcfb" : "#2b2b2b",
       border: "1px solid #ced4da",
       fontSize: 16,
       width: "auto",
@@ -305,7 +307,17 @@ const Checkout: React.FC<props> = () => {
                           }
                           minDate={new DateObject()}
                           maxDate={new Date(Date.now() + 12096e5)}
-                          style={{ marginTop: "20px" }}
+                          style={{
+                            marginTop: "20px",
+                            backgroundColor:
+                              theme.palette.mode === "light"
+                                ? "#fcfcfb"
+                                : "#2b2b2b",
+                            color:
+                              theme.palette.mode === "light"
+                                ? "black"
+                                : "white",
+                          }}
                           editable={false}
                         />
                       </div>

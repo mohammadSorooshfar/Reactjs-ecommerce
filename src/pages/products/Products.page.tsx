@@ -4,6 +4,7 @@ import {
   Container,
   Grid,
   Pagination,
+  Paper,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -67,73 +68,96 @@ const Products: React.FC = () => {
   };
 
   return (
-    <Container maxWidth={"lg"} sx={{ marginTop: 10, marginBottom: 10 }}>
-      <Box display={"flex"} width={"100%"} minHeight={"50vh"}>
-        <FilterSide />
-        <Box width={"100%"} minHeight={"100%"}>
-          <Toolbar sx={{ borderBottom: "1px solid #5661686d" }}>
-            <Typography mb={0}>مرتب سازی:</Typography>
-            <Button
-              color={sortBy === "createdAt" ? "info" : "primary"}
-              onClick={() => {
-                changeSort("createdAt", "desc");
-              }}
-            >
-              جدید ترین
-            </Button>
-            <Button
-              color={
-                sortBy === "price" && order === "desc" ? "info" : "primary"
-              }
-              onClick={() => {
-                changeSort("price", "desc");
-              }}
-            >
-              گران ترین
-            </Button>
-            <Button
-              color={sortBy === "price" && order === "asc" ? "info" : "primary"}
-              onClick={() => {
-                changeSort("price", "asc");
-              }}
-            >
-              ارزان ترین
-            </Button>
-          </Toolbar>
-          <Grid container spacing={3} padding={2}>
-            {loading ? (
-              <CircularProgress sx={{ margin: "auto", marginTop: "100px" }} />
-            ) : products.length ? (
-              products.map((product) => (
-                <Grid item sm={4}>
-                  <ProductCard product={product} height={"400"} />
-                </Grid>
-              ))
+    <Paper>
+      <Container maxWidth={"lg"} sx={{ paddingTop: 5, paddingBottom: 10 }}>
+        <Box display={"flex"} width={"100%"} minHeight={"60vh"}>
+          <FilterSide />
+          <Box width={"100%"} minHeight={"100%"} marginRight={"1%"}>
+            <Toolbar sx={{ borderBottom: "1px solid #5661686d" }}>
+              <Typography mb={0}>مرتب سازی:</Typography>
+              <Button
+                color={sortBy === "createdAt" ? "info" : "primary"}
+                sx={{
+                  color: (theme) =>
+                    sortBy === "createdAt"
+                      ? "info.main"
+                      : theme.palette.mode === "dark"
+                      ? "white"
+                      : "primary.main",
+                }}
+                onClick={() => {
+                  changeSort("createdAt", "desc");
+                }}
+              >
+                جدید ترین
+              </Button>
+              <Button
+                sx={{
+                  color: (theme) =>
+                    sortBy === "price" && order === "desc"
+                      ? "info.main"
+                      : theme.palette.mode === "dark"
+                      ? "white"
+                      : "primary.main",
+                }}
+                onClick={() => {
+                  changeSort("price", "desc");
+                }}
+              >
+                گران ترین
+              </Button>
+              <Button
+                sx={{
+                  color: (theme) =>
+                    sortBy === "price" && order === "asc"
+                      ? "info.main"
+                      : theme.palette.mode === "dark"
+                      ? "white"
+                      : "primary.main",
+                }}
+                onClick={() => {
+                  changeSort("price", "asc");
+                }}
+              >
+                ارزان ترین
+              </Button>
+            </Toolbar>
+            <Grid container spacing={3} padding={2}>
+              {loading ? (
+                <CircularProgress sx={{ margin: "auto", marginTop: "100px" }} />
+              ) : products.length ? (
+                products.map((product) => (
+                  <Grid item sm={4}>
+                    <ProductCard product={product} height={"400"} />
+                  </Grid>
+                ))
+              ) : (
+                <Typography variant="h4" margin={"auto"} marginTop={"10%"}>
+                  محصولی یافت نشد!!
+                </Typography>
+              )}
+            </Grid>
+            {products.length && !loading ? (
+              <Pagination
+                sx={{
+                  marginTop: 3,
+                  "& .MuiPagination-ul": {
+                    marginRight: "45%",
+                  },
+                  color: (theme) =>
+                    theme.palette.mode === "dark" ? "white" : "primary.main",
+                }}
+                count={Math.ceil(totalProducts / 6)}
+                page={page}
+                onChange={handleChangePage}
+              />
             ) : (
-              <Typography variant="h4" margin={"auto"} marginTop={"10%"}>
-                محصولی یافت نشد!!
-              </Typography>
+              ""
             )}
-          </Grid>
-          {products.length && !loading ? (
-            <Pagination
-              sx={{
-                marginTop: 3,
-                "& .MuiPagination-ul": {
-                  marginRight: "45%",
-                },
-              }}
-              count={Math.ceil(totalProducts / 6)}
-              color="primary"
-              page={page}
-              onChange={handleChangePage}
-            />
-          ) : (
-            ""
-          )}
+          </Box>
         </Box>
-      </Box>
-    </Container>
+      </Container>
+    </Paper>
   );
 };
 

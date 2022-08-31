@@ -11,9 +11,11 @@ import {
   Drawer,
   ListItem,
   MenuItemProps,
+  Paper,
   Slide,
   styled,
   useScrollTrigger,
+  useTheme,
 } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -28,10 +30,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { checkAuth } from "utils/functions.util";
 import logo from "../../assets/logo.png";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ICart } from "types/interfaces.types";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
+import { changeDark } from "redux/theme";
 
-interface Iprops {
+interface IProps {
   navHeight: string;
 }
 const genders = {
@@ -45,18 +50,20 @@ const categories = {
   oxford: "رسمی",
 };
 
-const Header: React.FC<Iprops> = ({ navHeight }) => {
+const Header: React.FC<IProps> = ({ navHeight }) => {
   const [anchorElCategory, setAnchorElCategory] = useState<null | HTMLElement>(
     null
   );
+  const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [selectedGender, setSelectedGender] = useState("");
   const [navOptionColor, setNavOptionColor] = useState({
-    men: "black",
-    women: "black",
-    kid: "black",
+    men: theme.palette.mode === "dark" ? "white" : "black",
+    women: theme.palette.mode === "dark" ? "white" : "black",
+    kid: theme.palette.mode === "dark" ? "white" : "black",
   });
   const [cartItemCounts, setCartItemCounts] = useState(0);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartProducts = useSelector((state: any) => state.cart.cartProducts);
   useEffect(() => {
@@ -66,6 +73,19 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
     );
     setCartItemCounts(totalItems);
   }, [cartProducts]);
+  useEffect(() => {
+    theme.palette.mode === "dark"
+      ? setNavOptionColor({
+          men: "white",
+          women: "white",
+          kid: "white",
+        })
+      : setNavOptionColor({
+          men: "black",
+          women: "black",
+          kid: "black",
+        });
+  }, [theme.palette.mode]);
   const handleOpenCategoryMenu = (event: React.MouseEvent<HTMLElement>) => {
     if (anchorElCategory !== event.currentTarget) {
       setAnchorElCategory(event.currentTarget);
@@ -76,22 +96,25 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
       if (selected[0]) {
         setSelectedGender(selected[0]);
         setNavOptionColor({
-          men: "black",
-          women: "black",
-          kid: "black",
+          men: theme.palette.mode === "dark" ? "white" : "black",
+          women: theme.palette.mode === "dark" ? "white" : "black",
+          kid: theme.palette.mode === "dark" ? "white" : "black",
           [selected[0]]: "#ffd32a",
         });
       }
     }
   };
   const handleCloseCategoryMenu = () => {
-    setNavOptionColor({ men: "black", women: "black", kid: "black" });
+    setNavOptionColor({
+      men: theme.palette.mode === "dark" ? "white" : "black",
+      women: theme.palette.mode === "dark" ? "white" : "black",
+      kid: theme.palette.mode === "dark" ? "white" : "black",
+    });
     setAnchorElCategory(null);
   };
   const LoginManagementButton = styled(Button)<{
     small?: boolean;
-    management?: boolean;
-  }>(({ theme, small, management }) => ({
+  }>(({ theme, small }) => ({
     color: theme.palette.secondary.main,
     backgroundColor: theme.palette.info.main,
     "&:hover": {
@@ -104,8 +127,8 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
   }));
   const BrandTypographyStyle = styled(Typography)<{}>(({ theme }) => ({
     fontWeight: 700,
-    color: theme.palette.primary.main,
     textDecoration: "none",
+    color: theme.palette.mode === "dark" ? "white" : "black",
     "&:hover": {
       cursor: "pointer",
     },
@@ -114,8 +137,8 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
       fontSize: "16px",
     },
   }));
-  const CategoryMenu = styled(MenuItem)<MenuItemProps>(() => ({
-    color: "black",
+  const CategoryMenu = styled(MenuItem)<MenuItemProps>(({ theme }) => ({
+    color: theme.palette.mode === "dark" ? "white" : "black",
     padding: "0 30px",
     width: "200px",
     direction: "rtl",
@@ -158,7 +181,14 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
   );
   return (
     <>
-      <AppBar position="fixed" sx={{ backgroundColor: "white" }} elevation={0}>
+      <AppBar
+        position="fixed"
+        elevation={0}
+        sx={{
+          backgroundColor: (theme) =>
+            theme.palette.mode === "dark" ? "#1E1E1E" : "white",
+        }}
+      >
         <Container maxWidth="xl">
           <Toolbar disableGutters sx={{ maxHeight: navHeight }}>
             <Box
@@ -243,6 +273,19 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
                   ))}
                 </Menu>
               </Box>
+              <IconButton
+                onClick={() => dispatch(changeDark())}
+                sx={{
+                  color:
+                    theme.palette.mode === "dark" ? "white" : "primary.main",
+                }}
+              >
+                {theme.palette.mode === "dark" ? (
+                  <Brightness7Icon />
+                ) : (
+                  <Brightness4Icon />
+                )}
+              </IconButton>
               <ButtonGroup
                 variant="contained"
                 sx={{ flexDirection: "row-reverse", width: "25%" }}
@@ -251,7 +294,6 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
                 {checkAuth() ? (
                   <LoginManagementButton
                     onClick={() => navigate("/tehranshoes/dashboard/products")}
-                    management
                   >
                     مدیریت
                   </LoginManagementButton>
@@ -306,7 +348,6 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
                   <LoginManagementButton
                     onClick={() => navigate("/tehranshoes/dashboard/products")}
                     small
-                    management
                   >
                     مدیریت
                   </LoginManagementButton>

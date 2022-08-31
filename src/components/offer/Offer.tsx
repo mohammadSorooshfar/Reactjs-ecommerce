@@ -5,6 +5,7 @@ import {
   CardContent,
   Container,
   Grid,
+  Paper,
   Slide,
   Typography,
 } from "@mui/material";
@@ -49,18 +50,28 @@ const Offer: React.FC = () => {
   return (
     <Box
       sx={{
-        backgroundColor: "secondary.light",
+        backgroundColor: (theme) =>
+          theme.palette.mode === "dark" ? "#1e1e1e" : "secondary.light",
         paddingX: { sm: 20, xs: 3 },
         paddingY: { sm: 7, xs: 3 },
+        marginTop: 2,
       }}
-      mt={2}
     >
       <Container maxWidth="lg">
-        <Typography color="error.main" fontWeight={"700"} variant="h3" mb={3}>
+        <Typography
+          color="error.main"
+          fontWeight={"700"}
+          variant="h3"
+          mb={3}
+          textAlign={"center"}
+        >
           خدمات{" "}
           <Typography
             display={"inline-block"}
-            color="primary.main"
+            sx={{
+              color: (theme) =>
+                theme.palette.mode === "dark" ? "white" : "primary.main",
+            }}
             variant="h3"
             fontWeight={"700"}
           >

@@ -48,7 +48,10 @@ export default function Slider({ images }: props) {
   const navigate = useNavigate();
 
   return (
-    <Container maxWidth="lg" sx={{ paddingBottom: 5 }}>
+    <Container
+      maxWidth="lg"
+      sx={{ paddingBottom: 5, backgroundColor: "secondary" }}
+    >
       <Swiper
         spaceBetween={30}
         centeredSlides={true}

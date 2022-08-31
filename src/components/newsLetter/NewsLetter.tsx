@@ -1,16 +1,23 @@
 import React from "react";
 import skate from "assets/skateboard.jpg";
-import { Box, InputAdornment, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  InputAdornment,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 const NewsLetter: React.FC = () => {
   return (
-    <div
-      style={{
+    <Paper
+      sx={{
         width: "100%",
         position: "relative",
         backgroundColor: "#000000",
         zIndex: 2,
+        height: "500px",
       }}
     >
       <Box
@@ -60,7 +67,7 @@ const NewsLetter: React.FC = () => {
           opacity: "0.25",
         }}
       />
-    </div>
+    </Paper>
   );
 };
 

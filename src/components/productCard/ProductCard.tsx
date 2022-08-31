@@ -101,8 +101,9 @@ export default function ProductCard({
                 "&:hover": {
                   cursor: "pointer",
                 },
+                color: (theme) =>
+                  theme.palette.mode === "light" ? "primary.main" : "white",
               }}
-              color={"primary"}
             >
               {product.name}
             </Typography>

@@ -5,6 +5,7 @@ import {
   Button,
   Container,
   Grid,
+  Paper,
   styled,
   TextField,
   Typography,
@@ -73,191 +74,197 @@ const ProductDetails: React.FC<props> = () => {
   }));
 
   return (
-    <Container>
-      <Grid container spacing={2}>
-        <Grid item sm={6}>
-          <Swiper
-            thumbs={{
-              swiper:
-                thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null,
-            }}
-            navigation={true}
-            spaceBetween={30}
-            centeredSlides={true}
-            pagination={{
-              clickable: true,
-            }}
-            modules={[Navigation, Pagination, Thumbs]}
-            style={{
-              height: "500px",
-            }}
-          >
-            {swiperItems()}
-          </Swiper>
-          <Swiper
-            style={{ marginTop: "10px" }}
-            spaceBetween={5}
-            slidesPerView={4}
-            modules={[Thumbs]}
-            watchSlidesProgress
-            onSwiper={setThumbsSwiper}
-          >
-            {swiperItems()}
-          </Swiper>
-        </Grid>
-        <Grid item sm={6} padding={4} minHeight={"100%"}>
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            flexDirection={"column"}
-            alignItems={"flex-start"}
-            minHeight={"70%"}
-          >
-            <Breadcrumbs separator={<NavigateBeforeIcon fontSize="small" />}>
-              <Link
-                to={`/tehranshoes/products`}
-                style={{ textDecoration: "none" }}
-              >
-                <Typography color="text.primary">محصولات</Typography>{" "}
-              </Link>
-              <Link
-                to={`/tehranshoes/products/${product?.gender.en}/all`}
-                style={{ textDecoration: "none" }}
-              >
-                <Typography color="text.primary">
-                  {product?.gender.fa}
-                </Typography>
-              </Link>
-              <Link
-                to={`/tehranshoes/products/all/${product?.category.en}`}
-                style={{ textDecoration: "none" }}
-              >
-                <Typography color="text.primary">
-                  {product?.category.fa}
-                </Typography>
-              </Link>
-            </Breadcrumbs>
-            <Typography variant="h3" textAlign={"right"}>
-              {product?.name}
-            </Typography>
-            <Typography variant="subtitle2" textAlign={"right"}>
-              <div
-                dangerouslySetInnerHTML={{ __html: product?.description || "" }}
-              ></div>
-            </Typography>
+    <Paper>
+      <Container>
+        <Grid container spacing={2}>
+          <Grid item sm={6}>
+            <Swiper
+              thumbs={{
+                swiper:
+                  thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null,
+              }}
+              navigation={true}
+              spaceBetween={30}
+              centeredSlides={true}
+              pagination={{
+                clickable: true,
+              }}
+              modules={[Navigation, Pagination, Thumbs]}
+              style={{
+                height: "500px",
+              }}
+            >
+              {swiperItems()}
+            </Swiper>
+            <Swiper
+              style={{ marginTop: "10px" }}
+              spaceBetween={5}
+              slidesPerView={4}
+              modules={[Thumbs]}
+              watchSlidesProgress
+              onSwiper={setThumbsSwiper}
+            >
+              {swiperItems()}
+            </Swiper>
+          </Grid>
+          <Grid item sm={6} padding={4} minHeight={"100%"}>
             <Box
               display={"flex"}
               justifyContent={"space-between"}
-              width={"100%"}
+              flexDirection={"column"}
+              alignItems={"flex-start"}
+              minHeight={"70%"}
             >
-              <Box>
+              <Breadcrumbs separator={<NavigateBeforeIcon fontSize="small" />}>
+                <Link
+                  to={`/tehranshoes/products`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <Typography color="text.primary">محصولات</Typography>{" "}
+                </Link>
+                <Link
+                  to={`/tehranshoes/products/${product?.gender.en}/all`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <Typography color="text.primary">
+                    {product?.gender.fa}
+                  </Typography>
+                </Link>
+                <Link
+                  to={`/tehranshoes/products/all/${product?.category.en}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <Typography color="text.primary">
+                    {product?.category.fa}
+                  </Typography>
+                </Link>
+              </Breadcrumbs>
+              <Typography variant="h3" textAlign={"right"}>
+                {product?.name}
+              </Typography>
+              <Typography variant="subtitle2" textAlign={"right"}>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: product?.description || "",
+                  }}
+                ></div>
+              </Typography>
+              <Box
+                display={"flex"}
+                justifyContent={"space-between"}
+                width={"100%"}
+              >
+                <Box>
+                  <Typography variant="h5">
+                    رنگ: {product?.colors[selectedColor]}
+                  </Typography>
+                  <Box display={"flex"} marginTop={3}>
+                    {product?.colors.map((color, index) => (
+                      <CircleBoxStyle
+                        selected={index === selectedColor}
+                        onClick={() => setSelectedColor(index)}
+                      >
+                        <ColorCircleStyle shoeColor={colorGenerator(color)} />
+                      </CircleBoxStyle>
+                    ))}
+                  </Box>
+                </Box>
                 <Typography variant="h5">
-                  رنگ: {product?.colors[selectedColor]}
+                  قیمت: {product ? persianNumber(product.price.toString()) : ""}{" "}
+                  تومان
                 </Typography>
-                <Box display={"flex"} marginTop={3}>
-                  {product?.colors.map((color, index) => (
-                    <CircleBoxStyle
-                      selected={index === selectedColor}
-                      onClick={() => setSelectedColor(index)}
-                    >
-                      <ColorCircleStyle shoeColor={colorGenerator(color)} />
-                    </CircleBoxStyle>
-                  ))}
+              </Box>
+              <Box
+                display={"flex"}
+                justifyContent={"space-between"}
+                alignItems={"center"}
+                width={"100%"}
+              >
+                <TextField
+                  type="number"
+                  placeholder="تعداد"
+                  size="small"
+                  sx={{ width: "20%" }}
+                  InputProps={{
+                    inputProps: { min: 1, max: product?.inventory },
+                  }}
+                  value={quantity}
+                  onChange={(e) => {
+                    console.log(
+                      product &&
+                        cartItem &&
+                        +e.target.value > product?.inventory - cartItem.quantity
+                    );
+
+                    if (+e.target.value < 1) {
+                      setQuantity(1);
+                    } else if (
+                      product &&
+                      ((cartItem &&
+                        +e.target.value >
+                          product?.inventory - cartItem.quantity) ||
+                        +e.target.value > product?.inventory)
+                    ) {
+                      if (cartItem) {
+                        setQuantity(product?.inventory - cartItem.quantity);
+                      } else {
+                        setQuantity(product?.inventory);
+                      }
+                    } else {
+                      setQuantity(+e.target.value);
+                    }
+                  }}
+                />
+                <Box>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    size="large"
+                    disabled={
+                      product &&
+                      cartItem &&
+                      product?.inventory - cartItem.quantity <= 0
+                    }
+                    onClick={() => {
+                      dispatch(
+                        addToCart({
+                          id: product?.id,
+                          inventory: product?.inventory,
+                          name: product?.name,
+                          price: product?.price,
+                          image: product?.images[0],
+                          quantity,
+                        })
+                      );
+                      setQuantity(1);
+                      cartItem
+                        ? toast.success(
+                            "تعداد مد نظر به کالا در سبد خرید افزوده شد"
+                          )
+                        : toast.success("کالا به سبد خرید اضافه شد");
+                    }}
+                  >
+                    افزودن به سبد خرید
+                  </Button>
+                  <Typography
+                    color={"error"}
+                    display={
+                      product &&
+                      cartItem &&
+                      product?.inventory - cartItem.quantity <= 0
+                        ? "block"
+                        : "none"
+                    }
+                  >
+                    موجودی به اتمام رسیده است!
+                  </Typography>
                 </Box>
               </Box>
-              <Typography variant="h5">
-                قیمت: {product ? persianNumber(product.price.toString()) : ""}{" "}
-                تومان
-              </Typography>
             </Box>
-            <Box
-              display={"flex"}
-              justifyContent={"space-between"}
-              alignItems={"center"}
-              width={"100%"}
-            >
-              <TextField
-                type="number"
-                placeholder="تعداد"
-                size="small"
-                sx={{ width: "20%" }}
-                InputProps={{ inputProps: { min: 1, max: product?.inventory } }}
-                value={quantity}
-                onChange={(e) => {
-                  console.log(
-                    product &&
-                      cartItem &&
-                      +e.target.value > product?.inventory - cartItem.quantity
-                  );
-
-                  if (+e.target.value < 1) {
-                    setQuantity(1);
-                  } else if (
-                    product &&
-                    ((cartItem &&
-                      +e.target.value >
-                        product?.inventory - cartItem.quantity) ||
-                      +e.target.value > product?.inventory)
-                  ) {
-                    if (cartItem) {
-                      setQuantity(product?.inventory - cartItem.quantity);
-                    } else {
-                      setQuantity(product?.inventory);
-                    }
-                  } else {
-                    setQuantity(+e.target.value);
-                  }
-                }}
-              />
-              <Box>
-                <Button
-                  variant="contained"
-                  color="success"
-                  size="large"
-                  disabled={
-                    product &&
-                    cartItem &&
-                    product?.inventory - cartItem.quantity <= 0
-                  }
-                  onClick={() => {
-                    dispatch(
-                      addToCart({
-                        id: product?.id,
-                        inventory: product?.inventory,
-                        name: product?.name,
-                        price: product?.price,
-                        image: product?.images[0],
-                        quantity,
-                      })
-                    );
-                    setQuantity(1);
-                    cartItem
-                      ? toast.success(
-                          "تعداد مد نظر به کالا در سبد خرید افزوده شد"
-                        )
-                      : toast.success("کالا به سبد خرید اضافه شد");
-                  }}
-                >
-                  افزودن به سبد خرید
-                </Button>
-                <Typography
-                  color={"error"}
-                  display={
-                    product &&
-                    cartItem &&
-                    product?.inventory - cartItem.quantity <= 0
-                      ? "block"
-                      : "none"
-                  }
-                >
-                  موجودی به اتمام رسیده است!
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    </Container>
+      </Container>
+    </Paper>
   );
 };
 

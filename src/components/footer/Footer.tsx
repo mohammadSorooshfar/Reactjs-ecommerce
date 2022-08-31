@@ -6,6 +6,7 @@ import {
   ListItem,
   ListItemText,
   ListItemTextProps,
+  Paper,
   styled,
 } from "@mui/material";
 import React from "react";
@@ -20,7 +21,10 @@ const Footer: React.FC<props> = () => {
     ({ theme }) => ({
       textAlign: "right",
       "& span": {
-        color: theme.palette.primary.dark,
+        color:
+          theme.palette.mode === "light"
+            ? theme.palette.primary.dark
+            : theme.palette.primary.light,
         fontWeight: "800",
       },
     })
@@ -29,93 +33,98 @@ const Footer: React.FC<props> = () => {
     ({ theme }) => ({
       textAlign: "right",
       "& span": {
-        color: theme.palette.secondary.dark,
+        color:
+          theme.palette.mode === "light"
+            ? theme.palette.secondary.dark
+            : theme.palette.secondary.light,
       },
     })
   );
   return (
-    <Container maxWidth="xl" sx={{ paddingY: 5 }}>
-      <Grid container>
-        <Grid item sm={3} xs={6}>
-          <List>
-            <ListItem>
-              <ListItemTitleText primary="با کفش طهران" />
-            </ListItem>
-            <ListItem>
-              <ListItemSubtitleText primary="اتاق خبر کفش طهران" />
-            </ListItem>
-            <ListItem>
-              <ListItemSubtitleText primary="فروش در کفش طهران" />
-            </ListItem>
-            <ListItem>
-              <ListItemSubtitleText primary="فرصت های شغلی" />
-            </ListItem>
-            <ListItem>
-              <ListItemSubtitleText primary="گزارش تخلف در کفش طهران" />
-            </ListItem>
-            <ListItem>
-              <ListItemSubtitleText primary="درباره کفش طهران" />
-            </ListItem>
-          </List>
+    <Paper>
+      <Container maxWidth="xl" sx={{ paddingY: 5 }}>
+        <Grid container>
+          <Grid item sm={3} xs={6}>
+            <List>
+              <ListItem>
+                <ListItemTitleText primary="با کفش طهران" />
+              </ListItem>
+              <ListItem>
+                <ListItemSubtitleText primary="اتاق خبر کفش طهران" />
+              </ListItem>
+              <ListItem>
+                <ListItemSubtitleText primary="فروش در کفش طهران" />
+              </ListItem>
+              <ListItem>
+                <ListItemSubtitleText primary="فرصت های شغلی" />
+              </ListItem>
+              <ListItem>
+                <ListItemSubtitleText primary="گزارش تخلف در کفش طهران" />
+              </ListItem>
+              <ListItem>
+                <ListItemSubtitleText primary="درباره کفش طهران" />
+              </ListItem>
+            </List>
+          </Grid>
+          <Grid item sm={3} xs={6}>
+            <List>
+              <ListItem>
+                <ListItemTitleText primary="خدمات مشتریان" />
+              </ListItem>
+              <ListItem>
+                <ListItemSubtitleText primary="پاسخ به پرسش های متداول" />
+              </ListItem>
+              <ListItem>
+                <ListItemSubtitleText primary="رویه بازگرداندن کالا" />
+              </ListItem>
+              <ListItem>
+                <ListItemSubtitleText primary="شرایط استفاده" />
+              </ListItem>
+              <ListItem>
+                <ListItemSubtitleText primary="حریم خصوصی" />
+              </ListItem>
+            </List>
+          </Grid>
+          <Grid item sm={3} xs={6}>
+            <List>
+              <ListItem>
+                <ListItemTitleText primary="راهنمای خرید از کفش طهران" />
+              </ListItem>
+              <ListItem>
+                <ListItemSubtitleText primary="نحوه ثبت سفارش" />
+              </ListItem>
+              <ListItem>
+                <ListItemSubtitleText primary="رویه ارسال سفارش" />
+              </ListItem>
+              <ListItem>
+                <ListItemSubtitleText primary="شیوه های پرداخت" />
+              </ListItem>
+            </List>
+          </Grid>
+          <Grid item sm={3} xs={6}>
+            <List>
+              <ListItem>
+                <ListItemTitleText primary="ما را در فضای مجازی دنبال کنید" />
+              </ListItem>
+              <ListItem>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width: "100%",
+                  }}
+                >
+                  <InstagramIcon />
+                  <TwitterIcon />
+                  <YouTubeIcon />
+                  <FacebookIcon />
+                </Box>
+              </ListItem>
+            </List>
+          </Grid>
         </Grid>
-        <Grid item sm={3} xs={6}>
-          <List>
-            <ListItem>
-              <ListItemTitleText primary="خدمات مشتریان" />
-            </ListItem>
-            <ListItem>
-              <ListItemSubtitleText primary="پاسخ به پرسش های متداول" />
-            </ListItem>
-            <ListItem>
-              <ListItemSubtitleText primary="رویه بازگرداندن کالا" />
-            </ListItem>
-            <ListItem>
-              <ListItemSubtitleText primary="شرایط استفاده" />
-            </ListItem>
-            <ListItem>
-              <ListItemSubtitleText primary="حریم خصوصی" />
-            </ListItem>
-          </List>
-        </Grid>
-        <Grid item sm={3} xs={6}>
-          <List>
-            <ListItem>
-              <ListItemTitleText primary="راهنمای خرید از کفش طهران" />
-            </ListItem>
-            <ListItem>
-              <ListItemSubtitleText primary="نحوه ثبت سفارش" />
-            </ListItem>
-            <ListItem>
-              <ListItemSubtitleText primary="رویه ارسال سفارش" />
-            </ListItem>
-            <ListItem>
-              <ListItemSubtitleText primary="شیوه های پرداخت" />
-            </ListItem>
-          </List>
-        </Grid>
-        <Grid item sm={3} xs={6}>
-          <List>
-            <ListItem>
-              <ListItemTitleText primary="ما را در فضای مجازی دنبال کنید" />
-            </ListItem>
-            <ListItem>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  width: "100%",
-                }}
-              >
-                <InstagramIcon />
-                <TwitterIcon />
-                <YouTubeIcon />
-                <FacebookIcon />
-              </Box>
-            </ListItem>
-          </List>
-        </Grid>
-      </Grid>
-    </Container>
+      </Container>
+    </Paper>
   );
 };
 
