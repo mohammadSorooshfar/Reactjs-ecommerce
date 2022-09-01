@@ -1,5 +1,6 @@
 import { createTheme, ThemeProvider } from "@mui/material";
 import { faIR } from "@mui/material/locale";
+import { Helmet } from "react-helmet";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useSelector } from "react-redux";
@@ -51,14 +52,23 @@ function App() {
     faIR
   );
   return (
-    <BrowserRouter>
-      <ThemeProvider theme={mainTheme}>
-        <Routes>
-          <Route path="/tehranshoes/*" element={<MainRoutes />} />
-          <Route path="/" element={<Navigate to="/tehranshoes" replace />} />
-        </Routes>
-      </ThemeProvider>
-    </BrowserRouter>
+    <>
+      <Helmet>
+        <style>
+          {mode === "dark"
+            ? "body { background-color: #1e1e1e; }"
+            : "body { background-color: none; }"}
+        </style>
+      </Helmet>
+      <BrowserRouter>
+        <ThemeProvider theme={mainTheme}>
+          <Routes>
+            <Route path="/tehranshoes/*" element={<MainRoutes />} />
+            <Route path="/" element={<Navigate to="/tehranshoes" replace />} />
+          </Routes>
+        </ThemeProvider>
+      </BrowserRouter>
+    </>
   );
 }
 

@@ -1,3 +1,4 @@
+import { useMediaQuery, useTheme } from "@mui/material";
 import BestSeller from "components/bestSeller/bestSeller";
 import Category from "components/category/Category";
 import NewsLetter from "components/newsLetter/NewsLetter";
@@ -18,6 +19,8 @@ const categories = [
 ];
 
 const Home: React.FC = () => {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down("md"));
   const [posters, setPosters] = useState<string[]>([]);
   const [productsCategories, setProductsCategories] = useState<{
     sport: IProduct[];
@@ -40,7 +43,7 @@ const Home: React.FC = () => {
 
   return (
     <UserLayout>
-      {/* <Slider images={posters} /> */}
+      <Slider images={matches ? posters.slice(8) : posters.slice(0, 8)} />
       <Offer />
       <Category />
       {Object.values(productsCategories).map((productCategory, index) => (
