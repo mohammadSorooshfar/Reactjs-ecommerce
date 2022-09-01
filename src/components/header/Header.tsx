@@ -122,8 +122,8 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
       backgroundColor: theme.palette.info.dark,
     },
     padding: small ? "0 5px " : "0 30px",
-    width: small ? "" : "40%",
-    minHeight: small ? "20px" : "35px",
+    width: small ? "50px" : "40%",
+    minHeight: small ? "30px" : "35px",
     fontSize: small ? "10px" : "",
   }));
   const BrandTypographyStyle = styled(Typography)<{}>(({ theme }) => ({
@@ -348,7 +348,7 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
                 right: 0,
               }}
             >
-              <Box sx={{ width: "20%", textAlign: "right" }}>
+              <Box sx={{ width: "30%", textAlign: "right" }}>
                 <IconButton
                   size="large"
                   onClick={() => setOpen(true)}
@@ -371,23 +371,53 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
               >
                 کفش طهران
               </Typography>
-              <Box sx={{ width: "20%" }}>
-                {checkAuth() ? (
-                  <LoginManagementButton
-                    onClick={() => navigate("/tehranshoes/dashboard/products")}
-                    small
+              <ButtonGroup
+                variant="contained"
+                sx={{ flexDirection: "row-reverse", width: "30%" }}
+                disableElevation
+              >
+                <Box>
+                  {checkAuth() ? (
+                    <LoginManagementButton
+                      onClick={() =>
+                        navigate("/tehranshoes/dashboard/products")
+                      }
+                      small
+                    >
+                      مدیریت
+                    </LoginManagementButton>
+                  ) : (
+                    <LoginManagementButton
+                      onClick={() => navigate("/tehranshoes/login")}
+                      small
+                    >
+                      ورود
+                    </LoginManagementButton>
+                  )}
+                </Box>
+                <Button
+                  sx={{
+                    padding: "0 5px ",
+                    minHeight: "20px",
+                    fontSize: "10px",
+                    width: "60px",
+                  }}
+                >
+                  <Badge
+                    badgeContent={cartItemCounts}
+                    color="info"
+                    onClick={() => navigate(`/tehranshoes/pay/cart`)}
+                    sx={{
+                      "& .MuiBadge-badge": {
+                        right: "-5px",
+                        top: "-3px",
+                      },
+                    }}
                   >
-                    مدیریت
-                  </LoginManagementButton>
-                ) : (
-                  <LoginManagementButton
-                    onClick={() => navigate("/tehranshoes/login")}
-                    small
-                  >
-                    ورود
-                  </LoginManagementButton>
-                )}
-              </Box>
+                    سبد خرید
+                  </Badge>
+                </Button>
+              </ButtonGroup>
             </Box>
           </Toolbar>
         </Container>
