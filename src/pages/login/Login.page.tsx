@@ -65,7 +65,7 @@ const Login: React.FC = () => {
     loginService(data)
       .then(() => {
         toast.success("ورود با موفقیت انجام شد");
-        navigate("/tehranshoes/dashboard/products");
+        navigate("/tehranshoes/dashboard/orders");
       })
       .catch((e) => {
         if (e.response.status === 400) {

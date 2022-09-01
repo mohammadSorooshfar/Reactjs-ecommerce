@@ -39,7 +39,7 @@ const Payment: React.FC<props> = () => {
       1000
     );
     setTimeout(() => {
-      // failed ? navigate("/tehranshoes/pay/checkout") : navigate("/");
+      failed ? navigate("/tehranshoes/pay/checkout") : navigate("/");
     }, 5000);
     return () => {
       clearInterval(timer);

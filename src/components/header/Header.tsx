@@ -317,7 +317,7 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
               >
                 {checkAuth() ? (
                   <LoginManagementButton
-                    onClick={() => navigate("/tehranshoes/dashboard/products")}
+                    onClick={() => navigate("/tehranshoes/dashboard/orders")}
                   >
                     مدیریت
                   </LoginManagementButton>
@@ -379,9 +379,7 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
                 <Box>
                   {checkAuth() ? (
                     <LoginManagementButton
-                      onClick={() =>
-                        navigate("/tehranshoes/dashboard/products")
-                      }
+                      onClick={() => navigate("/tehranshoes/dashboard/orders")}
                       small
                     >
                       مدیریت
