@@ -69,22 +69,18 @@ const Checkout: React.FC<props> = () => {
     maxWidth: "300px",
     minHeight: "100px",
     maxHeight: "200px",
+    padding: "10px 12px",
+    border: "1px solid #ced4da",
+    fontSize: 16,
+    borderRadius: 4,
+    transition: theme.transitions.create([
+      "border-color",
+      "background-color",
+      "box-shadow",
+    ]),
     backgroundColor: theme.palette.mode === "light" ? "#fcfcfb" : "#2b2b2b",
     "label + &": {
       marginTop: theme.spacing(3),
-    },
-    "& .MuiInputBase-input": {
-      borderRadius: 4,
-      position: "relative",
-      border: "1px solid #ced4da",
-      fontSize: 16,
-      width: "auto",
-      padding: "10px 12px",
-      transition: theme.transitions.create([
-        "border-color",
-        "background-color",
-        "box-shadow",
-      ]),
     },
   }));
   const BoxFormStyle: any = styled(Box)<BoxProps>(({ theme }) => ({
