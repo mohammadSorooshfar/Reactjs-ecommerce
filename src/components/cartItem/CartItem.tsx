@@ -8,7 +8,10 @@ import {
   ListItemButton,
   ListItemText,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
+import { match } from "assert";
 import { BASE_URL, IMAGES } from "configs/url.config";
 import React from "react";
 import { useDispatch } from "react-redux";
@@ -22,16 +25,21 @@ interface props {
 
 const CartItem: React.FC<props> = ({ product }) => {
   const dispatch = useDispatch();
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down("md"));
   return (
     <>
       <ListItemAvatar>
         <Avatar
           src={`${BASE_URL}${IMAGES}/${product.image}`}
           variant={"rounded"}
-          sx={{ width: "100px", height: "100px" }}
+          sx={{
+            width: matches ? "50px" : "100px",
+            height: matches ? "50px" : "100px",
+          }}
         />
       </ListItemAvatar>
-      <Box sx={{ textAlign: "right", width: "200px" }}>
+      <Box sx={{ textAlign: "right", width: matches ? "70px" : "150px" }}>
         <Link
           to={`/tehranshoes/product/${product.id}`}
           style={{ textDecoration: "none", color: "inherit" }}
@@ -39,6 +47,9 @@ const CartItem: React.FC<props> = ({ product }) => {
           <ListItemText
             primary={product.name}
             secondary={`${persianNumber(product.price.toString())} تومان`}
+            sx={{
+              "& .MuiTypography-root": { fontSize: matches ? "12px" : "1rem" },
+            }}
           />
         </Link>
       </Box>
@@ -47,6 +58,7 @@ const CartItem: React.FC<props> = ({ product }) => {
         alignItems={"center"}
         border={"1px solid #ccc"}
         borderRadius={"10px"}
+        fontSize={"10px"}
       >
         <ListItemButton
           onClick={() =>
@@ -58,10 +70,13 @@ const CartItem: React.FC<props> = ({ product }) => {
             )
           }
           disabled={product.quantity - 1 === 0}
+          sx={{ padding: matches ? "5px" : "" }}
         >
-          <RemoveIcon fontSize="small" />
+          <RemoveIcon fontSize={matches ? "inherit" : "small"} />
         </ListItemButton>
-        <Typography>{product.quantity}</Typography>
+        <Typography variant={matches ? "subtitle2" : "body1"}>
+          {product.quantity}
+        </Typography>
         <ListItemButton
           onClick={() =>
             dispatch(
@@ -72,12 +87,16 @@ const CartItem: React.FC<props> = ({ product }) => {
             )
           }
           disabled={product.quantity === product.inventory}
+          sx={{ padding: matches ? "5px" : "" }}
         >
-          <AddIcon fontSize="small" />
+          <AddIcon fontSize={matches ? "inherit" : "small"} />
         </ListItemButton>
       </Box>
       <Box>
-        <Typography fontWeight={"bold"}>
+        <Typography
+          fontWeight={"bold"}
+          sx={{ fontSize: matches ? "12px" : "16px" }}
+        >
           {persianNumber((product.quantity * product.price).toString())} تومان{" "}
         </Typography>
       </Box>
@@ -90,8 +109,9 @@ const CartItem: React.FC<props> = ({ product }) => {
               })
             )
           }
+          sx={{ fontSize: matches ? "15px" : "" }}
         >
-          <DeleteIcon fontSize="medium" color="error" />
+          <DeleteIcon fontSize={matches ? "inherit" : "medium"} color="error" />
         </ListItemButton>
       </Box>
     </>

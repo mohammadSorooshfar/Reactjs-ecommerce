@@ -11,6 +11,8 @@ import {
   TextField,
   Typography,
   TypographyProps,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import CartItem from "components/cartItem/CartItem";
 import React, { useEffect, useState } from "react";
@@ -33,6 +35,8 @@ const Cart: React.FC<props> = () => {
   const [sale, setSale] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down("md"));
 
   useEffect(() => {
     getSaleCodesService().then((res) => setSaleCodes(res));
@@ -57,10 +61,10 @@ const Cart: React.FC<props> = () => {
     })
   );
   return (
-    <Container maxWidth={"lg"}>
+    <Container maxWidth={"lg"} sx={{ paddingTop: matches ? 3 : "" }}>
       <Grid container spacing={2}>
-        <Grid item sm={8}>
-          <Paper sx={{ padding: 2 }}>
+        <Grid item xs={12} sm={8}>
+          <Paper sx={{ padding: matches ? 1 : 2 }}>
             <Typography
               textAlign={"right"}
               variant={"h5"}
@@ -79,7 +83,10 @@ const Cart: React.FC<props> = () => {
                 cartProducts.map((product: ICart, index: number) => (
                   <>
                     <ListItem
-                      sx={{ justifyContent: "space-between" }}
+                      sx={{
+                        justifyContent: "space-between",
+                        padding: matches ? 1 : "",
+                      }}
                       key={product.id}
                     >
                       <CartItem product={product} />
@@ -91,7 +98,7 @@ const Cart: React.FC<props> = () => {
             </List>
           </Paper>
         </Grid>
-        <Grid item sm={4}>
+        <Grid item xs={12} sm={4}>
           <Paper sx={{ padding: 2 }}>
             <Typography
               textAlign={"right"}
@@ -122,6 +129,8 @@ const Cart: React.FC<props> = () => {
                   variant="contained"
                   color="primary"
                   onClick={() => checkCode()}
+                  size={matches ? "small" : "medium"}
+                  sx={{ paddingY: matches ? 1 : "" }}
                 >
                   اعمال کد
                 </Button>
