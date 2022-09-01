@@ -5,6 +5,9 @@ import "aos/dist/aos.css";
 import { useSelector } from "react-redux";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import MainRoutes from "routes/index.Routes";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 import "./App.css";
 
 function App() {
