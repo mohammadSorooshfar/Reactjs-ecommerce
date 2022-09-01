@@ -1,6 +1,7 @@
 import {
   Box,
   BoxProps,
+  Grid,
   Input,
   InputLabel,
   MenuItem,
@@ -19,44 +20,36 @@ import TextField from "@mui/material/TextField";
 import { Field, Form, Formik } from "formik";
 import { TextFieldProps } from "material-ui";
 import * as React from "react";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { categoryEnglish, genderEnglish } from "utils/functions.util";
-
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import CancelIcon from "@mui/icons-material/Cancel";
 import { IProduct } from "types/interfaces.types";
-
-const MultilineText: React.FC = () => {
-  return (
-    <TextField
-      multiline
-      rows={4}
-      placeholder="Default Value"
-      variant="standard"
-    />
-  );
-};
+import {
+  CKEditor,
+  CKEditorEventHandler,
+  prefixEventName,
+  useCKEditor,
+} from "ckeditor4-react";
+import { BASE_URL, IMAGES } from "configs/url.config";
 
 interface props {
   open: any;
   setOpen: any;
   handleSubmit: any;
-  data?: IProduct;
+  initProduct?: IProduct;
+  edit: boolean;
 }
-const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit, data }) => {
-  const [files, setFiles] = React.useState<any>([]);
-  const [gender, setGender] = React.useState<any>(data ? data.gender.fa : "");
-  const [category, setCategory] = React.useState<any>(
-    data ? data.category.fa : ""
+const AddModal: React.FC<props> = ({
+  open,
+  setOpen,
+  handleSubmit,
+  initProduct,
+  edit,
+}) => {
+  const [deletedImageIndex, setDeletedImageIndex] = React.useState<number[]>(
+    []
   );
-  const [customErrors, setCustomErrors] = React.useState<any>({});
-  // const [currentImages, setCurrentImages] = React.useState<string[]>(
-  //   data ? data.images : ""
-  // );
-  console.log(data);
 
   const handleClose = () => {
-    setFiles([]);
-    setCustomErrors({});
     setOpen(false);
   };
   const BoxFormStyle: any = styled(Box)<BoxProps>(({ theme }) => ({
@@ -67,11 +60,6 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit, data }) => {
   const FormTextFieldStyle: any = styled(TextField)<TextFieldProps>(
     ({ theme }) => ({
       width: "255px",
-    })
-  );
-  const DescriptionTextFieldStyle: any = styled(TextField)<TextFieldProps>(
-    ({ theme }) => ({
-      width: "520px",
     })
   );
   const ErrorTypographyStyle: any = styled(Typography)<TypographyProps>(
@@ -85,16 +73,19 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit, data }) => {
   return (
     <Dialog open={open} onClose={handleClose} dir="rtl" fullWidth>
       <DialogTitle sx={{ pt: 2 }}>
-        {data ? "ویرایش" : "افزودن"} کالا
+        {initProduct ? "ویرایش" : "افزودن"} کالا
       </DialogTitle>
       <DialogContent sx={{ textAlign: "center", p: 1 }}>
         <Formik
           initialValues={{
-            name: data ? data.name : "",
-            color: data ? data.colors[0] : "",
-            price: data ? data.price.toString() : "",
-            inventory: data ? data.inventory.toString() : "",
-            description: data ? data.description : "",
+            name: initProduct ? initProduct.name : "",
+            color: initProduct ? initProduct.colors[0] : "",
+            price: initProduct ? initProduct.price.toString() : "",
+            inventory: initProduct ? initProduct.inventory.toString() : "",
+            category: initProduct ? initProduct.category.fa : "",
+            gender: initProduct ? initProduct.gender.fa : "",
+            description: initProduct ? initProduct.description : "",
+            files: [],
           }}
           validate={(values) => {
             const errors: any = {};
@@ -121,49 +112,52 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit, data }) => {
             } else if (+values.inventory <= 0) {
               errors.inventory = "موجودی کالا باید بزرگتر از 0 باشد";
             }
+            if (!values.category) {
+              errors.category = "دسته بندی را انتخاب کنید";
+            }
+            if (!values.gender) {
+              errors.gender = "جنسیت را انتخاب کنید";
+            }
+            if (!values.files.length && !edit) {
+              errors.files = "عکس را انتخاب کنید";
+            }
 
             return errors;
           }}
           onSubmit={(data, { setSubmitting }) => {
-            if (gender && category && files.length) {
-              setCustomErrors({});
-              const genderTranslate = genderEnglish(gender);
-              const categoryTranslate = categoryEnglish(category);
-
+            const genderTranslate = genderEnglish(data.gender);
+            const categoryTranslate = categoryEnglish(data.category);
+            if (edit) {
+              handleSubmit(
+                {
+                  name: data.name,
+                  price: data.price,
+                  color: data.color,
+                  inventory: data.inventory,
+                  gender: genderTranslate,
+                  category: categoryTranslate,
+                  files: data.files,
+                  description: data.description,
+                  deletedImages: deletedImageIndex,
+                },
+                initProduct
+              );
+            } else {
               handleSubmit({
                 name: data.name,
                 price: data.price,
-                colors: data.color,
+                color: data.color,
                 inventory: data.inventory,
                 gender: genderTranslate,
                 category: categoryTranslate,
-                files,
+                files: data.files,
                 description: data.description,
               });
-              handleClose();
-              return;
             }
-            if (!gender) {
-              setCustomErrors((prev: any) => ({
-                gender: "جنسیت را انتخاب کنید",
-                ...prev,
-              }));
-            }
-            if (!category) {
-              setCustomErrors((prev: any) => ({
-                category: "جنسیت را انتخاب کنید",
-                ...prev,
-              }));
-            }
-            if (!files.length) {
-              setCustomErrors((prev: any) => ({
-                files: "عکس را انتخاب کنید",
-                ...prev,
-              }));
-            }
+            handleClose();
           }}
         >
-          {({ isSubmitting, errors, touched }) => (
+          {({ isSubmitting, errors, touched, values, setFieldValue }) => (
             <Form
               style={{
                 display: "flex",
@@ -235,10 +229,10 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit, data }) => {
                   <Box>
                     <Select
                       displayEmpty
-                      value={gender}
+                      value={values.gender}
                       sx={{ width: "255px" }}
                       onChange={(e) => {
-                        setGender(e.target.value);
+                        setFieldValue("gender", e.target.value);
                       }}
                       input={<OutlinedInput />}
                       renderValue={(selected: any) => {
@@ -248,26 +242,26 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit, data }) => {
                         return selected;
                       }}
                     >
-                      <MenuItem disabled value="جنسیت">
+                      <MenuItem disabled value="">
                         <em>جنسیت</em>
                       </MenuItem>
                       <MenuItem value="مردانه">مردانه</MenuItem>
                       <MenuItem value="زنانه">زنانه</MenuItem>
                       <MenuItem value="بچگانه">بچگانه</MenuItem>
                     </Select>
-                    {customErrors.gender && (
+                    {errors.gender && touched.gender && (
                       <ErrorTypographyStyle>
-                        {customErrors.gender}
+                        {errors.gender}
                       </ErrorTypographyStyle>
                     )}
                   </Box>
                   <Box>
                     <Select
                       displayEmpty
-                      value={category}
+                      value={values.category}
                       sx={{ width: "255px" }}
                       onChange={(e) => {
-                        setCategory(e.target.value);
+                        setFieldValue("category", e.target.value);
                       }}
                       input={<OutlinedInput />}
                       renderValue={(selected: any) => {
@@ -284,9 +278,9 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit, data }) => {
                       <MenuItem value="رسمی">رسمی</MenuItem>
                       <MenuItem value="کتانی">کتانی</MenuItem>
                     </Select>
-                    {customErrors.category && (
+                    {errors.category && touched.category && (
                       <ErrorTypographyStyle>
-                        {customErrors.category}
+                        {errors.category}
                       </ErrorTypographyStyle>
                     )}
                   </Box>
@@ -300,64 +294,85 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit, data }) => {
                   type="file"
                   inputProps={{ multiple: true }}
                   onChange={(e) =>
-                    setFiles((e.target as HTMLInputElement).files)
+                    setFieldValue("files", (e.target as HTMLInputElement).files)
                   }
                   sx={{ mb: 4, width: "90%" }}
                 />
-                {customErrors.files && (
-                  <ErrorTypographyStyle>
-                    {customErrors.files}
-                  </ErrorTypographyStyle>
-                )}
-                {/* {data ? (
-                  <Grid container spacing={2} marginBottom={4}>
-                    {currentImages.map((type: any, indexType: number) =>
-                      type.images.map((image: string, indexImage: number) => (
-                        <Grid
-                          item
-                          xs={4}
-                          onClick={() => {
-                            setCurrentImages((prev: any) => {
-                              let current = [...prev];
-                              const index = current[indexType].images.findIndex(
-                                (img: string) => img === image
-                              );
-                              console.log(
-                                current[indexType].images,
-                                index,
-                                image
-                              );
 
-                              current[indexType].images.splice(index, 1);
-                              console.log(current[indexType]);
-                              return current;
-                            });
-                            console.log(type, image);
-                          }}
-                        >
-                          <Avatar
-                            variant="rounded"
-                            src={`${BASE_URL}${IMAGES}/${image}`}
-                            sx={{
-                              width: 100,
-                              height: 100,
-                              mr: "auto",
-                              ml: "auto",
+                {errors.files && touched.files && (
+                  <ErrorTypographyStyle>{errors.files}</ErrorTypographyStyle>
+                )}
+                {values.files ? (
+                  <Box>
+                    <Grid container spacing={1} marginBottom={4}>
+                      {Object.values(values.files).map((image) => (
+                        <Grid item xs={4}>
+                          <img
+                            src={URL.createObjectURL(image)}
+                            alt=""
+                            style={{
+                              width: "100%",
+                              height: "200px",
+                              objectFit: "cover",
                             }}
                           />
                         </Grid>
-                      ))
-                    )}
-                  </Grid>
+                      ))}
+                    </Grid>
+                  </Box>
                 ) : (
                   ""
-                )} */}
-                <Field
-                  name="description"
-                  placeholder="توضیحات"
-                  required
-                  type="text"
-                  as={DescriptionTextFieldStyle}
+                )}
+                {initProduct ? (
+                  <Box>
+                    <Grid container spacing={1} marginBottom={4}>
+                      {initProduct.images.map((image, index) => (
+                        <Grid
+                          item
+                          xs={4}
+                          key={index}
+                          position={"relative"}
+                          display={
+                            deletedImageIndex.findIndex((img: number) => {
+                              return img === index;
+                            }) !== -1
+                              ? "none"
+                              : "inline-block"
+                          }
+                        >
+                          <CancelIcon
+                            sx={{
+                              position: "absolute",
+                              "&:hover": { cursor: "pointer" },
+                            }}
+                            onClick={() =>
+                              setDeletedImageIndex([
+                                ...deletedImageIndex,
+                                index,
+                              ])
+                            }
+                          />
+                          <img
+                            src={`${BASE_URL}${IMAGES}/${image}`}
+                            alt=""
+                            style={{
+                              width: "100%",
+                              height: "200px",
+                              objectFit: "cover",
+                            }}
+                          />
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </Box>
+                ) : (
+                  ""
+                )}
+                <CKEditor
+                  initData={`${values.description}`}
+                  onChange={({ editor }) => {
+                    setFieldValue("description", editor.getData());
+                  }}
                 />
               </div>
               <DialogActions sx={{ mt: 3, pb: 1, justifyContent: "center" }}>
@@ -366,11 +381,17 @@ const AddModal: React.FC<props> = ({ open, setOpen, handleSubmit, data }) => {
                   onClick={handleClose}
                   color="error"
                   sx={{ ml: 3 }}
+                  disabled={isSubmitting}
                 >
                   انصراف
                 </Button>
-                <Button variant={"contained"} color="success" type="submit">
-                  {data ? "ویرایش" : "افزودن"}
+                <Button
+                  variant={"contained"}
+                  color="success"
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  {initProduct ? "ویرایش" : "افزودن"}
                 </Button>
               </DialogActions>
             </Form>

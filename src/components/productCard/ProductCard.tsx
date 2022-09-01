@@ -1,15 +1,21 @@
-import React, { useEffect, useState } from "react";
+import { Box, styled } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Box, BoxProps, CardActionArea, styled } from "@mui/material";
-import { IProduct } from "types/interfaces.types";
 import { BASE_URL, IMAGES } from "configs/url.config";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { IProduct } from "types/interfaces.types";
 import { colorGenerator, persianNumber } from "utils/functions.util";
-import { useNavigate } from "react-router-dom";
 
-export default function ProductCard({ product }: { product: IProduct }) {
+export default function ProductCard({
+  product,
+  height,
+}: {
+  product: IProduct;
+  height: string;
+}) {
   const [img, setImg] = useState(`${BASE_URL}${IMAGES}/${product.images[0]}`);
   const [selectedColor, setSelectedColor] = useState(0);
   const navigate = useNavigate();
@@ -38,48 +44,70 @@ export default function ProductCard({ product }: { product: IProduct }) {
       cursor: "pointer",
     },
   }));
+
   return (
-    <Card elevation={1}>
+    <Card elevation={1} sx={{ width: "100%" }}>
       <Box
         sx={{
-          minHeight: "400px",
+          minHeight: height,
         }}
+        width={"100%"}
       >
-        <CardMedia
-          component="img"
-          height="250"
-          image={img}
-          alt="shoe photo"
-          onMouseEnter={() =>
-            setImg(
-              `${BASE_URL}${IMAGES}/${product.images[selectedColor * 3 + 2]}`
-            )
-          }
-          onMouseLeave={() =>
-            setImg(`${BASE_URL}${IMAGES}/${product.images[selectedColor * 3]}`)
-          }
-          sx={{
-            "&:hover": {
-              cursor: "pointer",
-            },
+        <Link
+          to={`/tehranshoes/product/${product.id}`}
+          style={{
+            textDecoration: "none",
           }}
-          onClick={() => navigate(`/tehranshoes/product/${product.id}`)}
-        />
-        <CardContent>
-          <Typography
-            gutterBottom
-            variant="h6"
-            component="div"
-            textAlign={"right"}
+        >
+          <CardMedia
+            component="img"
+            height={`${+height - +height / 3}px`}
+            width={"100%"}
+            image={img}
+            alt="shoe photo"
+            onMouseEnter={() =>
+              product.images.length >= selectedColor * 3 + 2 &&
+              setImg(
+                `${BASE_URL}${IMAGES}/${product.images[selectedColor * 3 + 2]}`
+              )
+            }
+            onMouseLeave={() =>
+              product.images.length >= selectedColor * 3 &&
+              setImg(
+                `${BASE_URL}${IMAGES}/${product.images[selectedColor * 3]}`
+              )
+            }
             sx={{
               "&:hover": {
                 cursor: "pointer",
               },
+              // objectFit: "contain",
             }}
-            onClick={() => navigate(`/tehranshoes/product/${product.id}`)}
+          />
+        </Link>
+        <CardContent>
+          <Link
+            to={`/tehranshoes/product/${product.id}`}
+            style={{
+              textDecoration: "none",
+            }}
           >
-            {product.name}
-          </Typography>
+            <Typography
+              gutterBottom
+              variant="h6"
+              component="div"
+              textAlign={"right"}
+              sx={{
+                "&:hover": {
+                  cursor: "pointer",
+                },
+                color: (theme) =>
+                  theme.palette.mode === "light" ? "primary.main" : "white",
+              }}
+            >
+              {product.name}
+            </Typography>
+          </Link>
           <Box
             display={"flex"}
             justifyContent={"space-between"}
@@ -97,7 +125,7 @@ export default function ProductCard({ product }: { product: IProduct }) {
               ))}
             </Box>
             <Typography variant="subtitle1" textAlign={"left"}>
-              {persianNumber(product.price.toString())}
+              {persianNumber(product.price.toString()) + " تومان"}
             </Typography>
           </Box>
         </CardContent>

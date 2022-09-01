@@ -1,16 +1,27 @@
 import React from "react";
 import skate from "assets/skateboard.jpg";
-import { Box, InputAdornment, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  InputAdornment,
+  Paper,
+  TextField,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 const NewsLetter: React.FC = () => {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down("lg"));
   return (
-    <div
-      style={{
+    <Paper
+      sx={{
         width: "100%",
         position: "relative",
         backgroundColor: "#000000",
         zIndex: 2,
+        height: "500px",
       }}
     >
       <Box
@@ -22,11 +33,17 @@ const NewsLetter: React.FC = () => {
           zIndex: 3,
         }}
       >
-        <Typography color={"#EFEFEF"} variant={"h3"} fontWeight={"700"} mb={8}>
+        <Typography
+          color={"#EFEFEF"}
+          variant={matches ? "h4" : "h3"}
+          fontWeight={"700"}
+          mb={8}
+          textAlign="center"
+        >
           به{" "}
           <Typography
             component={"span"}
-            variant="h3"
+            variant={matches ? "h4" : "h3"}
             color={"error"}
             fontWeight={"700"}
           >
@@ -60,7 +77,7 @@ const NewsLetter: React.FC = () => {
           opacity: "0.25",
         }}
       />
-    </div>
+    </Paper>
   );
 };
 

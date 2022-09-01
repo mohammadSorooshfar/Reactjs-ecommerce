@@ -1,19 +1,3 @@
-import EnhancedTable from "components/table/Table";
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import {
-  IOrderManagement,
-  IPriceManagement,
-  IProduct,
-  IProductManagement,
-} from "types/interfaces.types";
-import {
-  isAnPriceManagement,
-  isAnProductManagement,
-} from "utils/functions.util";
-import TrOrder from "components/table/TrOrder";
-import TrPrice from "components/table/TrPrice";
-import TrProduct from "components/table/TrProduct";
 import {
   Box,
   Button,
@@ -23,32 +7,54 @@ import {
   Typography,
 } from "@mui/material";
 import AddModal from "components/modals/AddModal";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { editableToggle } from "redux/products";
+import EnhancedTable from "components/table/Table";
+import TrOrder from "components/table/TrOrder";
+import TrPrice from "components/table/TrPrice";
+import TrProduct from "components/table/TrProduct";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
+import { deleteEditList } from "redux/products";
 import {
   addProductAdminService,
+  getProductService,
   updateProductsAdminService,
   uploadImagesAdminService,
 } from "services/services.services";
-import { toast } from "react-toastify";
+import {
+  IEditRow,
+  IOrderManagement,
+  IPriceManagement,
+  IProductManagement,
+} from "types/interfaces.types";
+import {
+  isAnPriceManagement,
+  isAnProductManagement,
+} from "utils/functions.util";
 
 const RowType: React.FC<{
   rowData: IProductManagement | IPriceManagement | IOrderManagement;
   refreshFunction: any;
-  handleChangePriceInventory: any;
-}> = ({ rowData, refreshFunction, handleChangePriceInventory }) => {
+}> = ({ rowData, refreshFunction }) => {
   if (isAnProductManagement(rowData)) {
-    return <TrProduct rowData={rowData} refreshFunction={refreshFunction} />;
-  } else if (isAnPriceManagement(rowData)) {
     return (
-      <TrPrice
+      <TrProduct
         rowData={rowData}
-        handleChangePriceInventory={handleChangePriceInventory}
+        refreshFunction={refreshFunction}
+        key={rowData.id}
       />
     );
+  } else if (isAnPriceManagement(rowData)) {
+    return <TrPrice rowData={rowData} key={rowData.id} />;
   } else {
-    return <TrOrder rowData={rowData} />;
+    return (
+      <TrOrder
+        rowData={rowData}
+        refreshFunction={refreshFunction}
+        key={rowData.id}
+      />
+    );
   }
 };
 const ActionButtons: React.FC<{
@@ -56,37 +62,48 @@ const ActionButtons: React.FC<{
   setDelivered?: any;
   rowsData: [];
   refreshFunction: any;
-}> = ({ path, setDelivered, rowsData, refreshFunction }) => {
+  setLoading: any;
+}> = ({ path, setDelivered, rowsData, refreshFunction, setLoading }) => {
   const [addOpen, setAddOpen] = useState(false);
-  const editable = useSelector((state: any) => state.products.editable);
-  const products = useSelector((state: any) => state.products.products);
+  const editList = useSelector((state: any) => state.products.editList);
   const dispatch = useDispatch();
-  const handleEditPrice = (
-    rowsData: IPriceManagement[],
-    dispatch: any,
-    products: IProduct[]
-  ) => {
-    console.log(rowsData);
-    dispatch(editableToggle());
-    const editedProducts: IProduct[] = [];
-    products.forEach((product: IProduct, index) => {
-      if (
-        product.price !== rowsData[index].price ||
-        product.inventory !== rowsData[index].inventory
-      ) {
-        const newProduct = { ...product };
-        newProduct.price = rowsData[index].price;
-        newProduct.inventory = rowsData[index].inventory;
-        return editedProducts.push(newProduct);
+
+  useEffect(() => {
+    const keyDownHandler = (event: any) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        dispatch(deleteEditList());
       }
-    }, []);
-    const promises = editedProducts.map((product) =>
-      updateProductsAdminService(product.id.toString(), product)
-    );
-    Promise.all(promises)
-      .then((res) => {
-        toast.success("ویرایش محصولات با موفقیت انجام شد");
-        refreshFunction();
+    };
+    document.addEventListener("keydown", keyDownHandler);
+    return () => {
+      document.removeEventListener("keydown", keyDownHandler);
+    };
+  }, []);
+
+  const handleEditPrice = () => {
+    setLoading(true);
+    const getPromises = editList.map((editedRow: IEditRow) => {
+      return getProductService(editedRow.id.toString());
+    });
+    Promise.all(getPromises)
+      .then((products) => {
+        const putPromises = products.map((product, index) => {
+          editList[index].priceEdit &&
+            (product.price = editList[index].priceData);
+          editList[index].inventoryEdit &&
+            (product.inventory = editList[index].inventoryData);
+          return updateProductsAdminService(product.id.toString(), product);
+        });
+        Promise.all(putPromises)
+          .then(() => {
+            toast.success("ویرایش محصولات با موفقیت انجام شد");
+            dispatch(deleteEditList());
+            refreshFunction();
+          })
+          .catch((res) => {
+            toast.error("در ویرایش کالاها خطایی صورت گرفت");
+          });
       })
       .catch((res) => {
         toast.error("در ویرایش کالاها خطایی صورت گرفت");
@@ -114,16 +131,19 @@ const ActionButtons: React.FC<{
       return uploadImagesAdminService(formData, reqConfig);
     });
     Promise.all(imagePromises).then((arrOfResults) => {
+      const now = new Date();
       const allFormData = {
         name: data.name,
         colors: [data.color],
         images: [...arrOfResults],
         price: +data.price,
         inventory: +data.inventory,
-        gender: { [data.gender.en]: data.gender.fa },
-        category: { [data.category.en]: data.category.fa },
+        gender: { en: data.gender.en, fa: data.gender.fa },
+        category: { en: data.category.en, fa: data.category.fa },
         description: data.description,
+        createdAt: now,
       };
+      console.log([data.color], allFormData.colors);
 
       addProductAdminService(allFormData)
         .then((res) => {
@@ -161,6 +181,7 @@ const ActionButtons: React.FC<{
           open={addOpen}
           setOpen={setAddOpen}
           handleSubmit={handleAdd}
+          edit={false}
         />
       </>
     );
@@ -179,8 +200,8 @@ const ActionButtons: React.FC<{
         <Button
           variant="contained"
           color={"success"}
-          onClick={() => handleEditPrice(rowsData, dispatch, products)}
-          disabled={!editable}
+          onClick={() => handleEditPrice()}
+          disabled={editList.length === 0}
         >
           ذخیره
         </Button>

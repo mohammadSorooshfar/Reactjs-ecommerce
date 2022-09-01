@@ -5,13 +5,17 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Badge,
   Button,
+  ButtonGroup,
   Drawer,
   ListItem,
   MenuItemProps,
+  Paper,
   Slide,
   styled,
   useScrollTrigger,
+  useTheme,
 } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -21,12 +25,19 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { checkAuth } from "utils/functions.util";
-import logo from "../../assets/logo.png";
+import logoDark from "../../assets/logo1.png";
+import logoLight from "../../assets/logo.png";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useDispatch, useSelector } from "react-redux";
+import { ICart } from "types/interfaces.types";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
+import { changeDark } from "redux/theme";
 
-interface Iprops {
+interface IProps {
   navHeight: string;
 }
 const genders = {
@@ -37,21 +48,45 @@ const genders = {
 const categories = {
   sport: "ورزشی",
   sneaker: "کتانی",
-  oxfords: "رسمی",
+  oxford: "رسمی",
 };
 
-const Header: React.FC<Iprops> = ({ navHeight }) => {
+const Header: React.FC<IProps> = ({ navHeight }) => {
   const [anchorElCategory, setAnchorElCategory] = useState<null | HTMLElement>(
     null
   );
+  const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [selectedGender, setSelectedGender] = useState("");
   const [navOptionColor, setNavOptionColor] = useState({
-    men: "black",
-    women: "black",
-    kid: "black",
+    men: theme.palette.mode === "dark" ? "white" : "black",
+    women: theme.palette.mode === "dark" ? "white" : "black",
+    kid: theme.palette.mode === "dark" ? "white" : "black",
   });
+  const [cartItemCounts, setCartItemCounts] = useState(0);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const cartProducts = useSelector((state: any) => state.cart.cartProducts);
+  useEffect(() => {
+    const totalItems = cartProducts.reduce(
+      (prev: number, current: ICart) => prev + current.quantity,
+      0
+    );
+    setCartItemCounts(totalItems);
+  }, [cartProducts]);
+  useEffect(() => {
+    theme.palette.mode === "dark"
+      ? setNavOptionColor({
+          men: "white",
+          women: "white",
+          kid: "white",
+        })
+      : setNavOptionColor({
+          men: "black",
+          women: "black",
+          kid: "black",
+        });
+  }, [theme.palette.mode]);
   const handleOpenCategoryMenu = (event: React.MouseEvent<HTMLElement>) => {
     if (anchorElCategory !== event.currentTarget) {
       setAnchorElCategory(event.currentTarget);
@@ -62,38 +97,39 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
       if (selected[0]) {
         setSelectedGender(selected[0]);
         setNavOptionColor({
-          men: "black",
-          women: "black",
-          kid: "black",
+          men: theme.palette.mode === "dark" ? "white" : "black",
+          women: theme.palette.mode === "dark" ? "white" : "black",
+          kid: theme.palette.mode === "dark" ? "white" : "black",
           [selected[0]]: "#ffd32a",
         });
       }
     }
   };
   const handleCloseCategoryMenu = () => {
-    setNavOptionColor({ men: "black", women: "black", kid: "black" });
+    setNavOptionColor({
+      men: theme.palette.mode === "dark" ? "white" : "black",
+      women: theme.palette.mode === "dark" ? "white" : "black",
+      kid: theme.palette.mode === "dark" ? "white" : "black",
+    });
     setAnchorElCategory(null);
   };
   const LoginManagementButton = styled(Button)<{
     small?: boolean;
-    management?: boolean;
-  }>(({ theme, small, management }) => ({
+  }>(({ theme, small }) => ({
     color: theme.palette.secondary.main,
-    backgroundColor: management
-      ? theme.palette.info.main
-      : theme.palette.primary.main,
+    backgroundColor: theme.palette.info.main,
     "&:hover": {
-      backgroundColor: management ? theme.palette.info.dark : "#000000df",
+      backgroundColor: theme.palette.info.dark,
     },
     padding: small ? "0 5px " : "0 30px",
-    width: small ? "" : "13%",
-    minHeight: small ? "20px" : "35px",
+    width: small ? "50px" : "40%",
+    minHeight: small ? "30px" : "35px",
     fontSize: small ? "10px" : "",
   }));
   const BrandTypographyStyle = styled(Typography)<{}>(({ theme }) => ({
     fontWeight: 700,
-    color: theme.palette.primary.main,
     textDecoration: "none",
+    color: theme.palette.mode === "dark" ? "white" : "black",
     "&:hover": {
       cursor: "pointer",
     },
@@ -102,17 +138,29 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
       fontSize: "16px",
     },
   }));
-  const CategoryMenu = styled(MenuItem)<MenuItemProps>(() => ({
-    color: "black",
+  const CategoryMenu = styled(MenuItem)<MenuItemProps>(({ theme }) => ({
+    color: theme.palette.mode === "dark" ? "white" : "black",
     padding: "0 30px",
     width: "200px",
     direction: "rtl",
   }));
   const getList = () => (
-    <div style={{ direction: "rtl" }}>
+    <Box
+      sx={{
+        backgroundColor: (theme) =>
+          theme.palette.mode === "dark" ? "#1e1e1e" : "white",
+        direction: "rtl",
+      }}
+    >
       {Object.entries(genders).map((gender, index) => (
         <ListItem key={index} sx={{ paddingRight: 0 }}>
-          <Accordion elevation={0}>
+          <Accordion
+            elevation={0}
+            sx={{
+              backgroundColor: (theme) =>
+                theme.palette.mode === "dark" ? "#1e1e1e" : "white",
+            }}
+          >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Typography color={Object.values(navOptionColor)[index]}>
                 {gender[1]}
@@ -142,13 +190,27 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
           </Accordion>
         </ListItem>
       ))}
-    </div>
+    </Box>
   );
   return (
     <>
-      <AppBar position="fixed" sx={{ backgroundColor: "white" }} elevation={0}>
-        <Container maxWidth="lg">
-          <Toolbar disableGutters sx={{ maxHeight: navHeight }}>
+      <AppBar
+        position="fixed"
+        elevation={0}
+        sx={{
+          backgroundColor: (theme) =>
+            theme.palette.mode === "dark" ? "#1E1E1E" : "white",
+        }}
+      >
+        <Container maxWidth={theme.breakpoints.down("md") ? false : "xl"}>
+          <Toolbar
+            disableGutters
+            sx={{
+              maxHeight: navHeight,
+              width: "100%",
+              justifyContent: "flex-start",
+            }}
+          >
             <Box
               sx={{
                 display: { xs: "none", sm: "flex" },
@@ -158,9 +220,13 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
                 textAlign: "right",
               }}
             >
-              <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box sx={{ display: "flex", alignItems: "center", width: "25%" }}>
                 <Box>
-                  <img src={logo} alt="logo" style={{ width: "40px" }} />
+                  <img
+                    src={theme.palette.mode === "dark" ? logoDark : logoLight}
+                    alt="logo"
+                    style={{ width: "40px" }}
+                  />
                 </Box>
                 <BrandTypographyStyle
                   variant="h6"
@@ -231,35 +297,65 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
                   ))}
                 </Menu>
               </Box>
-              {checkAuth() ? (
-                <LoginManagementButton
-                  onClick={() => navigate("/tehranshoes/dashboard/products")}
-                  management
-                >
-                  مدیریت
-                </LoginManagementButton>
-              ) : (
-                <LoginManagementButton
-                  onClick={() => navigate("/tehranshoes/login")}
-                >
-                  ورود
-                </LoginManagementButton>
-              )}
+              <IconButton
+                onClick={() => dispatch(changeDark())}
+                sx={{
+                  color:
+                    theme.palette.mode === "dark" ? "white" : "primary.main",
+                }}
+              >
+                {theme.palette.mode === "dark" ? (
+                  <Brightness7Icon />
+                ) : (
+                  <Brightness4Icon />
+                )}
+              </IconButton>
+              <ButtonGroup
+                variant="contained"
+                sx={{ flexDirection: "row-reverse", width: "25%" }}
+                disableElevation
+              >
+                {checkAuth() ? (
+                  <LoginManagementButton
+                    onClick={() => navigate("/tehranshoes/dashboard/orders")}
+                  >
+                    مدیریت
+                  </LoginManagementButton>
+                ) : (
+                  <LoginManagementButton
+                    onClick={() => navigate("/tehranshoes/login")}
+                  >
+                    ورود
+                  </LoginManagementButton>
+                )}
+                <Button>
+                  <Badge
+                    badgeContent={cartItemCounts}
+                    color="secondary"
+                    onClick={() => navigate(`/tehranshoes/pay/cart`)}
+                  >
+                    سبد خرید <ShoppingCartIcon />{" "}
+                  </Badge>
+                </Button>
+              </ButtonGroup>
             </Box>
-
             <Box
               sx={{
                 display: { xs: "flex", sm: "none" },
                 justifyContent: "space-between",
                 alignItems: "center",
                 width: "100%",
+                right: 0,
               }}
             >
-              <Box sx={{ width: "20%", textAlign: "right" }}>
+              <Box sx={{ width: "30%", textAlign: "right" }}>
                 <IconButton
                   size="large"
                   onClick={() => setOpen(true)}
-                  color="primary"
+                  sx={{
+                    color:
+                      theme.palette.mode === "dark" ? "white" : "primary.main",
+                  }}
                 >
                   <MenuIcon />
                 </IconButton>
@@ -270,28 +366,56 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
                 sx={{
                   fontWeight: 700,
                   textDecoration: "none",
+                  color: theme.palette.mode === "dark" ? "white" : "black",
                 }}
               >
                 کفش طهران
               </Typography>
-              <Box sx={{ width: "20%" }}>
-                {checkAuth() ? (
-                  <LoginManagementButton
-                    onClick={() => navigate("/tehranshoes/dashboard/products")}
-                    small
-                    management
+              <ButtonGroup
+                variant="contained"
+                sx={{ flexDirection: "row-reverse", width: "30%" }}
+                disableElevation
+              >
+                <Box>
+                  {checkAuth() ? (
+                    <LoginManagementButton
+                      onClick={() => navigate("/tehranshoes/dashboard/orders")}
+                      small
+                    >
+                      مدیریت
+                    </LoginManagementButton>
+                  ) : (
+                    <LoginManagementButton
+                      onClick={() => navigate("/tehranshoes/login")}
+                      small
+                    >
+                      ورود
+                    </LoginManagementButton>
+                  )}
+                </Box>
+                <Button
+                  sx={{
+                    padding: "0 5px ",
+                    minHeight: "20px",
+                    fontSize: "10px",
+                    width: "60px",
+                  }}
+                >
+                  <Badge
+                    badgeContent={cartItemCounts}
+                    color="info"
+                    onClick={() => navigate(`/tehranshoes/pay/cart`)}
+                    sx={{
+                      "& .MuiBadge-badge": {
+                        right: "-5px",
+                        top: "-3px",
+                      },
+                    }}
                   >
-                    مدیریت
-                  </LoginManagementButton>
-                ) : (
-                  <LoginManagementButton
-                    onClick={() => navigate("/tehranshoes/login")}
-                    small
-                  >
-                    ورود
-                  </LoginManagementButton>
-                )}
-              </Box>
+                    سبد خرید
+                  </Badge>
+                </Button>
+              </ButtonGroup>
             </Box>
           </Toolbar>
         </Container>
@@ -305,22 +429,49 @@ const Header: React.FC<Iprops> = ({ navHeight }) => {
         <Box
           display={"flex"}
           justifyContent={"space-between"}
-          marginTop="5px"
+          paddingTop="5px"
           alignItems={"center"}
           width="200px"
+          sx={{
+            backgroundColor: (theme) =>
+              theme.palette.mode === "dark" ? "#1e1e1e" : "white",
+          }}
         >
           <IconButton
             size="large"
             onClick={() => setOpen(false)}
             color="inherit"
+            sx={{
+              height: "10px",
+              color: theme.palette.mode === "dark" ? "white" : "primary.main",
+            }}
           >
             <CloseIcon />
           </IconButton>
-          <Box sx={{ mr: 1 }} onClick={() => navigate("/")}>
-            <img src={logo} alt="logo" style={{ width: "40px" }} />
-          </Box>
+
+          <IconButton
+            onClick={() => dispatch(changeDark())}
+            sx={{
+              color: theme.palette.mode === "dark" ? "white" : "primary.main",
+              ml: 2,
+            }}
+          >
+            {theme.palette.mode === "dark" ? (
+              <Brightness7Icon />
+            ) : (
+              <Brightness4Icon />
+            )}
+          </IconButton>
         </Box>
-        <Container maxWidth="md">{getList()}</Container>
+        <Box
+          height={"100%"}
+          sx={{
+            backgroundColor: (theme) =>
+              theme.palette.mode === "dark" ? "#1e1e1e" : "white",
+          }}
+        >
+          {getList()}
+        </Box>
       </Drawer>
     </>
   );

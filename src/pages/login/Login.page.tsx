@@ -8,10 +8,12 @@ import {
   ButtonProps,
   Container,
   ContainerProps,
+  Paper,
   styled,
   TextField,
   TextFieldProps,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { Field, Form, Formik } from "formik";
 import React from "react";
@@ -21,11 +23,7 @@ import { loginService } from "services/services.services";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const ContainerStyle = styled(Container)<ContainerProps>(({ theme }) => ({
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  }));
+  const theme = useTheme();
   const FormBoxStyle = styled(Box)<BoxProps>(({ theme }) => ({
     position: "absolute",
     top: "50%",
@@ -67,7 +65,7 @@ const Login: React.FC = () => {
     loginService(data)
       .then(() => {
         toast.success("ورود با موفقیت انجام شد");
-        navigate("/tehranshoes/dashboard/products");
+        navigate("/tehranshoes/dashboard/orders");
       })
       .catch((e) => {
         if (e.response.status === 400) {
@@ -77,7 +75,15 @@ const Login: React.FC = () => {
       });
   };
   return (
-    <ContainerStyle>
+    <Paper
+      sx={{
+        width: "100%",
+        minHeight: "100vh",
+        marginRight: "auto",
+        marginLeft: "auto",
+        borderRadius: "0px",
+      }}
+    >
       <FormBoxStyle>
         <AvatarStyle>
           <LockOutlinedIcon />
@@ -101,7 +107,7 @@ const Login: React.FC = () => {
                 height: "240px",
               }}
             >
-              <div>
+              <Box textAlign={"center"}>
                 <Field
                   placeholder="نام کاربری"
                   name="username"
@@ -116,8 +122,8 @@ const Login: React.FC = () => {
                   type="password"
                   as={FormTextFieldStyle}
                 />
-              </div>
-              <div>
+              </Box>
+              <Box textAlign={"center"}>
                 <LoginButtonStyle
                   variant="contained"
                   disabled={isSubmitting}
@@ -125,13 +131,18 @@ const Login: React.FC = () => {
                 >
                   ورود
                 </LoginButtonStyle>
-              </div>
+              </Box>
             </Form>
           )}
         </Formik>
-        <Button onClick={() => navigate("/")}>بازگشت به سایت</Button>
+        <Button
+          onClick={() => navigate("/")}
+          sx={{ color: theme.palette.mode === "dark" ? "white" : "primary" }}
+        >
+          بازگشت به سایت
+        </Button>
       </FormBoxStyle>
-    </ContainerStyle>
+    </Paper>
   );
 };
 

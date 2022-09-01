@@ -1,5 +1,6 @@
 import { ACCESS_TOKEN } from "configs/variables.config";
-import { NavigateFunction } from "react-router-dom";
+import { useLayoutEffect } from "react";
+import { NavigateFunction, useLocation } from "react-router-dom";
 import {
   IOrder,
   IOrderManagement,
@@ -171,13 +172,22 @@ export const colorGenerator = (color: string) => {
       return "pink";
     case "سبز":
       return "green";
+    case "قهوه ای":
+      return "brown";
+    case "کرم":
+      return "#E5C9B3";
 
     default:
       break;
   }
 };
-
+function addComma(num: string) {
+  var str = num;
+  str = str.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return str;
+}
 export const persianNumber = (number: string) => {
+  number = addComma(number);
   let output = "";
   for (let index = 0; index < number.length; index++) {
     const num = number[index];
@@ -213,10 +223,34 @@ export const persianNumber = (number: string) => {
       case "0":
         output += "۰";
         break;
-
+      case ",":
+        output += ",";
+        break;
       default:
         break;
     }
   }
-  return output + " تومان";
+
+  return output;
+};
+
+export const disablePastDate = () => {
+  let dtToday = new Date();
+
+  let month = dtToday.getMonth() + 1;
+  let day = dtToday.getDate();
+  let year = dtToday.getFullYear();
+  let monthString, dayString;
+  if (month < 10) monthString = "0" + month.toString();
+  if (day < 10) dayString = "0" + day.toString();
+
+  return year + "-" + monthString + "-" + dayString;
+};
+
+export const ScrollToTop = ({ children }: any) => {
+  const location = useLocation();
+  useLayoutEffect(() => {
+    document.documentElement.scrollTo(0, 0);
+  }, [location.pathname]);
+  return children;
 };

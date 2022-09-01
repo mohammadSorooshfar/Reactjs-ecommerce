@@ -46,7 +46,13 @@ const DashboardLayout: React.FC<any> = ({ children }) => {
           boxSizing: "border-box",
         }}
       >
-        <Typography variant="h4" noWrap component="div" color={"black"}>
+        <Typography
+          variant="h4"
+          textAlign={"center"}
+          noWrap
+          component="div"
+          color={"black"}
+        >
           پنل مدیریت فروشگاه
         </Typography>
         <Box

@@ -9,7 +9,7 @@ import {
 import AddModal from "components/modals/AddModal";
 import DeleteModal from "components/modals/DeleteModal";
 import { BASE_URL, IMAGES } from "configs/url.config";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import {
@@ -26,9 +26,6 @@ const TrProduct: React.FC<{
   const [openDelete, setOpenDelete] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const products = useSelector((state: any) => state.products.products);
-  const product = useRef<IProduct>(
-    products.find((product: IProduct) => product.id == rowData.id)
-  );
 
   const DeleteButton = styled(Button)<{}>(({ theme }) => ({
     backgroundColor: theme.palette.error.main,
@@ -48,43 +45,56 @@ const TrProduct: React.FC<{
         setOpenDelete(false);
         toast.success("کالا با موفقیت حذف شد");
         refreshFunction();
-        console.log(res);
       })
       .catch((e) => {
         setOpenDelete(false);
         toast.error("حذف کالا با خطا روبرو شد");
       });
   };
-  const handleEdit = (data: {
-    name: string;
-    price: string;
-    color: string;
-    inventory: string;
-    gender: { fa: string; en: string };
-    category: { fa: string; en: string };
-    files: FileList;
-    description: string;
-  }) => {
+  const handleEdit = (
+    data: {
+      name: string;
+      price: string;
+      color: string;
+      inventory: string;
+      gender: { fa: string; en: string };
+      category: { fa: string; en: string };
+      files: FileList;
+      description: string;
+      deletedImages: number[];
+    },
+    productBeforeEdit: IProduct
+  ) => {
+    const initialProduct = JSON.parse(JSON.stringify(productBeforeEdit));
+    console.log(data.deletedImages);
+    data.deletedImages.forEach((imgIndex) => {
+      console.log(imgIndex, initialProduct.images[imgIndex]);
+
+      initialProduct.images.splice(imgIndex, 1);
+    });
     const reqConfig = {
       headers: {
         "content-type": "multipart/form-data",
         token: localStorage.getItem("ACCESS_TOKEN"),
       },
     };
-    const imagePromises = Object.values(data.files).map((file: any) => {
-      let formData = new FormData();
-      formData.append("image", file);
-      return uploadImagesAdminService(formData, reqConfig);
-    });
+
+    const imagePromises = data.files
+      ? Object.values(data.files).map((file: any) => {
+          let formData = new FormData();
+          formData.append("image", file);
+          return uploadImagesAdminService(formData, reqConfig);
+        })
+      : "";
     Promise.all(imagePromises).then((arrOfResults) => {
       const allFormData = {
-        id: product.current.id,
+        id: initialProduct.id,
         name: data.name,
         colors: [
-          data.color ? data.color : product.current.colors[0],
-          ...product.current.colors.slice(1),
+          data.color ? data.color : initialProduct.colors[0],
+          ...initialProduct.colors.slice(1),
         ],
-        images: [...product.current.images, ...arrOfResults],
+        images: [...initialProduct.images, ...arrOfResults],
         price: +data.price,
         inventory: +data.inventory,
         gender: { en: data.gender.en, fa: data.gender.fa },
@@ -142,7 +152,10 @@ const TrProduct: React.FC<{
         open={openUpdate}
         setOpen={setOpenUpdate}
         handleSubmit={handleEdit}
-        data={product.current}
+        initProduct={products.find(
+          (product: IProduct) => product.id === rowData.id
+        )}
+        edit={true}
       />
     </>
   );

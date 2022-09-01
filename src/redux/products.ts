@@ -1,9 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { IEditRow, IProduct } from "types/interfaces.types";
 
-const initialState = {
+interface IState {
+  products: IProduct[];
+  editedProducts: IProduct[];
+  editList: IEditRow[];
+}
+
+const initialState: IState = {
   products: [],
   editedProducts: [],
-  editable: false,
+  editList: [],
 };
 export const productsSlice = createSlice({
   name: "products",
@@ -12,11 +19,24 @@ export const productsSlice = createSlice({
     addProducts(state, action) {
       state.products = action.payload;
     },
-    editableToggle(state) {
-      state.editable = !state.editable;
+    addToEditList(state, action) {
+      state.editList.push(action.payload);
+    },
+    changeEditList(state, action) {
+      const index = state.editList.findIndex(
+        (product) => product.id === action.payload.id
+      );
+      state.editList[index] = {
+        ...state.editList[index],
+        ...action.payload.data,
+      };
+    },
+    deleteEditList(state) {
+      state.editList = [];
     },
   },
 });
 
-export const { addProducts, editableToggle } = productsSlice.actions;
+export const { addProducts, addToEditList, changeEditList, deleteEditList } =
+  productsSlice.actions;
 export default productsSlice.reducer;

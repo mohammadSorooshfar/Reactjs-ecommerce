@@ -3,9 +3,6 @@ import React, { useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation";
 
 // import required modules
 import { Autoplay, Pagination, Navigation } from "swiper";
@@ -17,6 +14,8 @@ import {
   Container,
   Grid,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -46,9 +45,18 @@ const text: { title: string; description: string }[] = [
 
 export default function Slider({ images }: props) {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
-    <Container maxWidth="lg" sx={{ paddingBottom: 5 }}>
+    <Container
+      maxWidth="lg"
+      sx={{
+        paddingBottom: 5,
+        backgroundColor: "secondary",
+        marginTop: matches ? 5 : "",
+      }}
+    >
       <Swiper
         spaceBetween={30}
         centeredSlides={true}
@@ -61,7 +69,9 @@ export default function Slider({ images }: props) {
         }}
         modules={[Autoplay, Pagination]}
         style={{
-          height: "600px",
+          height: matches ? "800px" : "600px",
+
+          objectFit: "fill",
         }}
       >
         {images.map((image, index) => (
@@ -73,6 +83,7 @@ export default function Slider({ images }: props) {
                 pr={5}
                 pt={10}
                 maxWidth={"40%"}
+                display={matches ? "none" : "block"}
               >
                 <Typography
                   color={index % 2 === 0 ? "white" : "black"}
@@ -105,11 +116,32 @@ export default function Slider({ images }: props) {
         `}
                 style={{
                   width: "100%",
-                  height: " 600px",
-                  borderRadius: "15px",
+                  height: matches ? "500px" : " 600px",
+                  objectFit: matches ? "contain" : "fill",
                 }}
                 alt=""
               />
+              <Box
+                textAlign={"center"}
+                display={matches ? "block" : "none"}
+                marginTop={2}
+              >
+                <Typography variant="h4" fontWeight={"700"}>
+                  {text[index % text.length].title}
+                </Typography>
+                <Typography variant="h6" mt={3}>
+                  {text[index % text.length].description}
+                </Typography>
+                <Button
+                  variant="contained"
+                  color="error"
+                  sx={{ mt: 3 }}
+                  size="large"
+                  onClick={() => navigate("products")}
+                >
+                  خرید
+                </Button>
+              </Box>
             </Box>
           </SwiperSlide>
         ))}

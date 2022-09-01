@@ -5,8 +5,11 @@ import {
   CardContent,
   Container,
   Grid,
+  Paper,
   Slide,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import React from "react";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -46,22 +49,34 @@ const offers: any = [
 ];
 
 const Offer: React.FC = () => {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down("lg"));
   return (
     <Box
       sx={{
-        backgroundColor: "secondary.light",
+        backgroundColor: (theme) =>
+          theme.palette.mode === "dark" ? "#1e1e1e" : "secondary.light",
         paddingX: { sm: 20, xs: 3 },
         paddingY: { sm: 7, xs: 3 },
+        marginTop: 2,
       }}
-      mt={2}
     >
       <Container maxWidth="lg">
-        <Typography color="error.main" fontWeight={"700"} variant="h3" mb={3}>
+        <Typography
+          color="error.main"
+          fontWeight={"700"}
+          variant={matches ? "h4" : "h3"}
+          mb={3}
+          textAlign={"center"}
+        >
           خدمات{" "}
           <Typography
             display={"inline-block"}
-            color="primary.main"
-            variant="h3"
+            sx={{
+              color: (theme) =>
+                theme.palette.mode === "dark" ? "white" : "primary.main",
+            }}
+            variant={matches ? "h4" : "h3"}
             fontWeight={"700"}
           >
             کفش طهران
@@ -71,7 +86,9 @@ const Offer: React.FC = () => {
           {offers.map((offer: any, index: number) => (
             <Grid
               item
-              sm={3}
+              xs={12}
+              md={6}
+              lg={3}
               data-aos="fade-up"
               data-aos-duration={offer.animation}
             >

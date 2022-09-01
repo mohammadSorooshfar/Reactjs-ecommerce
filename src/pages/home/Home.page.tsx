@@ -1,27 +1,59 @@
-import { Box, Container, Grid, Typography } from "@mui/material";
+import { useMediaQuery, useTheme } from "@mui/material";
+import BestSeller from "components/bestSeller/bestSeller";
 import Category from "components/category/Category";
 import NewsLetter from "components/newsLetter/NewsLetter";
 import Offer from "components/offer/Offer";
 import Slider from "components/slider/Slider";
 import UserLayout from "layouts/User.Layout";
 import React, { useEffect, useState } from "react";
-import { getPostersService } from "services/services.services";
+import {
+  getPostersService,
+  getProductsService,
+} from "services/services.services";
+import { IProduct } from "types/interfaces.types";
 
-interface props {}
+const categories = [
+  { en: "sport", fa: "ورزشی" },
+  { en: "oxford", fa: "رسمی" },
+  { en: "sneaker", fa: "کتانی" },
+];
 
-const Home: React.FC<props> = () => {
+const Home: React.FC = () => {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down("md"));
   const [posters, setPosters] = useState<string[]>([]);
+  const [productsCategories, setProductsCategories] = useState<{
+    sport: IProduct[];
+    oxford: IProduct[];
+    sneaker: IProduct[];
+  }>({ sport: [], oxford: [], sneaker: [] });
+
   useEffect(() => {
     getPostersService()
       .then((res: any) => setPosters(res))
       .catch((e) => console.log(e));
+    categories.forEach((category) =>
+      getProductsService("1", "6", [
+        { name: "category.en", value: category.en },
+      ]).then((res) => {
+        setProductsCategories((prev) => ({ ...prev, [category.en]: res.data }));
+      })
+    );
   }, []);
 
   return (
     <UserLayout>
-      <Slider images={posters} />
+      <Slider images={matches ? posters.slice(8) : posters.slice(0, 8)} />
       <Offer />
       <Category />
+      {Object.values(productsCategories).map((productCategory, index) => (
+        <BestSeller
+          products={productCategory}
+          title={categories[index].fa}
+          background={index % 2 === 0 ? "secondary.light" : "white"}
+          category={categories[index].en}
+        />
+      ))}
       <NewsLetter />
     </UserLayout>
   );

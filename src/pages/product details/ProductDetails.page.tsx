@@ -1,22 +1,28 @@
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import {
   Box,
   Breadcrumbs,
   Button,
   Container,
   Grid,
+  Paper,
   styled,
   TextField,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { BASE_URL, IMAGES } from "configs/url.config";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { addToCart } from "redux/cart";
 import { getProductService } from "services/services.services";
+import { Navigation, Pagination, Thumbs } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Controller, Navigation, Pagination, Thumbs } from "swiper";
-import { IProduct } from "types/interfaces.types";
+import { ICart, IProduct } from "types/interfaces.types";
 import { colorGenerator, persianNumber } from "utils/functions.util";
-import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 
 interface props {}
 
@@ -25,6 +31,18 @@ const ProductDetails: React.FC<props> = () => {
   const [product, setProduct] = useState<IProduct>();
   const [selectedColor, setSelectedColor] = useState(0);
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
+  const [quantity, setQuantity] = useState(1);
+  const cartProducts = useSelector((state: any) => state.cart.cartProducts);
+  const [cartItem, setCartItem] = useState(
+    cartProducts.find((product: ICart) => product.id === +id)
+  );
+  const dispatch = useDispatch();
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down("md"));
+  useEffect(() => {
+    setCartItem(cartProducts.find((product: ICart) => product.id === +id));
+  }, [cartProducts]);
+
   useEffect(() => {
     getProductService(id)
       .then((res) => setProduct(res))
@@ -36,7 +54,11 @@ const ProductDetails: React.FC<props> = () => {
         <img
           src={`${BASE_URL}${IMAGES}/${image}`}
           alt=""
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: matches ? "contain" : "cover",
+          }}
         />
       </SwiperSlide>
     ));
@@ -57,10 +79,11 @@ const ProductDetails: React.FC<props> = () => {
       cursor: "pointer",
     },
   }));
+
   return (
-    <Container>
-      <Grid container spacing={2}>
-        <Grid item sm={6}>
+    <Container sx={{ padding: 3, "& .MuiPaper-root": { borderRadius: 0 } }}>
+      <Grid container spacing={2} justifyContent={matches ? "center" : ""}>
+        <Grid item xs={12} md={6}>
           <Swiper
             thumbs={{
               swiper:
@@ -74,42 +97,75 @@ const ProductDetails: React.FC<props> = () => {
             }}
             modules={[Navigation, Pagination, Thumbs]}
             style={{
-              height: "500px",
+              height: matches ? "600px" : "500px",
+              width: "100%",
             }}
           >
             {swiperItems()}
           </Swiper>
-          <Swiper
-            style={{ marginTop: "10px" }}
-            spaceBetween={5}
-            slidesPerView={4}
-            modules={[Thumbs]}
-            watchSlidesProgress
-            onSwiper={setThumbsSwiper}
-          >
-            {swiperItems()}
-          </Swiper>
+          {matches ? (
+            ""
+          ) : (
+            <Swiper
+              style={{ marginTop: "10px" }}
+              spaceBetween={5}
+              slidesPerView={4}
+              modules={[Thumbs]}
+              watchSlidesProgress
+              onSwiper={setThumbsSwiper}
+            >
+              {swiperItems()}
+            </Swiper>
+          )}
         </Grid>
-        <Grid item sm={6} padding={4} minHeight={"100%"}>
+        <Grid
+          item
+          xs={12}
+          sm={10}
+          md={6}
+          padding={matches ? 1 : 4}
+          minHeight={matches ? "500px" : "100%"}
+        >
           <Box
             display={"flex"}
             justifyContent={"space-between"}
             flexDirection={"column"}
             alignItems={"flex-start"}
-            minHeight={"70%"}
+            minHeight={matches ? "100%" : "70%"}
           >
             <Breadcrumbs separator={<NavigateBeforeIcon fontSize="small" />}>
-              <Typography color="text.primary">محصولات</Typography>
-              <Typography color="text.primary">{product?.gender.fa}</Typography>
-              <Typography color="text.primary">
-                {product?.category.fa}
-              </Typography>
+              <Link
+                to={`/tehranshoes/products`}
+                style={{ textDecoration: "none" }}
+              >
+                <Typography color="text.primary">محصولات</Typography>{" "}
+              </Link>
+              <Link
+                to={`/tehranshoes/products/${product?.gender.en}/all`}
+                style={{ textDecoration: "none" }}
+              >
+                <Typography color="text.primary">
+                  {product?.gender.fa}
+                </Typography>
+              </Link>
+              <Link
+                to={`/tehranshoes/products/all/${product?.category.en}`}
+                style={{ textDecoration: "none" }}
+              >
+                <Typography color="text.primary">
+                  {product?.category.fa}
+                </Typography>
+              </Link>
             </Breadcrumbs>
-            <Typography variant="h3" textAlign={"right"}>
+            <Typography variant={matches ? "h4" : "h3"} textAlign={"right"}>
               {product?.name}
             </Typography>
             <Typography variant="subtitle2" textAlign={"right"}>
-              {product?.description}
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: product?.description || "",
+                }}
+              ></div>
             </Typography>
             <Box
               display={"flex"}
@@ -117,7 +173,7 @@ const ProductDetails: React.FC<props> = () => {
               width={"100%"}
             >
               <Box>
-                <Typography variant="h5">
+                <Typography variant={matches ? "h6" : "h5"}>
                   رنگ: {product?.colors[selectedColor]}
                 </Typography>
                 <Box display={"flex"} marginTop={3}>
@@ -131,8 +187,9 @@ const ProductDetails: React.FC<props> = () => {
                   ))}
                 </Box>
               </Box>
-              <Typography variant="h5">
-                قیمت: {product ? persianNumber(product.price.toString()) : ""}
+              <Typography variant={matches ? "h6" : "h5"}>
+                قیمت: {product ? persianNumber(product.price.toString()) : ""}{" "}
+                تومان
               </Typography>
             </Box>
             <Box
@@ -146,10 +203,80 @@ const ProductDetails: React.FC<props> = () => {
                 placeholder="تعداد"
                 size="small"
                 sx={{ width: "20%" }}
+                InputProps={{
+                  inputProps: { min: 1, max: product?.inventory },
+                }}
+                value={quantity}
+                onChange={(e) => {
+                  console.log(
+                    product &&
+                      cartItem &&
+                      +e.target.value > product?.inventory - cartItem.quantity
+                  );
+
+                  if (+e.target.value < 1) {
+                    setQuantity(1);
+                  } else if (
+                    product &&
+                    ((cartItem &&
+                      +e.target.value >
+                        product?.inventory - cartItem.quantity) ||
+                      +e.target.value > product?.inventory)
+                  ) {
+                    if (cartItem) {
+                      setQuantity(product?.inventory - cartItem.quantity);
+                    } else {
+                      setQuantity(product?.inventory);
+                    }
+                  } else {
+                    setQuantity(+e.target.value);
+                  }
+                }}
               />
-              <Button variant="contained" color="success" size="large">
-                افزودن به سبد خرید
-              </Button>
+              <Box>
+                <Button
+                  variant="contained"
+                  color="success"
+                  size="large"
+                  disabled={
+                    product &&
+                    cartItem &&
+                    product?.inventory - cartItem.quantity <= 0
+                  }
+                  onClick={() => {
+                    dispatch(
+                      addToCart({
+                        id: product?.id,
+                        inventory: product?.inventory,
+                        name: product?.name,
+                        price: product?.price,
+                        image: product?.images[0],
+                        quantity,
+                      })
+                    );
+                    setQuantity(1);
+                    cartItem
+                      ? toast.success(
+                          "تعداد مد نظر به کالا در سبد خرید افزوده شد"
+                        )
+                      : toast.success("کالا به سبد خرید اضافه شد");
+                  }}
+                >
+                  افزودن به سبد خرید
+                </Button>
+                <Typography
+                  color={"error"}
+                  display={
+                    product &&
+                    cartItem &&
+                    product?.inventory - cartItem.quantity <= 0
+                      ? "block"
+                      : "none"
+                  }
+                >
+                  موجودی به اتمام رسیده است!
+                </Typography>
+              </Box>
             </Box>
           </Box>
         </Grid>

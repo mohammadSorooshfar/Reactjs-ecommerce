@@ -1,13 +1,10 @@
-import CategoryIcon from "@mui/icons-material/Category";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import InventoryIcon from "@mui/icons-material/Inventory";
-import ListAltIcon from "@mui/icons-material/ListAlt";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Button,
-  Container,
+  Paper,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -16,8 +13,7 @@ import ListItem from "@mui/material/ListItem";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import React from "react";
-import { useSelector } from "react-redux";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 const drawerWidth = 240;
 
 const genders = {
@@ -28,7 +24,7 @@ const genders = {
 const categories = {
   sport: "ورزشی",
   sneaker: "کتانی",
-  oxfords: "رسمی",
+  oxford: "رسمی",
 };
 
 const CategorySelect: React.FC<{
@@ -37,7 +33,13 @@ const CategorySelect: React.FC<{
 }> = ({ categoryParam, genderParam }) => {
   const navigate = useNavigate();
   return (
-    <Accordion elevation={0}>
+    <Accordion
+      elevation={0}
+      sx={{
+        backgroundColor: (theme) =>
+          theme.palette.mode === "dark" ? "#1e1e1e" : "white",
+      }}
+    >
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography>دسته بندی</Typography>
       </AccordionSummary>
@@ -45,7 +47,13 @@ const CategorySelect: React.FC<{
       <List>
         {Object.entries(genders).map((gender, index) => (
           <ListItem>
-            <Accordion elevation={0}>
+            <Accordion
+              elevation={0}
+              sx={{
+                backgroundColor: (theme) =>
+                  theme.palette.mode === "dark" ? "#1e1e1e" : "white",
+              }}
+            >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 sx={{ "&::before": { backgroundColor: "none" } }}
@@ -69,10 +77,14 @@ const CategorySelect: React.FC<{
                       );
                       // setOpen(false);
                     }}
+                    sx={{
+                      color: (theme) =>
+                        theme.palette.mode === "dark" ? "inherit" : "primary",
+                    }}
                     color={
                       categoryParam === category[0] && genderParam === gender[0]
                         ? "info"
-                        : "primary"
+                        : undefined
                     }
                     size={"large"}
                     variant={
@@ -109,7 +121,7 @@ const FilterSide: React.FC<props> = () => {
     </Box>
   );
   return (
-    <Box
+    <Paper
       component="nav"
       sx={{
         width: { sm: drawerWidth },
@@ -126,7 +138,8 @@ const FilterSide: React.FC<props> = () => {
             right: 0,
             border: "1px solid #5661686d",
             borderRadius: "10px",
-            backgroundColor: "white",
+            backgroundColor: (theme) =>
+              theme.palette.mode === "dark" ? "#1e1e1e" : "white",
             position: "static",
             minHeight: "80vh",
           },
@@ -156,7 +169,7 @@ const FilterSide: React.FC<props> = () => {
       >
         {drawer}
       </Drawer>
-    </Box>
+    </Paper>
   );
 };
 

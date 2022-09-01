@@ -6,11 +6,13 @@ import {
   Container,
   Grid,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import kid from "assets/kid.png";
 import men from "assets/men.png";
 import women from "assets/women.png";
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const categories: any = [
@@ -48,23 +50,28 @@ const categories: any = [
 
 const Category: React.FC = () => {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down("lg"));
   return (
     <Box
       mt={2}
       sx={{
         paddingX: { sm: 20, xs: 3 },
         paddingY: { sm: 5, xs: 3 },
+        textAlign: "center",
       }}
     >
       <Container maxWidth="lg">
-        <Typography fontWeight={"700"} variant="h3" mb={5}>
+        <Typography fontWeight={"700"} variant={matches ? "h4" : "h3"} mb={5}>
           دسته بندی محصولات
         </Typography>
-        <Grid container spacing={10}>
+        <Grid container spacing={matches ? 2 : 10} justifyContent="center">
           {categories.map((category: any) => (
             <Grid
               item
-              sm={4}
+              xs={12}
+              md={8}
+              lg={4}
               data-aos="fade-up"
               data-aos-duration={category.animation}
             >
