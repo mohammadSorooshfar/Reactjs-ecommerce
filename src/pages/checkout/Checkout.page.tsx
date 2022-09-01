@@ -13,6 +13,7 @@ import {
   TextField,
   Typography,
   TypographyProps,
+  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import { Field, Form, Formik } from "formik";
@@ -41,6 +42,7 @@ const CheckoutSchema = Yup.object().shape({
 const Checkout: React.FC<props> = () => {
   const navigate = useNavigate();
   const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down("md"));
   const cartProducts = useSelector((state: any) => state.cart.cartProducts);
   const totalToPay = useSelector((state: any) => state.cart.totalToPay);
   const BootstrapInput = styled(TextField)(({ theme }) => ({
@@ -53,7 +55,7 @@ const Checkout: React.FC<props> = () => {
       backgroundColor: theme.palette.mode === "light" ? "#fcfcfb" : "#2b2b2b",
       border: "1px solid #ced4da",
       fontSize: 16,
-      width: "auto",
+      width: "300px",
       padding: "10px 12px",
       transition: theme.transitions.create([
         "border-color",
@@ -87,6 +89,7 @@ const Checkout: React.FC<props> = () => {
   }));
   const BoxFormStyle: any = styled(Box)<BoxProps>(({ theme }) => ({
     display: "flex",
+    flexWrap: "wrap",
     justifyContent: "space-around",
     margin: "20px 0",
   }));
@@ -97,10 +100,64 @@ const Checkout: React.FC<props> = () => {
       fontSize: "12px",
     })
   );
+  const persianDatePicker = ({
+    errors,
+    values,
+    setFieldValue,
+    touched,
+  }: any) => {
+    return (
+      <FormControl>
+        <InputLabel
+          shrink
+          htmlFor="requestedDeliveryDate-input"
+          sx={{
+            left: "auto",
+            fontSize: "15px",
+            transform: "translate(-3px, -3.5px)",
+          }}
+        >
+          تاریخ تحویل
+        </InputLabel>
+
+        <div style={{ direction: "rtl" }}>
+          <DatePicker
+            id="requestedDeliveryDate-input"
+            calendar={persian}
+            locale={persian_fa}
+            calendarPosition="top-right"
+            value={values.requestedDeliveryDate}
+            onChange={(e: any) =>
+              setFieldValue("requestedDeliveryDate", e.format())
+            }
+            minDate={new DateObject()}
+            maxDate={new Date(Date.now() + 12096e5)}
+            style={{
+              marginTop: "20px",
+              backgroundColor:
+                theme.palette.mode === "light" ? "#fcfcfb" : "#2b2b2b",
+              color: theme.palette.mode === "light" ? "black" : "white",
+            }}
+            editable={false}
+          />
+        </div>
+        {errors.requestedDeliveryDate && touched.requestedDeliveryDate && (
+          <ErrorTypographyStyle>
+            {errors.requestedDeliveryDate}
+          </ErrorTypographyStyle>
+        )}
+      </FormControl>
+    );
+  };
   return (
     <Container maxWidth={"lg"}>
-      <Grid container spacing={2}>
-        <Grid item sm={8}>
+      <Grid
+        container
+        spacing={2}
+        flexDirection={matches ? "column-reverse" : "row"}
+        sx={{ marginTop: matches ? 4 : "" }}
+      >
+        <Grid item xs={12} md={8}>
           <Paper sx={{ padding: 2 }}>
             {" "}
             <Typography variant="h5" margin={"15px 0"}>
@@ -154,181 +211,170 @@ const Checkout: React.FC<props> = () => {
                   <Typography variant="h6" textAlign="right" marginTop={3}>
                     اطلاعات شخصی
                   </Typography>
-                  <BoxFormStyle>
-                    <FormControl>
-                      <InputLabel
-                        shrink
-                        htmlFor="name-input"
-                        sx={{
-                          left: "auto",
-                          fontSize: "15px",
-                          transform: "translate(-3px, -3.5px)",
-                        }}
-                      >
-                        نام
-                      </InputLabel>
-                      <Field
-                        id={"name-input"}
-                        name="name"
-                        type="text"
-                        as={BootstrapInput}
-                      />
-                      {errors.name && touched.name && (
-                        <ErrorTypographyStyle>
-                          {errors.name}
-                        </ErrorTypographyStyle>
-                      )}
-                    </FormControl>
-                    <FormControl>
-                      <InputLabel
-                        shrink
-                        htmlFor="family-input"
-                        sx={{
-                          left: "auto",
-                          fontSize: "15px",
-                          transform: "translate(-3px, -3.5px)",
-                        }}
-                      >
-                        نام خانوادگی
-                      </InputLabel>
-                      <Field
-                        id={"family-input"}
-                        name="family"
-                        type="text"
-                        as={BootstrapInput}
-                      />
-                      {errors.family && touched.family && (
-                        <ErrorTypographyStyle>
-                          {errors.family}
-                        </ErrorTypographyStyle>
-                      )}
-                    </FormControl>
-                  </BoxFormStyle>
-                  <BoxFormStyle>
-                    <FormControl>
-                      <InputLabel
-                        shrink
-                        htmlFor="phone-input"
-                        sx={{
-                          left: "auto",
-                          fontSize: "15px",
-                          transform: "translate(-3px, -3.5px)",
-                        }}
-                      >
-                        تلفن همراه
-                      </InputLabel>
-                      <Field
-                        id={"phone-input"}
-                        name="phone"
-                        type="tel"
-                        as={BootstrapInput}
-                      />
-                      {errors.phone && touched.phone && (
-                        <ErrorTypographyStyle>
-                          {errors.phone}
-                        </ErrorTypographyStyle>
-                      )}
-                    </FormControl>
-                    <FormControl>
-                      <InputLabel
-                        shrink
-                        htmlFor="email-input"
-                        sx={{
-                          left: "auto",
-                          fontSize: "15px",
-                          transform: "translate(-3px, -3.5px)",
-                        }}
-                      >
-                        ایمیل
-                      </InputLabel>
-                      <Field
-                        id={"email-input"}
-                        name="email"
-                        type="text"
-                        as={BootstrapInput}
-                      />
-                      {errors.email && touched.email && (
-                        <ErrorTypographyStyle>
-                          {errors.email}
-                        </ErrorTypographyStyle>
-                      )}
-                    </FormControl>
-                  </BoxFormStyle>
+                  <Grid
+                    container
+                    spacing={2}
+                    sx={{ marginTop: "5px", width: "100%" }}
+                    justifyContent={"space-around"}
+                  >
+                    <Grid item xs={12} md={6}>
+                      <FormControl>
+                        <InputLabel
+                          shrink
+                          htmlFor="name-input"
+                          sx={{
+                            left: "auto",
+                            fontSize: "15px",
+                            transform: "translate(-3px, -3.5px)",
+                          }}
+                        >
+                          نام
+                        </InputLabel>
+                        <Field
+                          id={"name-input"}
+                          name="name"
+                          type="text"
+                          as={BootstrapInput}
+                        />
+                        {errors.name && touched.name && (
+                          <ErrorTypographyStyle>
+                            {errors.name}
+                          </ErrorTypographyStyle>
+                        )}
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <FormControl>
+                        <InputLabel
+                          shrink
+                          htmlFor="family-input"
+                          sx={{
+                            left: "auto",
+                            fontSize: "15px",
+                            transform: "translate(-3px, -3.5px)",
+                          }}
+                        >
+                          نام خانوادگی
+                        </InputLabel>
+                        <Field
+                          id={"family-input"}
+                          name="family"
+                          type="text"
+                          as={BootstrapInput}
+                        />
+                        {errors.family && touched.family && (
+                          <ErrorTypographyStyle>
+                            {errors.family}
+                          </ErrorTypographyStyle>
+                        )}
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+                  <Grid
+                    container
+                    spacing={2}
+                    sx={{ marginTop: "5px", width: "100%" }}
+                    justifyContent={"space-around"}
+                  >
+                    <Grid item xs={12} md={6}>
+                      <FormControl>
+                        <InputLabel
+                          shrink
+                          htmlFor="phone-input"
+                          sx={{
+                            left: "auto",
+                            fontSize: "15px",
+                            transform: "translate(-3px, -3.5px)",
+                          }}
+                        >
+                          تلفن همراه
+                        </InputLabel>
+                        <Field
+                          id={"phone-input"}
+                          name="phone"
+                          type="tel"
+                          as={BootstrapInput}
+                        />
+                        {errors.phone && touched.phone && (
+                          <ErrorTypographyStyle>
+                            {errors.phone}
+                          </ErrorTypographyStyle>
+                        )}
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      {" "}
+                      <FormControl>
+                        <InputLabel
+                          shrink
+                          htmlFor="email-input"
+                          sx={{
+                            left: "auto",
+                            fontSize: "15px",
+                            transform: "translate(-3px, -3.5px)",
+                          }}
+                        >
+                          ایمیل
+                        </InputLabel>
+                        <Field
+                          id={"email-input"}
+                          name="email"
+                          type="text"
+                          as={BootstrapInput}
+                        />
+                        {errors.email && touched.email && (
+                          <ErrorTypographyStyle>
+                            {errors.email}
+                          </ErrorTypographyStyle>
+                        )}
+                      </FormControl>
+                    </Grid>
+                  </Grid>
                   <Typography variant="h6" textAlign="right" marginTop={3}>
                     ارسال{" "}
                   </Typography>
-                  <BoxFormStyle>
-                    <FormControl>
-                      <InputLabel
-                        shrink
-                        htmlFor="address-input"
-                        sx={{
-                          left: "auto",
-                          fontSize: "15px",
-                          transform: "translate(-3px, -3.5px)",
-                        }}
-                      >
-                        آدرس تحویل گیرنده
-                      </InputLabel>
-                      <Field
-                        id={"address-input"}
-                        name="address"
-                        type="text"
-                        as={BootstrapBigInput}
-                      />
-                      {errors.address && touched.address && (
-                        <ErrorTypographyStyle>
-                          {errors.address}
-                        </ErrorTypographyStyle>
-                      )}
-                    </FormControl>
-                    <FormControl>
-                      <InputLabel
-                        shrink
-                        htmlFor="requestedDeliveryDate-input"
-                        sx={{
-                          left: "auto",
-                          fontSize: "15px",
-                          transform: "translate(-3px, -3.5px)",
-                        }}
-                      >
-                        تاریخ تحویل
-                      </InputLabel>
-
-                      <div style={{ direction: "rtl" }}>
-                        <DatePicker
-                          id="requestedDeliveryDate-input"
-                          calendar={persian}
-                          locale={persian_fa}
-                          calendarPosition="top-right"
-                          value={values.requestedDeliveryDate}
-                          onChange={(e: any) =>
-                            setFieldValue("requestedDeliveryDate", e.format())
-                          }
-                          minDate={new DateObject()}
-                          maxDate={new Date(Date.now() + 12096e5)}
-                          style={{
-                            marginTop: "20px",
-                            backgroundColor:
-                              theme.palette.mode === "light"
-                                ? "#fcfcfb"
-                                : "#2b2b2b",
-                            color:
-                              theme.palette.mode === "light"
-                                ? "black"
-                                : "white",
+                  <Grid
+                    container
+                    spacing={2}
+                    sx={{ marginTop: "5px", width: "100%" }}
+                    justifyContent={"space-around"}
+                  >
+                    <Grid item xs={12} md={6}>
+                      <FormControl>
+                        <InputLabel
+                          shrink
+                          htmlFor="address-input"
+                          sx={{
+                            left: "auto",
+                            fontSize: "15px",
+                            transform: "translate(-3px, -3.5px)",
                           }}
-                          editable={false}
+                        >
+                          آدرس تحویل گیرنده
+                        </InputLabel>
+                        <Field
+                          id={"address-input"}
+                          name="address"
+                          type="text"
+                          as={BootstrapBigInput}
                         />
-                      </div>
-                      {errors.requestedDeliveryDate &&
-                        touched.requestedDeliveryDate && (
+                        {errors.address && touched.address && (
                           <ErrorTypographyStyle>
-                            {errors.requestedDeliveryDate}
+                            {errors.address}
                           </ErrorTypographyStyle>
                         )}
-                    </FormControl>
-                  </BoxFormStyle>
+                      </FormControl>
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                      {persianDatePicker({
+                        errors,
+                        values,
+                        setFieldValue,
+                        touched,
+                      })}
+                    </Grid>
+                  </Grid>
                   <BoxFormStyle>
                     <Button
                       color="success"
@@ -355,7 +401,7 @@ const Checkout: React.FC<props> = () => {
             </Formik>
           </Paper>
         </Grid>
-        <Grid item sm={4}>
+        <Grid item xs={12} sm={4}>
           <Paper sx={{ padding: 2 }}>
             <Typography variant="h5" margin={"15px 0"}>
               خرید شما{" "}
