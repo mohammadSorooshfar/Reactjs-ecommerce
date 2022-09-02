@@ -15,7 +15,7 @@ import {
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import debounce from "lodash.debounce";
-
+import FilterListIcon from "@mui/icons-material/FilterList";
 import Typography from "@mui/material/Typography";
 import FilterSide from "components/filterSide/FilterSide";
 import SearchIcon from "@mui/icons-material/Search";
@@ -47,9 +47,12 @@ const Products: React.FC = () => {
   const [sortBy, setSortBy] = useState("createdAt");
   const [order, setOrder] = useState("desc");
   const [loading, setLoading] = useState(true);
+  const [maxPrice, setMaxPrice] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [filterListMobileOpen, setFilterListMobileOpen] = useState(false);
   const [page, setPage] = useState(1);
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.down("lg"));
+  const matches = useMediaQuery(theme.breakpoints.down("md"));
   const [filters, setFilters] = useState<{ name: string; value: string }[]>([
     { name: "gender.en", value: gender === "all" ? "" : gender },
     { name: "category.en", value: category === "all" ? "" : category },
@@ -87,8 +90,10 @@ const Products: React.FC = () => {
       { name: "_sort", value: sortBy },
       { name: "_order", value: order },
       { name: "name_like", value: searchedName },
+      { name: "price_gte", value: minPrice },
+      { name: "price_lte", value: maxPrice },
     ]);
-  }, [gender, category, sortBy, order, searchedName]);
+  }, [gender, category, sortBy, order, searchedName, maxPrice, minPrice]);
 
   const changeSort = (sort: string, order: string) => {
     setSortBy(sort);
@@ -120,7 +125,14 @@ const Products: React.FC = () => {
     <Paper>
       <Container maxWidth={"lg"} sx={{ paddingTop: 5, paddingBottom: 10 }}>
         <Box display={"flex"} width={"100%"} minHeight={"60vh"}>
-          <FilterSide />
+          <FilterSide
+            {...{
+              setMaxPrice,
+              setMinPrice,
+              filterListMobileOpen,
+              setFilterListMobileOpen,
+            }}
+          />
           <Box width={"100%"} minHeight={"100%"} marginRight={"1%"}>
             <Toolbar
               sx={{
@@ -156,13 +168,7 @@ const Products: React.FC = () => {
                     />
                   </Paper>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  md={6}
-                  display={"flex"}
-                  alignItems={"center"}
-                >
+                <Grid item xs={8} md={6} display={"flex"} alignItems={"center"}>
                   <Typography mb={0} ml={1} mr={matches ? "" : "auto"}>
                     مرتب سازی:{" "}
                   </Typography>
@@ -226,6 +232,25 @@ const Products: React.FC = () => {
                       </Button>
                     </>
                   )}
+                </Grid>
+                <Grid item xs={4} md={0} display={matches ? "" : "none"}>
+                  <Button
+                    variant="contained"
+                    color="info"
+                    sx={{
+                      marginRight: "auto",
+                      height: "100%",
+                      width: "90%",
+                      fontSize: 14,
+                      paddingX: 1,
+                    }}
+                    endIcon={
+                      <FilterListIcon sx={{ marginLeft: 0, marginRight: 1 }} />
+                    }
+                    onClick={() => setFilterListMobileOpen(true)}
+                  >
+                    فیلتر ها
+                  </Button>
                 </Grid>
               </Grid>
             </Toolbar>
