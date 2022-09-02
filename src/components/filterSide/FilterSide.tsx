@@ -41,7 +41,7 @@ const CategorySelect: React.FC<{
       }}
     >
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography>دسته بندی</Typography>
+        <Typography gutterBottom={false}>دسته بندی</Typography>
       </AccordionSummary>
 
       <List>

@@ -3,6 +3,8 @@ import {
   CircularProgress,
   Container,
   Grid,
+  IconButton,
+  InputBase,
   Pagination,
   Paper,
   Select,
@@ -12,11 +14,14 @@ import {
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
+import debounce from "lodash.debounce";
+
 import Typography from "@mui/material/Typography";
 import FilterSide from "components/filterSide/FilterSide";
+import SearchIcon from "@mui/icons-material/Search";
 import MenuItem from "@mui/material/MenuItem";
 import ProductCard from "components/productCard/ProductCard";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getProductsService } from "services/services.services";
 import { IProduct } from "types/interfaces.types";
@@ -37,6 +42,7 @@ const Products: React.FC = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState<IProduct[]>([]);
   const [totalProducts, setTotalProducts] = useState(0);
+  const [searchedName, setSearchedName] = useState("");
   const [productsPerPage, setProductsPerPage] = useState(6);
   const [sortBy, setSortBy] = useState("createdAt");
   const [order, setOrder] = useState("desc");
@@ -70,6 +76,8 @@ const Products: React.FC = () => {
 
   useEffect(() => {
     setLoading(true);
+    console.log(filters);
+
     getProductsData("1");
   }, [filters]);
   useEffect(() => {
@@ -78,8 +86,9 @@ const Products: React.FC = () => {
       { name: "category.en", value: category === "all" ? "" : category },
       { name: "_sort", value: sortBy },
       { name: "_order", value: order },
+      { name: "name_like", value: searchedName },
     ]);
-  }, [gender, category, sortBy, order]);
+  }, [gender, category, sortBy, order, searchedName]);
 
   const changeSort = (sort: string, order: string) => {
     setSortBy(sort);
@@ -95,6 +104,18 @@ const Products: React.FC = () => {
       changeSort("price", "asc");
     }
   };
+  const searchChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchedName(e.target.value);
+  };
+  const debouncedSearchChangeHandler = useMemo(
+    () => debounce(searchChangeHandler, 500),
+    []
+  );
+  useEffect(() => {
+    return () => {
+      debouncedSearchChangeHandler.cancel();
+    };
+  }, []);
   return (
     <Paper>
       <Container maxWidth={"lg"} sx={{ paddingTop: 5, paddingBottom: 10 }}>
@@ -102,73 +123,118 @@ const Products: React.FC = () => {
           <FilterSide />
           <Box width={"100%"} minHeight={"100%"} marginRight={"1%"}>
             <Toolbar
-              sx={{ borderBottom: "1px solid #5661686d", paddingBottom: 2 }}
+              sx={{
+                justifyContent: "space-between",
+                borderBottom: "1px solid #5661686d",
+                paddingBottom: 2,
+              }}
             >
-              <Typography mb={0} ml={1}>
-                مرتب سازی:{" "}
-              </Typography>
-              {matches ? (
-                <Select
-                  value={`${sortBy} ${order}`}
-                  onChange={handleSelectChange}
-                  MenuProps={MenuProps}
+              <Grid container>
+                <Grid item xs={12} md={6}>
+                  <Paper
+                    component="form"
+                    sx={{
+                      p: "10px",
+                      display: "flex",
+                      alignItems: "center",
+                      width: 300,
+                      backgroundColor: "#F0F0F1",
+                      marginY: matches ? 3 : 0,
+                    }}
+                  >
+                    <InputBase
+                      sx={{
+                        ml: 1,
+                        flex: 1,
+                        "&& .MuiInputBase-input": {
+                          backgroundColor: "#F0F0F1",
+                          color: "#424750",
+                        },
+                      }}
+                      placeholder="جستجوی کالا"
+                      onChange={debouncedSearchChangeHandler}
+                    />
+                  </Paper>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  md={6}
+                  display={"flex"}
+                  alignItems={"center"}
                 >
-                  <MenuItem value={"createdAt desc"}>جدید ترین</MenuItem>
-                  <MenuItem value={"price desc"}>گران ترین</MenuItem>
-                  <MenuItem value={"price asc"}>ارزان ترین</MenuItem>
-                </Select>
-              ) : (
-                <>
-                  <Button
-                    color={sortBy === "createdAt" ? "info" : "primary"}
-                    sx={{
-                      color: (theme) =>
-                        sortBy === "createdAt"
-                          ? "info.main"
-                          : theme.palette.mode === "dark"
-                          ? "white"
-                          : "primary.main",
-                    }}
-                    onClick={() => {
-                      changeSort("createdAt", "desc");
-                    }}
-                  >
-                    جدید ترین
-                  </Button>
-                  <Button
-                    sx={{
-                      color: (theme) =>
-                        sortBy === "price" && order === "desc"
-                          ? "info.main"
-                          : theme.palette.mode === "dark"
-                          ? "white"
-                          : "primary.main",
-                    }}
-                    onClick={() => {
-                      changeSort("price", "desc");
-                    }}
-                  >
-                    گران ترین
-                  </Button>
-                  <Button
-                    sx={{
-                      color: (theme) =>
-                        sortBy === "price" && order === "asc"
-                          ? "info.main"
-                          : theme.palette.mode === "dark"
-                          ? "white"
-                          : "primary.main",
-                    }}
-                    onClick={() => {
-                      changeSort("price", "asc");
-                    }}
-                  >
-                    ارزان ترین
-                  </Button>
-                </>
-              )}
+                  <Typography mb={0} ml={1} mr={matches ? "" : "auto"}>
+                    مرتب سازی:{" "}
+                  </Typography>
+                  {matches ? (
+                    <Select
+                      value={`${sortBy} ${order}`}
+                      onChange={handleSelectChange}
+                      MenuProps={MenuProps}
+                    >
+                      <MenuItem value={"createdAt desc"}>جدید ترین</MenuItem>
+                      <MenuItem value={"price desc"}>گران ترین</MenuItem>
+                      <MenuItem value={"price asc"}>ارزان ترین</MenuItem>
+                    </Select>
+                  ) : (
+                    <>
+                      <Button
+                        color={sortBy === "createdAt" ? "info" : "primary"}
+                        sx={{
+                          color: (theme) =>
+                            sortBy === "createdAt"
+                              ? "info.main"
+                              : theme.palette.mode === "dark"
+                              ? "white"
+                              : "primary.main",
+                        }}
+                        onClick={() => {
+                          changeSort("createdAt", "desc");
+                        }}
+                      >
+                        جدید ترین
+                      </Button>
+                      <Button
+                        sx={{
+                          color: (theme) =>
+                            sortBy === "price" && order === "desc"
+                              ? "info.main"
+                              : theme.palette.mode === "dark"
+                              ? "white"
+                              : "primary.main",
+                        }}
+                        onClick={() => {
+                          changeSort("price", "desc");
+                        }}
+                      >
+                        گران ترین
+                      </Button>
+                      <Button
+                        sx={{
+                          color: (theme) =>
+                            sortBy === "price" && order === "asc"
+                              ? "info.main"
+                              : theme.palette.mode === "dark"
+                              ? "white"
+                              : "primary.main",
+                        }}
+                        onClick={() => {
+                          changeSort("price", "asc");
+                        }}
+                      >
+                        ارزان ترین
+                      </Button>
+                    </>
+                  )}
+                </Grid>
+              </Grid>
             </Toolbar>
-            <Grid container spacing={3} padding={2} justifyContent={"center"}>
+            <Grid
+              container
+              spacing={matches ? 2 : 3}
+              padding={2}
+              justifyContent={matches ? "center" : "flex-start"}
+            >
               {loading ? (
                 <CircularProgress sx={{ margin: "auto", marginTop: "100px" }} />
               ) : products.length ? (
