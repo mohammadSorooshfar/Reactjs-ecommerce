@@ -49,6 +49,7 @@ const Products: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [maxPrice, setMaxPrice] = useState("");
   const [minPrice, setMinPrice] = useState("");
+  const [colorCheckBox, setColorCheckbox] = useState<string[]>([]);
   const [filterListMobileOpen, setFilterListMobileOpen] = useState(false);
   const [page, setPage] = useState(1);
   const theme = useTheme();
@@ -92,8 +93,19 @@ const Products: React.FC = () => {
       { name: "name_like", value: searchedName },
       { name: "price_gte", value: minPrice },
       { name: "price_lte", value: maxPrice },
+      { name: "colors_like", value: colorCheckBox.join("|") },
     ]);
-  }, [gender, category, sortBy, order, searchedName, maxPrice, minPrice]);
+    console.log(colorCheckBox.join("|"));
+  }, [
+    gender,
+    category,
+    sortBy,
+    order,
+    searchedName,
+    maxPrice,
+    minPrice,
+    colorCheckBox,
+  ]);
 
   const changeSort = (sort: string, order: string) => {
     setSortBy(sort);
@@ -131,6 +143,7 @@ const Products: React.FC = () => {
               setMinPrice,
               filterListMobileOpen,
               setFilterListMobileOpen,
+              setColorCheckbox,
             }}
           />
           <Box width={"100%"} minHeight={"100%"} marginRight={"1%"}>

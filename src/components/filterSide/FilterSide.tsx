@@ -4,7 +4,10 @@ import {
   AccordionDetails,
   AccordionSummary,
   Button,
+  Checkbox,
   FormControl,
+  FormControlLabel,
+  FormGroup,
   InputBase,
   InputLabel,
   Paper,
@@ -34,6 +37,20 @@ const categories = {
   sneaker: "کتانی",
   oxford: "رسمی",
 };
+const colors = [
+  "قرمز",
+  "نارنجی",
+  "مشکی",
+  "بنفش",
+  "سفید",
+  "زرد",
+  "آبی",
+  "نقره ای",
+  "صورتی",
+  "سبز",
+  "قهوه ای",
+  "کرم",
+];
 
 const CategorySelect: React.FC<{
   categoryParam?: string;
@@ -249,18 +266,67 @@ const PriceSelect: React.FC<priceProps> = ({ setMaxPrice, setMinPrice }) => {
     </Accordion>
   );
 };
-
+const ColorCheckbox = ({
+  setColorCheckbox,
+}: {
+  setColorCheckbox: React.Dispatch<React.SetStateAction<string[]>>;
+}) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setColorCheckbox((prev) => [...prev, e.target.name]);
+    } else {
+      setColorCheckbox((prev) => {
+        const index = prev.indexOf(e.target.name);
+        prev.splice(index, 1);
+        return [...prev];
+      });
+    }
+  };
+  return (
+    <Accordion
+      elevation={0}
+      sx={{
+        backgroundColor: (theme) =>
+          theme.palette.mode === "dark" ? "#1e1e1e" : "white",
+      }}
+    >
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <Typography gutterBottom={false}> انتخاب رنگ </Typography>
+      </AccordionSummary>
+      <AccordionDetails
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "right",
+          paddingRight: 2,
+          width: `${drawerWidth - 80}px`,
+        }}
+      >
+        <FormGroup>
+          {colors.map((color) => (
+            <FormControlLabel
+              control={<Checkbox onChange={handleChange} name={color} />}
+              label={color}
+            />
+          ))}
+        </FormGroup>
+      </AccordionDetails>
+    </Accordion>
+  );
+};
 interface filterProps {
   setMaxPrice: React.Dispatch<React.SetStateAction<string>>;
   setMinPrice: React.Dispatch<React.SetStateAction<string>>;
   filterListMobileOpen: boolean;
   setFilterListMobileOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setColorCheckbox: React.Dispatch<React.SetStateAction<string[]>>;
 }
 const FilterSide: React.FC<filterProps> = ({
   setMaxPrice,
   setMinPrice,
   filterListMobileOpen,
   setFilterListMobileOpen,
+  setColorCheckbox,
 }) => {
   const { category, gender } = useParams();
   const navigate = useNavigate();
@@ -277,6 +343,7 @@ const FilterSide: React.FC<filterProps> = ({
           setMinPrice,
         }}
       />
+      <ColorCheckbox setColorCheckbox={setColorCheckbox} />
     </Box>
   );
   return (
