@@ -347,13 +347,7 @@ const FilterSide: React.FC<filterProps> = ({
     </Box>
   );
   return (
-    <Paper
-      component="nav"
-      sx={{
-        width: { md: drawerWidth },
-        flexShrink: { md: 0 },
-      }}
-    >
+    <>
       <Drawer
         variant="permanent"
         sx={{
@@ -395,7 +389,7 @@ const FilterSide: React.FC<filterProps> = ({
       >
         {drawer}
       </Drawer>
-    </Paper>
+    </>
   );
 };
 

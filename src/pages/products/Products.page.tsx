@@ -163,8 +163,10 @@ const Products: React.FC = () => {
                       display: "flex",
                       alignItems: "center",
                       width: 300,
-                      backgroundColor: "#F0F0F1",
+                      backgroundColor:
+                        theme.palette.mode === "light" ? "#f0f0f1" : "#2b2b2b",
                       marginY: matches ? 3 : 0,
+                      backgroundImage: "none",
                     }}
                   >
                     <InputBase
@@ -172,8 +174,10 @@ const Products: React.FC = () => {
                         ml: 1,
                         flex: 1,
                         "&& .MuiInputBase-input": {
-                          backgroundColor: "#F0F0F1",
-                          color: "#424750",
+                          backgroundColor:
+                            theme.palette.mode === "light"
+                              ? "#f0f0f1"
+                              : "#2b2b2b",
                         },
                       }}
                       placeholder="جستجوی کالا"
