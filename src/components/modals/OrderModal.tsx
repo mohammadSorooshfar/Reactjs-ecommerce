@@ -17,6 +17,7 @@ import React from "react";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
 import { DateObject } from "react-multi-date-picker";
+import { Link } from "react-router-dom";
 import { ICart, IOrder } from "types/interfaces.types";
 import { persianNumber } from "utils/functions.util";
 
@@ -113,7 +114,14 @@ const OrderModal: React.FC<props> = ({
                   key={product.id}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
-                  <TableCell align="right">{product.name}</TableCell>
+                  <TableCell align="right">
+                    <Link
+                      to={`/tehranshoes/product/${product.id}`}
+                      style={{ textDecoration: "none", color: "black" }}
+                    >
+                      {product.name}
+                    </Link>
+                  </TableCell>
                   <TableCell align="right">
                     {persianNumber(product.price.toString())}
                   </TableCell>
