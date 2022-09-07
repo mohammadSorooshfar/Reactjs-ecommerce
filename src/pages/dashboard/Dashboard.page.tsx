@@ -68,19 +68,6 @@ const ActionButtons: React.FC<{
   const editList = useSelector((state: any) => state.products.editList);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const keyDownHandler = (event: any) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        dispatch(deleteEditList());
-      }
-    };
-    document.addEventListener("keydown", keyDownHandler);
-    return () => {
-      document.removeEventListener("keydown", keyDownHandler);
-    };
-  }, []);
-
   const handleEditPrice = () => {
     setLoading(true);
     const getPromises = editList.map((editedRow: IEditRow) => {

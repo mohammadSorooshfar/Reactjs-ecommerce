@@ -29,6 +29,17 @@ const TrPrice: React.FC<props> = ({ rowData }) => {
                 })
               )
             }
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                e.preventDefault();
+                dispatch(
+                  changeEditList({
+                    id: rowData.id,
+                    data: { priceEdit: false },
+                  })
+                );
+              }
+            }}
           />
         ) : (
           <Typography
@@ -70,6 +81,17 @@ const TrPrice: React.FC<props> = ({ rowData }) => {
                 })
               )
             }
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                e.preventDefault();
+                dispatch(
+                  changeEditList({
+                    id: rowData.id,
+                    data: { inventoryEdit: false },
+                  })
+                );
+              }
+            }}
           />
         ) : (
           <Typography

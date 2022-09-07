@@ -30,6 +30,12 @@ export const productsSlice = createSlice({
         ...state.editList[index],
         ...action.payload.data,
       };
+      if (
+        state.editList[index].priceEdit === false &&
+        state.editList[index].inventoryEdit === false
+      ) {
+        state.editList.splice(index, 1);
+      }
     },
     deleteEditList(state) {
       state.editList = [];
