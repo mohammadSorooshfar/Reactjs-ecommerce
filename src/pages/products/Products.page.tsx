@@ -141,7 +141,7 @@ const Products: React.FC = () => {
   }, []);
   return (
     <Paper>
-      <Container maxWidth={"lg"} sx={{ paddingTop: 5, paddingBottom: 10 }}>
+      <Container maxWidth={"lg"} sx={{ paddingTop: 3, paddingBottom: 10 }}>
         <Box display={"flex"} width={"100%"} minHeight={"60vh"}>
           <FilterSide
             {...{

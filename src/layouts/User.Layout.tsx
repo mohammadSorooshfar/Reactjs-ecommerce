@@ -7,7 +7,7 @@ const UserLayout: React.FC<any> = ({ children }: { children: any }) => {
   return (
     <div>
       <Header navHeight="100px" />
-      <Paper sx={{ paddingTop: "120px" }}>{children}</Paper>
+      <Paper sx={{ paddingTop: "110px" }}>{children}</Paper>
       <Footer />
     </div>
   );

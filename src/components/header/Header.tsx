@@ -69,6 +69,7 @@ const NavbarMenu = ({
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [searchInput, setSearchInput] = useState("");
   const getList = () => (
     <Box
       sx={{
@@ -77,6 +78,43 @@ const NavbarMenu = ({
         direction: "rtl",
       }}
     >
+      <Paper
+        component="form"
+        sx={{
+          p: "3px",
+          display: "flex",
+          alignItems: "center",
+          width: "80%",
+          marginRight: 2,
+          backgroundColor:
+            theme.palette.mode === "light" ? "#f0f0f1" : "#2b2b2b",
+          backgroundImage: "none",
+          marginBottom: 2,
+        }}
+      >
+        <IconButton
+          type="button"
+          onClick={() => {
+            navigate(`/tehranshoes/products/all/all?q=${searchInput}`);
+            setSearchInput("");
+          }}
+        >
+          <SearchIcon fontSize="small" />
+        </IconButton>
+        <InputBase
+          sx={{
+            ml: 1,
+            flex: 1,
+            "&& .MuiInputBase-input": {
+              backgroundColor:
+                theme.palette.mode === "light" ? "#f0f0f1" : "#2b2b2b",
+            },
+          }}
+          placeholder="جستجوی کالا"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+      </Paper>
       {Object.entries(genders).map((gender, index) => (
         <ListItem key={index} sx={{ paddingRight: 0 }}>
           <Accordion
@@ -127,7 +165,8 @@ const NavbarMenu = ({
         justifyContent={"space-between"}
         paddingTop="5px"
         alignItems={"center"}
-        width="200px"
+        width="100%"
+        marginBottom={2}
         sx={{
           backgroundColor: (theme) =>
             theme.palette.mode === "dark" ? "#1e1e1e" : "white",
@@ -265,7 +304,11 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
                     if (!openGroups) handleClickGroups(e);
                   }}
                   sx={{
-                    color: openGroups ? "error.main" : "",
+                    color: openGroups
+                      ? "error.main"
+                      : theme.palette.mode === "dark"
+                      ? "white"
+                      : "primary.main",
                     fontSize: "16px",
                   }}
                   startIcon={<MenuIcon sx={{ marginLeft: 1 }} />}
@@ -306,6 +349,7 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
                         alignItems: "flex-start",
                         borderLeft: "1px solid #e8e8e9",
                         width: "100%",
+                        paddingLeft: 1,
                       }}
                     >
                       {Object.entries(genders).map((gender) => (
@@ -313,7 +357,11 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
                           key={gender[1].name}
                           sx={{
                             backgroundColor:
-                              selectedGender === gender[0] ? "#f0f0f090" : "",
+                              selectedGender === gender[0]
+                                ? theme.palette.mode === "dark"
+                                  ? "#f0f0f023"
+                                  : "#f0f0f090"
+                                : "",
                             width: "100%",
                             height: "calc(100%/3)",
                             display: "flex",
