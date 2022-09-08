@@ -202,7 +202,7 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
       backgroundColor: theme.palette.info.dark,
     },
     padding: small ? "0 5px " : "0 30px",
-    width: small ? "50px" : "40%",
+    width: small ? "50px" : "35%",
     minHeight: small ? "30px" : "35px",
     fontSize: small ? "10px" : "",
   }));
@@ -213,7 +213,7 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
     "&:hover": {
       cursor: "pointer",
     },
-    fontSize: "20px",
+    fontSize: "26px",
     [theme.breakpoints.down(1024)]: {
       fontSize: "16px",
     },
@@ -226,13 +226,43 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
         sx={{
           backgroundColor: (theme) =>
             theme.palette.mode === "dark" ? "#1E1E1E" : "white",
+          paddingTop: `calc(3*${navHeight} / 13)`,
         }}
       >
         <Container maxWidth={theme.breakpoints.down("md") ? false : "xl"}>
           <Toolbar
             disableGutters
             sx={{
-              maxHeight: navHeight,
+              minHeight: `calc(4*${navHeight} /13) !important`,
+              width: "100%",
+              justifyContent: "center",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                "&:hover": { cursor: "pointer" },
+              }}
+              onClick={() => navigate("/tehranshoes")}
+            >
+              <Box>
+                <img
+                  src={theme.palette.mode === "dark" ? logoDark : logoLight}
+                  alt="logo"
+                  style={{ width: "40px" }}
+                />
+              </Box>
+              <BrandTypographyStyle variant="h5" noWrap>
+                کفش طهران
+              </BrandTypographyStyle>
+            </Box>
+          </Toolbar>
+          <Toolbar
+            disableGutters
+            sx={{
+              minHeight: `calc(6*${navHeight} / 13) !important`,
               width: "100%",
               justifyContent: "flex-start",
             }}
@@ -254,12 +284,31 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
                   width: "calc(100%/3)",
                 }}
               >
-                <Button onClick={handleClickGroups}>دسته بندی</Button>
+                <Button
+                  onMouseOver={(e) => {
+                    if (!openGroups) handleClickGroups(e);
+                  }}
+                  sx={{
+                    color: openGroups ? "error.main" : "",
+                    fontSize: "16px",
+                  }}
+                  startIcon={<MenuIcon sx={{ marginLeft: 1 }} />}
+                >
+                  دسته بندی کالا‌ها
+                </Button>
                 <Menu
                   anchorEl={anchorElGroups}
                   open={openGroups}
                   onClose={() => {
                     handleCloseGroups();
+                  }}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
                   }}
                 >
                   <Grid
@@ -283,7 +332,7 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
                         width: "100%",
                       }}
                     >
-                      {Object.entries(genders).map((gender, index) => (
+                      {Object.entries(genders).map((gender) => (
                         <Box
                           key={gender[1].name}
                           sx={{
@@ -318,41 +367,19 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
                         </Box>
                       ))}
                     </Grid>
-                    <Grid item sm={8}>
-                      {/* {" "}
-                        <Menu
-                          id="menu-category"
-                          anchorEl={anchorElCategory}
-                          anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "right",
-                          }}
-                          transformOrigin={{
-                            vertical: "top",
-                            horizontal: "right",
-                          }}
-                          open={Boolean(anchorElCategory)}
-                          onClose={handleCloseCategoryMenu}
-                        >
-                          {Object.entries(categories).map((category) => (
-                            <CategoryMenu
-                              key={category[1]}
-                              onClick={handleCloseCategoryMenu}
-                            >
-                              <Link
-                                to={`/tehranshoes/products/${selectedGender}/${category[0]}`}
-                                style={{
-                                  textDecoration: "none",
-                                  color: "inherit",
-                                }}
-                              >
-                                <Typography fontSize="20px">
-                                  {category[1]}
-                                </Typography>
-                              </Link>
-                            </CategoryMenu>
-                          ))}
-                        </Menu> */}
+                    <Grid
+                      item
+                      sm={8}
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        height: "100%",
+                        justifyContent: "space-evenly",
+                        alignItems: "flex-start",
+                        paddingRight: "10px",
+                        width: "100%",
+                      }}
+                    >
                       {Object.entries(categories).map((category) => (
                         <Link
                           to={`/tehranshoes/products/${selectedGender}/${category[0]}`}
@@ -367,26 +394,6 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
                     </Grid>
                   </Grid>
                 </Menu>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "calc(100%/3)",
-                }}
-                onClick={() => navigate("/tehranshoes")}
-              >
-                <Box>
-                  <img
-                    src={theme.palette.mode === "dark" ? logoDark : logoLight}
-                    alt="logo"
-                    style={{ width: "40px" }}
-                  />
-                </Box>
-                <BrandTypographyStyle variant="h6" noWrap>
-                  کفش طهران
-                </BrandTypographyStyle>
               </Box>
               <Box
                 sx={{
@@ -426,7 +433,7 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
                       ورود
                     </LoginManagementButton>
                   )}
-                  <Button>
+                  <Button sx={{ width: "40%" }}>
                     <Badge
                       badgeContent={cartItemCounts}
                       color="secondary"
