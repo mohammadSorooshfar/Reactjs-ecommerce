@@ -10,6 +10,8 @@ import {
   ButtonGroup,
   Drawer,
   Grid,
+  InputAdornment,
+  InputBase,
   ListItem,
   MenuItemProps,
   Paper,
@@ -19,6 +21,7 @@ import {
   useTheme,
 } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
+import SearchIcon from "@mui/icons-material/Search";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
@@ -170,6 +173,7 @@ const NavbarMenu = ({
 
 const Header: React.FC<IProps> = ({ navHeight }) => {
   const theme = useTheme();
+  const [searchInput, setSearchInput] = useState("");
   const [open, setOpen] = useState(false);
   const [selectedGender, setSelectedGender] = useState("men");
   const [cartItemCounts, setCartItemCounts] = useState(0);
@@ -394,6 +398,41 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
                     </Grid>
                   </Grid>
                 </Menu>
+                <Paper
+                  component="form"
+                  sx={{
+                    p: "10px",
+                    display: "flex",
+                    alignItems: "center",
+                    width: 200,
+                    backgroundColor:
+                      theme.palette.mode === "light" ? "#f0f0f1" : "#2b2b2b",
+                    backgroundImage: "none",
+                  }}
+                >
+                  <InputBase
+                    sx={{
+                      ml: 1,
+                      flex: 1,
+                      "&& .MuiInputBase-input": {
+                        backgroundColor:
+                          theme.palette.mode === "light"
+                            ? "#f0f0f1"
+                            : "#2b2b2b",
+                      },
+                    }}
+                    placeholder="جستجوی کالا"
+                    onChange={(e) => setSearchInput(e.target.value)}
+                  />
+                  <IconButton
+                    type="button"
+                    onClick={() =>
+                      navigate(`/tehranshoes/products/all/all?q=${searchInput}`)
+                    }
+                  >
+                    <SearchIcon />
+                  </IconButton>
+                </Paper>
               </Box>
               <Box
                 sx={{

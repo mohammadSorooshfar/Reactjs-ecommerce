@@ -22,7 +22,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import MenuItem from "@mui/material/MenuItem";
 import ProductCard from "components/productCard/ProductCard";
 import React, { ChangeEvent, useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { getProductsService } from "services/services.services";
 import { IProduct } from "types/interfaces.types";
 
@@ -39,10 +39,13 @@ const MenuProps = {
 
 const Products: React.FC = () => {
   const { category = "", gender = "" } = useParams();
-  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const searchedQuery = searchParams.get("q");
   const [products, setProducts] = useState<IProduct[]>([]);
   const [totalProducts, setTotalProducts] = useState(0);
-  const [searchedName, setSearchedName] = useState("");
+  const [searchedName, setSearchedName] = useState(
+    searchedQuery ? searchedQuery : ""
+  );
   const [productsPerPage, setProductsPerPage] = useState(6);
   const [sortBy, setSortBy] = useState("createdAt");
   const [order, setOrder] = useState("desc");
@@ -59,6 +62,7 @@ const Products: React.FC = () => {
     { name: "category.en", value: category === "all" ? "" : category },
     { name: "_sort", value: sortBy },
     { name: "_order", value: order },
+    { name: "name_like", value: searchedName },
   ]);
   const handleChangePage = (event: unknown, newPage: number) => {
     setLoading(true);
