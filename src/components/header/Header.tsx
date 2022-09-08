@@ -19,6 +19,7 @@ import {
   styled,
   useScrollTrigger,
   useTheme,
+  Collapse,
 } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import SearchIcon from "@mui/icons-material/Search";
@@ -177,6 +178,7 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
   const [open, setOpen] = useState(false);
   const [selectedGender, setSelectedGender] = useState("men");
   const [cartItemCounts, setCartItemCounts] = useState(0);
+  const [openSearch, setOpenSearch] = useState(false);
   const [anchorElGroups, setAnchorElGroups] =
     React.useState<null | HTMLElement>(null);
   const openGroups = Boolean(anchorElGroups);
@@ -230,43 +232,14 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
         sx={{
           backgroundColor: (theme) =>
             theme.palette.mode === "dark" ? "#1E1E1E" : "white",
-          paddingTop: `calc(3*${navHeight} / 13)`,
+          paddingTop: `calc(${navHeight} / 8)`,
         }}
       >
         <Container maxWidth={theme.breakpoints.down("md") ? false : "xl"}>
           <Toolbar
             disableGutters
             sx={{
-              minHeight: `calc(4*${navHeight} /13) !important`,
-              width: "100%",
-              justifyContent: "center",
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                "&:hover": { cursor: "pointer" },
-              }}
-              onClick={() => navigate("/tehranshoes")}
-            >
-              <Box>
-                <img
-                  src={theme.palette.mode === "dark" ? logoDark : logoLight}
-                  alt="logo"
-                  style={{ width: "40px" }}
-                />
-              </Box>
-              <BrandTypographyStyle variant="h5" noWrap>
-                کفش طهران
-              </BrandTypographyStyle>
-            </Box>
-          </Toolbar>
-          <Toolbar
-            disableGutters
-            sx={{
-              minHeight: `calc(6*${navHeight} / 13) !important`,
+              minHeight: `calc(7*${navHeight} /8) !important`,
               width: "100%",
               justifyContent: "flex-start",
             }}
@@ -284,7 +257,6 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "flex-start",
                   width: "calc(100%/3)",
                 }}
               >
@@ -398,41 +370,88 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
                     </Grid>
                   </Grid>
                 </Menu>
-                <Paper
-                  component="form"
+                <Box
                   sx={{
-                    p: "10px",
                     display: "flex",
                     alignItems: "center",
-                    width: 200,
-                    backgroundColor:
-                      theme.palette.mode === "light" ? "#f0f0f1" : "#2b2b2b",
-                    backgroundImage: "none",
+                    marginRight: 7,
                   }}
                 >
-                  <InputBase
-                    sx={{
-                      ml: 1,
-                      flex: 1,
-                      "&& .MuiInputBase-input": {
+                  <IconButton
+                    type="button"
+                    onClick={() => {
+                      openSearch
+                        ? navigate(
+                            `/tehranshoes/products/all/all?q=${searchInput}`
+                          )
+                        : setOpenSearch(true);
+                    }}
+                  >
+                    <SearchIcon />
+                  </IconButton>
+
+                  <Collapse in={openSearch} orientation={"horizontal"}>
+                    <Paper
+                      component="form"
+                      sx={{
+                        p: "3px",
+                        display: "flex",
+                        alignItems: "center",
+                        width: 200,
                         backgroundColor:
                           theme.palette.mode === "light"
                             ? "#f0f0f1"
                             : "#2b2b2b",
-                      },
-                    }}
-                    placeholder="جستجوی کالا"
-                    onChange={(e) => setSearchInput(e.target.value)}
+                        backgroundImage: "none",
+                      }}
+                    >
+                      <InputBase
+                        sx={{
+                          ml: 1,
+                          flex: 1,
+                          "&& .MuiInputBase-input": {
+                            backgroundColor:
+                              theme.palette.mode === "light"
+                                ? "#f0f0f1"
+                                : "#2b2b2b",
+                          },
+                        }}
+                        placeholder="جستجوی کالا"
+                        value={searchInput}
+                        onChange={(e) => setSearchInput(e.target.value)}
+                      />
+                      <IconButton
+                        type="button"
+                        onClick={() => {
+                          setOpenSearch(false);
+                          setSearchInput("");
+                        }}
+                      >
+                        <CloseIcon fontSize="small" />
+                      </IconButton>
+                    </Paper>
+                  </Collapse>
+                </Box>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  "&:hover": { cursor: "pointer" },
+                }}
+                onClick={() => navigate("/tehranshoes")}
+              >
+                <Box>
+                  <img
+                    src={theme.palette.mode === "dark" ? logoDark : logoLight}
+                    alt="logo"
+                    style={{ width: "40px" }}
                   />
-                  <IconButton
-                    type="button"
-                    onClick={() =>
-                      navigate(`/tehranshoes/products/all/all?q=${searchInput}`)
-                    }
-                  >
-                    <SearchIcon />
-                  </IconButton>
-                </Paper>
+                </Box>
+                <BrandTypographyStyle variant="h5" noWrap>
+                  کفش طهران
+                </BrandTypographyStyle>
               </Box>
               <Box
                 sx={{

@@ -110,7 +110,9 @@ const Products: React.FC = () => {
     minPrice,
     colorCheckBox,
   ]);
-
+  useEffect(() => {
+    setSearchedName((prev) => (searchedQuery !== null ? searchedQuery : ""));
+  }, [searchedQuery]);
   const changeSort = (sort: string, order: string) => {
     setSortBy(sort);
     setOrder(order);
