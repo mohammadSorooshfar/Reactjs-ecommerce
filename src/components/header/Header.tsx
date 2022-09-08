@@ -9,6 +9,7 @@ import {
   Button,
   ButtonGroup,
   Drawer,
+  Grid,
   ListItem,
   MenuItemProps,
   Paper,
@@ -27,6 +28,9 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import ManIcon from "@mui/icons-material/Man";
+import WomanIcon from "@mui/icons-material/Woman";
+import BoyIcon from "@mui/icons-material/Boy";
 import { checkAuth } from "utils/functions.util";
 import logoDark from "../../assets/logo1.png";
 import logoLight from "../../assets/logo.png";
@@ -41,9 +45,9 @@ interface IProps {
   navHeight: string;
 }
 const genders = {
-  men: "مردانه",
-  women: "زنانه",
-  kid: "بچگانه",
+  men: { name: "مردانه", icon: <ManIcon /> },
+  women: { name: "زنانه", icon: <WomanIcon /> },
+  kid: { name: "بچگانه", icon: <BoyIcon /> },
 };
 const categories = {
   sport: "ورزشی",
@@ -51,99 +55,16 @@ const categories = {
   oxford: "رسمی",
 };
 
-const Header: React.FC<IProps> = ({ navHeight }) => {
-  const [anchorElCategory, setAnchorElCategory] = useState<null | HTMLElement>(
-    null
-  );
+const NavbarMenu = ({
+  open,
+  setOpen,
+}: {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const theme = useTheme();
-  const [open, setOpen] = useState(false);
-  const [selectedGender, setSelectedGender] = useState("");
-  const [navOptionColor, setNavOptionColor] = useState({
-    men: theme.palette.mode === "dark" ? "white" : "black",
-    women: theme.palette.mode === "dark" ? "white" : "black",
-    kid: theme.palette.mode === "dark" ? "white" : "black",
-  });
-  const [cartItemCounts, setCartItemCounts] = useState(0);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const cartProducts = useSelector((state: any) => state.cart.cartProducts);
-  useEffect(() => {
-    const totalItems = cartProducts.reduce(
-      (prev: number, current: ICart) => prev + current.quantity,
-      0
-    );
-    setCartItemCounts(totalItems);
-  }, [cartProducts]);
-  useEffect(() => {
-    theme.palette.mode === "dark"
-      ? setNavOptionColor({
-          men: "white",
-          women: "white",
-          kid: "white",
-        })
-      : setNavOptionColor({
-          men: "black",
-          women: "black",
-          kid: "black",
-        });
-  }, [theme.palette.mode]);
-  const handleOpenCategoryMenu = (event: React.MouseEvent<HTMLElement>) => {
-    if (anchorElCategory !== event.currentTarget) {
-      setAnchorElCategory(event.currentTarget);
-      const gendersArray = Object.entries(genders);
-      const selected: any = gendersArray.find(
-        (gender) => gender[1] === event.currentTarget.innerText
-      );
-      if (selected[0]) {
-        setSelectedGender(selected[0]);
-        setNavOptionColor({
-          men: theme.palette.mode === "dark" ? "white" : "black",
-          women: theme.palette.mode === "dark" ? "white" : "black",
-          kid: theme.palette.mode === "dark" ? "white" : "black",
-          [selected[0]]: "#ffd32a",
-        });
-      }
-    }
-  };
-  const handleCloseCategoryMenu = () => {
-    setNavOptionColor({
-      men: theme.palette.mode === "dark" ? "white" : "black",
-      women: theme.palette.mode === "dark" ? "white" : "black",
-      kid: theme.palette.mode === "dark" ? "white" : "black",
-    });
-    setAnchorElCategory(null);
-  };
-  const LoginManagementButton = styled(Button)<{
-    small?: boolean;
-  }>(({ theme, small }) => ({
-    color: theme.palette.secondary.main,
-    backgroundColor: theme.palette.info.main,
-    "&:hover": {
-      backgroundColor: theme.palette.info.dark,
-    },
-    padding: small ? "0 5px " : "0 30px",
-    width: small ? "50px" : "40%",
-    minHeight: small ? "30px" : "35px",
-    fontSize: small ? "10px" : "",
-  }));
-  const BrandTypographyStyle = styled(Typography)<{}>(({ theme }) => ({
-    fontWeight: 700,
-    textDecoration: "none",
-    color: theme.palette.mode === "dark" ? "white" : "black",
-    "&:hover": {
-      cursor: "pointer",
-    },
-    fontSize: "20px",
-    [theme.breakpoints.down(1024)]: {
-      fontSize: "16px",
-    },
-  }));
-  const CategoryMenu = styled(MenuItem)<MenuItemProps>(({ theme }) => ({
-    color: theme.palette.mode === "dark" ? "white" : "black",
-    padding: "0 30px",
-    width: "200px",
-    direction: "rtl",
-  }));
   const getList = () => (
     <Box
       sx={{
@@ -162,9 +83,7 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
             }}
           >
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography color={Object.values(navOptionColor)[index]}>
-                {gender[1]}
-              </Typography>
+              <Typography>{gender[1].name}</Typography>
             </AccordionSummary>
             <AccordionDetails
               sx={{
@@ -193,6 +112,113 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
     </Box>
   );
   return (
+    <Drawer
+      transitionDuration={0}
+      open={open}
+      anchor={"right"}
+      onClose={() => setOpen(false)}
+    >
+      <Box
+        display={"flex"}
+        justifyContent={"space-between"}
+        paddingTop="5px"
+        alignItems={"center"}
+        width="200px"
+        sx={{
+          backgroundColor: (theme) =>
+            theme.palette.mode === "dark" ? "#1e1e1e" : "white",
+        }}
+      >
+        <IconButton
+          size="large"
+          onClick={() => setOpen(false)}
+          color="inherit"
+          sx={{
+            height: "10px",
+            color: theme.palette.mode === "dark" ? "white" : "primary.main",
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+
+        <IconButton
+          onClick={() => dispatch(changeDark())}
+          sx={{
+            color: theme.palette.mode === "dark" ? "white" : "primary.main",
+            ml: 2,
+          }}
+        >
+          {theme.palette.mode === "dark" ? (
+            <Brightness7Icon />
+          ) : (
+            <Brightness4Icon />
+          )}
+        </IconButton>
+      </Box>
+      <Box
+        height={"100%"}
+        sx={{
+          backgroundColor: (theme) =>
+            theme.palette.mode === "dark" ? "#1e1e1e" : "white",
+        }}
+      >
+        {getList()}
+      </Box>
+    </Drawer>
+  );
+};
+
+const Header: React.FC<IProps> = ({ navHeight }) => {
+  const theme = useTheme();
+  const [open, setOpen] = useState(false);
+  const [selectedGender, setSelectedGender] = useState("men");
+  const [cartItemCounts, setCartItemCounts] = useState(0);
+  const [anchorElGroups, setAnchorElGroups] =
+    React.useState<null | HTMLElement>(null);
+  const openGroups = Boolean(anchorElGroups);
+  const handleClickGroups = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorElGroups(event.currentTarget);
+  };
+  const handleCloseGroups = () => {
+    setAnchorElGroups(null);
+  };
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const cartProducts = useSelector((state: any) => state.cart.cartProducts);
+  useEffect(() => {
+    const totalItems = cartProducts.reduce(
+      (prev: number, current: ICart) => prev + current.quantity,
+      0
+    );
+    setCartItemCounts(totalItems);
+  }, [cartProducts]);
+  useEffect(() => {}, [theme.palette.mode]);
+  const LoginManagementButton = styled(Button)<{
+    small?: boolean;
+  }>(({ theme, small }) => ({
+    color: theme.palette.secondary.main,
+    backgroundColor: theme.palette.info.main,
+    "&:hover": {
+      backgroundColor: theme.palette.info.dark,
+    },
+    padding: small ? "0 5px " : "0 30px",
+    width: small ? "50px" : "40%",
+    minHeight: small ? "30px" : "35px",
+    fontSize: small ? "10px" : "",
+  }));
+  const BrandTypographyStyle = styled(Typography)<{}>(({ theme }) => ({
+    fontWeight: 700,
+    textDecoration: "none",
+    color: theme.palette.mode === "dark" ? "white" : "black",
+    "&:hover": {
+      cursor: "pointer",
+    },
+    fontSize: "20px",
+    [theme.breakpoints.down(1024)]: {
+      fontSize: "16px",
+    },
+  }));
+  return (
     <>
       <AppBar
         position="fixed"
@@ -220,7 +246,137 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
                 textAlign: "right",
               }}
             >
-              <Box sx={{ display: "flex", alignItems: "center", width: "25%" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                  width: "calc(100%/3)",
+                }}
+              >
+                <Button onClick={handleClickGroups}>دسته بندی</Button>
+                <Menu
+                  anchorEl={anchorElGroups}
+                  open={openGroups}
+                  onClose={() => {
+                    handleCloseGroups();
+                  }}
+                >
+                  <Grid
+                    container
+                    sx={{
+                      width: "400px",
+                      height: "170px",
+                      padding: "5px",
+                    }}
+                  >
+                    <Grid
+                      item
+                      sm={4}
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        height: "100%",
+                        justifyContent: "space-around",
+                        alignItems: "flex-start",
+                        borderLeft: "1px solid #e8e8e9",
+                        width: "100%",
+                      }}
+                    >
+                      {Object.entries(genders).map((gender, index) => (
+                        <Box
+                          key={gender[1].name}
+                          sx={{
+                            backgroundColor:
+                              selectedGender === gender[0] ? "#f0f0f090" : "",
+                            width: "100%",
+                            height: "calc(100%/3)",
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                          onMouseEnter={() => setSelectedGender(gender[0])}
+                        >
+                          <Typography
+                            sx={{
+                              fontWeight: "bold",
+                              fontSize: "16px",
+                              textDecoration: "none",
+                              color:
+                                selectedGender === gender[0]
+                                  ? "error.main"
+                                  : "",
+                              "&:hover": {
+                                cursor: "default",
+                              },
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            {gender[1].icon}
+                            {gender[1].name}
+                          </Typography>
+                        </Box>
+                      ))}
+                    </Grid>
+                    <Grid item sm={8}>
+                      {/* {" "}
+                        <Menu
+                          id="menu-category"
+                          anchorEl={anchorElCategory}
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "right",
+                          }}
+                          transformOrigin={{
+                            vertical: "top",
+                            horizontal: "right",
+                          }}
+                          open={Boolean(anchorElCategory)}
+                          onClose={handleCloseCategoryMenu}
+                        >
+                          {Object.entries(categories).map((category) => (
+                            <CategoryMenu
+                              key={category[1]}
+                              onClick={handleCloseCategoryMenu}
+                            >
+                              <Link
+                                to={`/tehranshoes/products/${selectedGender}/${category[0]}`}
+                                style={{
+                                  textDecoration: "none",
+                                  color: "inherit",
+                                }}
+                              >
+                                <Typography fontSize="20px">
+                                  {category[1]}
+                                </Typography>
+                              </Link>
+                            </CategoryMenu>
+                          ))}
+                        </Menu> */}
+                      {Object.entries(categories).map((category) => (
+                        <Link
+                          to={`/tehranshoes/products/${selectedGender}/${category[0]}`}
+                          style={{
+                            textDecoration: "none",
+                            color: "inherit",
+                          }}
+                        >
+                          <Typography fontSize="20px">{category[1]}</Typography>
+                        </Link>
+                      ))}
+                    </Grid>
+                  </Grid>
+                </Menu>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "calc(100%/3)",
+                }}
+                onClick={() => navigate("/tehranshoes")}
+              >
                 <Box>
                   <img
                     src={theme.palette.mode === "dark" ? logoDark : logoLight}
@@ -228,116 +384,59 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
                     style={{ width: "40px" }}
                   />
                 </Box>
-                <BrandTypographyStyle
-                  variant="h6"
-                  onClick={() => navigate("/tehranshoes")}
-                  noWrap
-                >
+                <BrandTypographyStyle variant="h6" noWrap>
                   کفش طهران
                 </BrandTypographyStyle>
               </Box>
               <Box
                 sx={{
+                  width: "calc(100%/3)",
+                  justifyContent: "flex-end",
                   display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%",
                 }}
               >
-                <Box
+                <IconButton
+                  onClick={() => dispatch(changeDark())}
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    width: "60%",
+                    color:
+                      theme.palette.mode === "dark" ? "white" : "primary.main",
                   }}
                 >
-                  {Object.values(genders).map((gender, index) => (
-                    <Button
-                      key={gender}
-                      onMouseOver={handleOpenCategoryMenu}
-                      sx={{
-                        color: Object.values(navOptionColor)[index],
-                        fontWeight: "bold",
-                        fontSize: "14px",
-                        textDecoration: "none",
-                      }}
-                    >
-                      {gender}
-                    </Button>
-                  ))}
-                </Box>
-                <Menu
-                  id="menu-category"
-                  anchorEl={anchorElCategory}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                  }}
-                  open={Boolean(anchorElCategory)}
-                  onClose={handleCloseCategoryMenu}
-                  MenuListProps={{ onMouseLeave: handleCloseCategoryMenu }}
+                  {theme.palette.mode === "dark" ? (
+                    <Brightness7Icon />
+                  ) : (
+                    <Brightness4Icon />
+                  )}
+                </IconButton>
+                <ButtonGroup
+                  variant="contained"
+                  sx={{ flexDirection: "row-reverse", width: "70%" }}
+                  disableElevation
                 >
-                  {Object.entries(categories).map((category) => (
-                    <CategoryMenu
-                      key={category[1]}
-                      onClick={handleCloseCategoryMenu}
+                  {checkAuth() ? (
+                    <LoginManagementButton
+                      onClick={() => navigate("/tehranshoes/dashboard/orders")}
                     >
-                      <Link
-                        to={`/tehranshoes/products/${selectedGender}/${category[0]}`}
-                        style={{ textDecoration: "none", color: "inherit" }}
-                      >
-                        <Typography fontSize="20px">{category[1]}</Typography>
-                      </Link>
-                    </CategoryMenu>
-                  ))}
-                </Menu>
+                      مدیریت
+                    </LoginManagementButton>
+                  ) : (
+                    <LoginManagementButton
+                      onClick={() => navigate("/tehranshoes/login")}
+                    >
+                      ورود
+                    </LoginManagementButton>
+                  )}
+                  <Button>
+                    <Badge
+                      badgeContent={cartItemCounts}
+                      color="secondary"
+                      onClick={() => navigate(`/tehranshoes/pay/cart`)}
+                    >
+                      سبد خرید <ShoppingCartIcon />{" "}
+                    </Badge>
+                  </Button>
+                </ButtonGroup>
               </Box>
-              <IconButton
-                onClick={() => dispatch(changeDark())}
-                sx={{
-                  color:
-                    theme.palette.mode === "dark" ? "white" : "primary.main",
-                }}
-              >
-                {theme.palette.mode === "dark" ? (
-                  <Brightness7Icon />
-                ) : (
-                  <Brightness4Icon />
-                )}
-              </IconButton>
-              <ButtonGroup
-                variant="contained"
-                sx={{ flexDirection: "row-reverse", width: "25%" }}
-                disableElevation
-              >
-                {checkAuth() ? (
-                  <LoginManagementButton
-                    onClick={() => navigate("/tehranshoes/dashboard/orders")}
-                  >
-                    مدیریت
-                  </LoginManagementButton>
-                ) : (
-                  <LoginManagementButton
-                    onClick={() => navigate("/tehranshoes/login")}
-                  >
-                    ورود
-                  </LoginManagementButton>
-                )}
-                <Button>
-                  <Badge
-                    badgeContent={cartItemCounts}
-                    color="secondary"
-                    onClick={() => navigate(`/tehranshoes/pay/cart`)}
-                  >
-                    سبد خرید <ShoppingCartIcon />{" "}
-                  </Badge>
-                </Button>
-              </ButtonGroup>
             </Box>
             <Box
               sx={{
@@ -420,59 +519,7 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
           </Toolbar>
         </Container>
       </AppBar>
-      <Drawer
-        transitionDuration={0}
-        open={open}
-        anchor={"right"}
-        onClose={() => setOpen(false)}
-      >
-        <Box
-          display={"flex"}
-          justifyContent={"space-between"}
-          paddingTop="5px"
-          alignItems={"center"}
-          width="200px"
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === "dark" ? "#1e1e1e" : "white",
-          }}
-        >
-          <IconButton
-            size="large"
-            onClick={() => setOpen(false)}
-            color="inherit"
-            sx={{
-              height: "10px",
-              color: theme.palette.mode === "dark" ? "white" : "primary.main",
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-
-          <IconButton
-            onClick={() => dispatch(changeDark())}
-            sx={{
-              color: theme.palette.mode === "dark" ? "white" : "primary.main",
-              ml: 2,
-            }}
-          >
-            {theme.palette.mode === "dark" ? (
-              <Brightness7Icon />
-            ) : (
-              <Brightness4Icon />
-            )}
-          </IconButton>
-        </Box>
-        <Box
-          height={"100%"}
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === "dark" ? "#1e1e1e" : "white",
-          }}
-        >
-          {getList()}
-        </Box>
-      </Drawer>
+      <NavbarMenu {...{ open, setOpen }} />
     </>
   );
 };
