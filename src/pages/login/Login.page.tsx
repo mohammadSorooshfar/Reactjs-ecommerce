@@ -6,8 +6,10 @@ import {
   BoxProps,
   Button,
   ButtonProps,
+  Checkbox,
   Container,
   ContainerProps,
+  FormControlLabel,
   Paper,
   styled,
   TextField,
@@ -58,7 +60,7 @@ const Login: React.FC = () => {
     backgroundColor: theme.palette.info.main,
   }));
   const handleLogin = async (
-    data: { username: string; password: string },
+    data: { username: string; password: string; remember: boolean },
     setSubmitting: (isSubmitting: boolean) => void
   ) => {
     setSubmitting(true);
@@ -93,18 +95,20 @@ const Login: React.FC = () => {
           initialValues={{
             username: "",
             password: "",
+            remember: true,
           }}
           onSubmit={(data, { setSubmitting }) => {
             handleLogin(data, setSubmitting);
           }}
         >
-          {({ isSubmitting }) => (
+          {({ isSubmitting, setFieldValue, values }) => (
             <Form
               style={{
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
-                height: "240px",
+                height: "250px",
+                width: "450px",
               }}
             >
               <Box textAlign={"center"}>
@@ -121,6 +125,19 @@ const Login: React.FC = () => {
                   required
                   type="password"
                   as={FormTextFieldStyle}
+                />
+              </Box>
+              <Box textAlign={"right"} width={"400px"}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      defaultChecked
+                      onChange={() =>
+                        setFieldValue("remember", !values.remember)
+                      }
+                    />
+                  }
+                  label="مرا به خاطر بسپار"
                 />
               </Box>
               <Box textAlign={"center"}>

@@ -13,10 +13,21 @@ import { getProduct, getProducts } from "api/user/products.api";
 import { getSaleCodes } from "api/user/sale.api";
 import { ACCESS_TOKEN } from "configs/variables.config";
 import { IOrder, IProduct, TDeliveryStatus } from "types/interfaces.types";
-export const loginService = async (data: any) => {
+export const loginService = async (data: {
+  username: string;
+  password: string;
+  remember: boolean;
+}) => {
   try {
-    const response = await Login(data);
-    localStorage.setItem(ACCESS_TOKEN, response.token);
+    const response = await Login({
+      username: data.username,
+      password: data.password,
+    });
+    if (data.remember) {
+      localStorage.setItem(ACCESS_TOKEN, response.token);
+    } else {
+      sessionStorage.setItem(ACCESS_TOKEN, response.token);
+    }
     return response;
   } catch (e) {
     return Promise.reject(e);

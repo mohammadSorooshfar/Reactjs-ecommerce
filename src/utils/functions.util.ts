@@ -26,6 +26,8 @@ export const CheckUserExpired = () => {
   const token = localStorage.getItem(ACCESS_TOKEN);
   if (!token) return;
   const { exp } = parseJwt(token);
+  console.log(exp * 1000, Date.now());
+
   if (exp * 1000 < Date.now()) {
     localStorage.removeItem(ACCESS_TOKEN);
     return false;
@@ -114,6 +116,9 @@ export const checkAuth = () => {
   if (localStorage.hasOwnProperty("ACCESS_TOKEN")) {
     return true;
   } else {
+    if (sessionStorage.getItem("ACCESS_TOKEN")) {
+      return true;
+    }
     return false;
   }
 };
