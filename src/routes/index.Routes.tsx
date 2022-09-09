@@ -7,6 +7,7 @@ import PayRoutes from "./Pay.Routes";
 import ProductRoutes from "./Product.Routes";
 import ProductsRoutes from "./Products.Routes";
 import { ScrollToTop } from "utils/functions.util";
+import NotFound from "pages/not found/NotFound.page";
 
 const MainRoutes: React.FC = () => {
   return (

@@ -411,6 +411,7 @@ const Header: React.FC<IProps> = ({ navHeight }) => {
                             textDecoration: "none",
                             color: "inherit",
                           }}
+                          onClick={handleCloseGroups}
                         >
                           <Typography fontSize="20px">{category[1]}</Typography>
                         </Link>
