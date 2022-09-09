@@ -154,7 +154,12 @@ export const categoryEnglish = (category: string) => {
       break;
   }
 };
-
+export const getToken = () => {
+  return (
+    localStorage.getItem("ACCESS_TOKEN") ||
+    sessionStorage.getItem("ACCESS_TOKEN")
+  );
+};
 export const colorGenerator = (color: string) => {
   switch (color) {
     case "قرمز":

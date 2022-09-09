@@ -18,6 +18,7 @@ import {
   uploadImagesAdminService,
 } from "services/services.services";
 import { IProduct, IProductManagement } from "types/interfaces.types";
+import { getToken } from "utils/functions.util";
 
 const TrProduct: React.FC<{
   rowData: IProductManagement;
@@ -75,7 +76,7 @@ const TrProduct: React.FC<{
     const reqConfig = {
       headers: {
         "content-type": "multipart/form-data",
-        token: localStorage.getItem("ACCESS_TOKEN"),
+        token: getToken(),
       },
     };
 

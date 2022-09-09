@@ -29,6 +29,7 @@ import {
   IProductManagement,
 } from "types/interfaces.types";
 import {
+  getToken,
   isAnPriceManagement,
   isAnProductManagement,
 } from "utils/functions.util";
@@ -109,7 +110,7 @@ const ActionButtons: React.FC<{
     const reqConfig = {
       headers: {
         "content-type": "multipart/form-data",
-        token: localStorage.getItem("ACCESS_TOKEN"),
+        token: getToken(),
       },
     };
     const imagePromises = Object.values(data.files).map((file: any) => {
