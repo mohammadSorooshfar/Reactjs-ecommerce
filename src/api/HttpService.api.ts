@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { BASE_URL } from "configs/url.config";
+import { toast } from "react-toastify";
 
 class HttpService {
   constructor() {
@@ -9,6 +10,24 @@ class HttpService {
         return config;
       },
       (error) => {
+        return Promise.reject(error);
+      }
+    );
+    axios.interceptors.response.use(
+      function (response) {
+        return response;
+      },
+      function (error) {
+        if (error.response.status >= 400) {
+          if (error.response.status === 401) {
+            toast.error("شما امکان انجام این عملیات را ندارید");
+          } else {
+            toast.error("درخواست شما نا مناسب می باشد");
+          }
+        } else if (error.response.status > 500) {
+          toast.error("سرور با مشکل مواجه شد");
+        }
+
         return Promise.reject(error);
       }
     );
