@@ -89,6 +89,7 @@ const Products: React.FC = () => {
     getProductsData("1");
   }, [filters]);
   useEffect(() => {
+    setPage(1);
     setFilters([
       { name: "gender.en", value: gender === "all" ? "" : gender },
       { name: "category.en", value: category === "all" ? "" : category },
